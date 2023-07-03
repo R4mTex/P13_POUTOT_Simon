@@ -1,0 +1,347 @@
+{% extends 'authentication/base.html' %}
+
+{% block content %}
+
+<body>
+    <!-- Header-->
+    <header class="bg-dark py-5">
+        <div class="container px-4 px-lg-5 my-5">
+            <div class="text-center text-white">
+                <h1 class="display-4 fw-bolder">News Feed</h1>
+                <p class="lead fw-normal text-white-50 mb-0">Find what you need for your job site</p>
+            </div>
+        </div>
+    </header>
+    <div class="d-flex flex-row">
+        <!-- Table  -->
+        <div class="col-2 py-5 px-2">
+            <table class="table table-sm table-borderless table-active caption-top">
+                <!-- Table body -->
+                <tbody>
+                    <caption style="margin-left: 10px;">Filtrez par :</caption>
+                    <tr>
+                        <th>Alphabétique</th>
+                    </tr>
+                    <tr>
+                        <td>
+                            <!-- Default unchecked -->
+                            <div class="form-check">
+                                <input class="form-check-input" type="radio" name="flexRadioDefaultA" id="flexRadioDefault1">
+                                <label class="form-check-label" for="flexRadioDefault1">De A-Z</label>
+                            </div>
+                            <!-- Default unchecked -->
+                            <div class="form-check">
+                                <input class="form-check-input" type="radio" name="flexRadioDefaultA" id="flexRadioDefault2">
+                                <label class="form-check-label" for="flexRadioDefault2">De Z-A</label>
+                            </div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <th>Localisation</th>
+                    </tr>
+                    <tr>
+                        <td>
+                            <!-- Default checked -->
+                            <div class="form-check">
+                                <input class="form-check-input" type="radio" name="flexRadioDefaultB" id="flexRadioDefault3" checked>
+                                <label class="form-check-label" for="flexRadioDefault3">Du plus près au plus loin</label>
+                            </div>
+                            <!-- Default unchecked -->
+                            <div class="form-check">
+                                <input class="form-check-input" type="radio" name="flexRadioDefaultB" id="flexRadioDefault4">
+                                <label class="form-check-label" for="flexRadioDefault4">Du plus loin au plus près</label>
+                            </div>
+                        </td>
+                    <tr>
+                        <th>Date de début de disponibilité</th>
+                    </tr>
+                    <tr>
+                        <td>
+                            <!-- Default checked -->
+                            <div class="form-check">
+                                <input class="form-check-input" type="radio" name="flexRadioDefaultC" id="flexRadioDefault5" checked>
+                                <label class="form-check-label" for="flexRadioDefault5">Du plus tôt au plus tard</label>
+                            </div>
+                            <!-- Default unchecked -->
+                            <div class="form-check">
+                                <input class="form-check-input" type="radio" name="flexRadioDefaultC" id="flexRadioDefault6">
+                                <label class="form-check-label" for="flexRadioDefault6">Du plus tard au plus tôt</label>
+                            </div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <th>Date de fin de disponibilité</th>
+                    </tr>
+                    <tr>
+                        <td>
+                            <!-- Default unchecked -->
+                            <div class="form-check">
+                                <input class="form-check-input" type="radio" name="flexRadioDefaultD" id="flexRadioDefault7">
+                                <label class="form-check-label" for="flexRadioDefault7">Du plus tôt au plus tard</label>
+                            </div>
+                            <!-- Default unchecked -->
+                            <div class="form-check">
+                                <input class="form-check-input" type="radio" name="flexRadioDefaultD" id="flexRadioDefault8">
+                                <label class="form-check-label" for="flexRadioDefault8">Du plus tard au plus tôt</label>
+                            </div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <th>Caution</th>
+                    </tr>
+                    <tr>
+                        <td>
+                            <!-- Default checked -->
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" name="flexCheckDefaultA" value="" id="flexCheckDefault1" checked>
+                                <label class="form-check-label" for="flexCheckDefault1">Oui</label>
+                            </div>
+                            <!-- Default unchecked -->
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" name="flexCheckDefaultA" value="" id="flexCheckChecked2">
+                                <label class="form-check-label" for="flexCheckChecked2">Non</label>
+                            </div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <th>Disponibilité</th>
+                    </tr>
+                    <tr>
+                        <td>
+                            <!-- Default checked -->
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" name="flexCheckDefaultB" value="" id="flexCheckDefault3" checked>
+                                <label class="form-check-label" for="flexCheckDefault3">Disponible</label>
+                            </div>
+                            <!-- Default unchecked -->
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" name="flexCheckDefaultB" value="" id="flexCheckChecked4">
+                                <label class="form-check-label" for="flexCheckChecked4">Indisponible</label>
+                            </div>
+                        </td>
+                    </tr>
+                </tbody>
+                <!-- Table body -->
+            </table>
+        </div>
+        <!-- Table  -->
+        <!-- Section-->
+        <section class="py-5">
+            <div class="container px-4 px-lg-5 mt-5">
+                <div class="row gx-4 gx-lg-5 row-cols-2 row-cols-md-3 row-cols-xl-4 justify-content-center">
+                    <div class="col mb-5">
+                        <div class="card h-100">
+                            <!-- Product image-->
+                            <img class="card-img-top" src="https://dummyimage.com/450x300/dee2e6/6c757d.jpg" alt="..." />
+                            <!-- Product details-->
+                            <div class="card-body p-4">
+                                <div class="text-center">
+                                    <!-- Product name-->
+                                    <h5 class="fw-bolder">Fancy Product</h5>
+                                    <!-- Product price-->
+                                    $40.00 - $80.00
+                                </div>
+                            </div>
+                            <!-- Product actions-->
+                            <div class="card-footer p-4 pt-0 border-top-0 bg-transparent">
+                                <div class="text-center"><a class="btn btn-outline-dark mt-auto" href="#">View options</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col mb-5">
+                        <div class="card h-100">
+                            <!-- Sale badge-->
+                            <div class="badge bg-dark text-white position-absolute" style="top: 0.5rem; right: 0.5rem">Sale
+                            </div>
+                            <!-- Product image-->
+                            <img class="card-img-top" src="https://dummyimage.com/450x300/dee2e6/6c757d.jpg" alt="..." />
+                            <!-- Product details-->
+                            <div class="card-body p-4">
+                                <div class="text-center">
+                                    <!-- Product name-->
+                                    <h5 class="fw-bolder">Special Item</h5>
+                                    <!-- Product reviews-->
+                                    <div class="d-flex justify-content-center small text-warning mb-2">
+                                        <div class="bi-star-fill"></div>
+                                        <div class="bi-star-fill"></div>
+                                        <div class="bi-star-fill"></div>
+                                        <div class="bi-star-fill"></div>
+                                        <div class="bi-star-fill"></div>
+                                    </div>
+                                    <!-- Product price-->
+                                    <span class="text-muted text-decoration-line-through">$20.00</span>
+                                    $18.00
+                                </div>
+                            </div>
+                            <!-- Product actions-->
+                            <div class="card-footer p-4 pt-0 border-top-0 bg-transparent">
+                                <div class="text-center"><a class="btn btn-outline-dark mt-auto" href="#">Add to cart</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col mb-5">
+                        <div class="card h-100">
+                            <!-- Sale badge-->
+                            <div class="badge bg-dark text-white position-absolute" style="top: 0.5rem; right: 0.5rem">Sale
+                            </div>
+                            <!-- Product image-->
+                            <img class="card-img-top" src="https://dummyimage.com/450x300/dee2e6/6c757d.jpg" alt="..." />
+                            <!-- Product details-->
+                            <div class="card-body p-4">
+                                <div class="text-center">
+                                    <!-- Product name-->
+                                    <h5 class="fw-bolder">Sale Item</h5>
+                                    <!-- Product price-->
+                                    <span class="text-muted text-decoration-line-through">$50.00</span>
+                                    $25.00
+                                </div>
+                            </div>
+                            <!-- Product actions-->
+                            <div class="card-footer p-4 pt-0 border-top-0 bg-transparent">
+                                <div class="text-center"><a class="btn btn-outline-dark mt-auto" href="#">Add to cart</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col mb-5">
+                        <div class="card h-100">
+                            <!-- Product image-->
+                            <img class="card-img-top" src="https://dummyimage.com/450x300/dee2e6/6c757d.jpg" alt="..." />
+                            <!-- Product details-->
+                            <div class="card-body p-4">
+                                <div class="text-center">
+                                    <!-- Product name-->
+                                    <h5 class="fw-bolder">Popular Item</h5>
+                                    <!-- Product reviews-->
+                                    <div class="d-flex justify-content-center small text-warning mb-2">
+                                        <div class="bi-star-fill"></div>
+                                        <div class="bi-star-fill"></div>
+                                        <div class="bi-star-fill"></div>
+                                        <div class="bi-star-fill"></div>
+                                        <div class="bi-star"></div>
+                                    </div>
+                                    <!-- Product price-->
+                                    $40.00
+                                </div>
+                            </div>
+                            <!-- Product actions-->
+                            <div class="card-footer p-4 pt-0 border-top-0 bg-transparent">
+                                <div class="text-center"><a class="btn btn-outline-dark mt-auto" href="#">Add to cart</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col mb-5">
+                        <div class="card h-100">
+                            <!-- Sale badge-->
+                            <div class="badge bg-dark text-white position-absolute" style="top: 0.5rem; right: 0.5rem">Sale
+                            </div>
+                            <!-- Product image-->
+                            <img class="card-img-top" src="https://dummyimage.com/450x300/dee2e6/6c757d.jpg" alt="..." />
+                            <!-- Product details-->
+                            <div class="card-body p-4">
+                                <div class="text-center">
+                                    <!-- Product name-->
+                                    <h5 class="fw-bolder">Sale Item</h5>
+                                    <!-- Product price-->
+                                    <span class="text-muted text-decoration-line-through">$50.00</span>
+                                    $25.00
+                                </div>
+                            </div>
+                            <!-- Product actions-->
+                            <div class="card-footer p-4 pt-0 border-top-0 bg-transparent">
+                                <div class="text-center"><a class="btn btn-outline-dark mt-auto" href="#">Add to cart</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col mb-5">
+                        <div class="card h-100">
+                            <!-- Product image-->
+                            <img class="card-img-top" src="https://dummyimage.com/450x300/dee2e6/6c757d.jpg" alt="..." />
+                            <!-- Product details-->
+                            <div class="card-body p-4">
+                                <div class="text-center">
+                                    <!-- Product name-->
+                                    <h5 class="fw-bolder">Fancy Product</h5>
+                                    <!-- Product price-->
+                                    $120.00 - $280.00
+                                </div>
+                            </div>
+                            <!-- Product actions-->
+                            <div class="card-footer p-4 pt-0 border-top-0 bg-transparent">
+                                <div class="text-center"><a class="btn btn-outline-dark mt-auto" href="#">View options</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col mb-5">
+                        <div class="card h-100">
+                            <!-- Sale badge-->
+                            <div class="badge bg-dark text-white position-absolute" style="top: 0.5rem; right: 0.5rem">Sale
+                            </div>
+                            <!-- Product image-->
+                            <img class="card-img-top" src="https://dummyimage.com/450x300/dee2e6/6c757d.jpg" alt="..." />
+                            <!-- Product details-->
+                            <div class="card-body p-4">
+                                <div class="text-center">
+                                    <!-- Product name-->
+                                    <h5 class="fw-bolder">Special Item</h5>
+                                    <!-- Product reviews-->
+                                    <div class="d-flex justify-content-center small text-warning mb-2">
+                                        <div class="bi-star-fill"></div>
+                                        <div class="bi-star-fill"></div>
+                                        <div class="bi-star-fill"></div>
+                                        <div class="bi-star-fill"></div>
+                                        <div class="bi-star-fill"></div>
+                                    </div>
+                                    <!-- Product price-->
+                                    <span class="text-muted text-decoration-line-through">$20.00</span>
+                                    $18.00
+                                </div>
+                            </div>
+                            <!-- Product actions-->
+                            <div class="card-footer p-4 pt-0 border-top-0 bg-transparent">
+                                <div class="text-center"><a class="btn btn-outline-dark mt-auto" href="#">Add to cart</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col mb-5">
+                        <div class="card h-100">
+                            <!-- Product image-->
+                            <img class="card-img-top" src="https://dummyimage.com/450x300/dee2e6/6c757d.jpg" alt="..." />
+                            <!-- Product details-->
+                            <div class="card-body p-4">
+                                <div class="text-center">
+                                    <!-- Product name-->
+                                    <h5 class="fw-bolder">Popular Item</h5>
+                                    <!-- Product reviews-->
+                                    <div class="d-flex justify-content-center small text-warning mb-2">
+                                        <div class="bi-star-fill"></div>
+                                        <div class="bi-star-fill"></div>
+                                        <div class="bi-star-fill"></div>
+                                        <div class="bi-star-fill"></div>
+                                        <div class="bi-star-fill"></div>
+                                    </div>
+                                    <!-- Product price-->
+                                    $40.00
+                                </div>
+                            </div>
+                            <!-- Product actions-->
+                            <div class="card-footer p-4 pt-0 border-top-0 bg-transparent">
+                                <div class="text-center"><a class="btn btn-outline-dark mt-auto" href="#">Add to cart</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+        <!-- Section-->
+    </div>
+</body>
+
+{% endblock %}

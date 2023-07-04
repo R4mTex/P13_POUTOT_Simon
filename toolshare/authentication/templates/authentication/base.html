@@ -21,7 +21,7 @@
     <!-- Navigation-->
     <nav class="navbar navbar-expand-lg">
         <div class="container px-4 px-lg-5">
-            <a class="navbar-brand" href="#!">Start Borrows</a>
+            <a class="navbar-brand" href="{% url 'research' %}">Start Borrows</a>
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
                 data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false"
                 aria-label="Toggle navigation"><span class="navbar-toggler-icon"></span></button>
@@ -33,15 +33,15 @@
                         <a class="nav-link dropdown-toggle" id="navbarDropdown" href="#" role="button"
                             data-bs-toggle="dropdown" aria-expanded="false">Workshop</a>
                         <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
-                            <li><a class="dropdown-item" href="#!">All Items</a></li>
+                            <li><a class="dropdown-item" href="{% url 'research' %}">All Items</a></li>
                             <li>
                                 <hr class="dropdown-divider" />
                             </li>
-                            <li><a class="dropdown-item" href="#!">All Tools</a></li>
+                            <li><a class="dropdown-item" href="{% url 'research' %}">All Tools</a></li>
                             <li>
                                 <hr class="dropdown-divider" />
                             </li>
-                            <li><a class="dropdown-item" href="#!">All Equipments</a></li>
+                            <li><a class="dropdown-item" href="{% url 'research' %}">All Equipments</a></li>
                             <li>
                                 <hr class="dropdown-divider" />
                             </li>
@@ -50,15 +50,22 @@
                         </ul>
                     </li>
                 </ul>
-                <form class="d-flex">
+                <form class="d-flex" action="{% url 'favorites' %}">
                     <button class="btn btn-outline-dark" type="submit">
                         <i class="bi bi-tools me-1"></i>
                         Bag
-                        <span class="badge bg-dark text-white ms-1 my-1 rounded-pill">0</span>
                     </button>
+                </form>
+                <form class="d-flex" action="{% url 'profile' %}">
                     <button class="btn btn-outline-dark mx-2" type="submit">
                         <i class="bi bi-person-circle me-1"></i>
                         Profile
+                    </button>
+                </form>
+                <form class="d-flex" action="{% url 'login' %}">
+                    <button class="btn btn-outline-dark" type="submit">
+                        <i class="bi bi-power me-1"></i>
+                        Login
                     </button>
                 </form>
             </div>

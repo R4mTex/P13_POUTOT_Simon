@@ -20,6 +20,10 @@ from authentication import views
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('', views.research),
-    path('login/', views.login),
+    path('', views.research, name='research'),
+    path('favorites/', views.favorites, name='favorites'),
+    path('login/', views.login, name='login'),
+    path('profile/', views.profile, name='profile'),
+    path('edit-profile/', views.edit_profile, name='edit-profile'),
+    path('registration/', views.sign_up, name='registration'),
 ]

@@ -16,13 +16,13 @@ from pathlib import Path
 BASE_DIR = Path(__file__).resolve().parent.parent
 
 
-# Quick-start development settings - unsuitable for production
+# Quick-start development settings - unsuitable for Toolion
 # See https://docs.djangoproject.com/en/4.2/howto/deployment/checklist/
 
-# SECURITY WARNING: keep the secret key used in production secret!
+# SECURITY WARNING: keep the secret key used in Toolion secret!
 SECRET_KEY = 'django-insecure-lpxfa$ctf^n0+w7qlbo536ojr7ab!x@k_d#wc80vays9$5^jix'
 
-# SECURITY WARNING: don't run with debug turned on in production!
+# SECURITY WARNING: don't run with debug turned on in Toolion!
 DEBUG = True
 
 ALLOWED_HOSTS = []

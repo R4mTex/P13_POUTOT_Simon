@@ -27,7 +27,7 @@
                 aria-label="Toggle navigation"><span class="navbar-toggler-icon"></span></button>
             <div class="collapse navbar-collapse" id="navbarSupportedContent">
                 <ul class="navbar-nav me-auto mb-2 mb-lg-0 ms-lg-4">
-                    <li class="nav-item"><a class="nav-link active" aria-current="page" href="#!">Home</a></li>
+                    <li class="nav-item"><a class="nav-link active" aria-current="page" href="{% url 'home' %}">Home</a></li>
                     <li class="nav-item"><a class="nav-link" href="#!">About</a></li>
                     <li class="nav-item dropdown">
                         <a class="nav-link dropdown-toggle" id="navbarDropdown" href="#" role="button"
@@ -50,6 +50,11 @@
                         </ul>
                     </li>
                 </ul>
+                <!-- Work to do about phone format -->
+                <form class="me-auto form" role="form" action="{% url 'research' %}">
+                    <input class="ps-2 py-1" type="search" name="search" id="searchBar" value="" placeholder="Do your research."
+                        size="30" style="background-color: rgb(214, 214, 214); border-radius: 4%;">
+                </form>
                 <form class="d-flex" action="{% url 'favorites' %}">
                     <button class="btn btn-outline-dark" type="submit">
                         <i class="bi bi-tools me-1"></i>

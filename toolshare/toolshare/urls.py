@@ -28,7 +28,7 @@ urlpatterns = [
     path('', av.home, name='home'),
     path('research', av.research, name='research'),
     path('favorites/', av.favorites, name='favorites'),
-    path('profile/', av.profile, name='profile'),
+    path('profile/', av.Profile.as_view(template_name='authentication/profile.html'), name='profile'),
     path('edit-profile/<int:id>/', av.editProfile.as_view(template_name='authentication/editProfile.html'), name='edit-profile'),
     path('registration/', av.Registration.as_view(template_name='authentication/registration.html'),
                                                      name='registration'),

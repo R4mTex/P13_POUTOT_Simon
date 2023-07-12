@@ -16,21 +16,34 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path
-from authentication import views
+from authentication import views as av
+from blog import views as bv
 from django.contrib.auth import views as auth_views
+
+from django.conf import settings
+from django.conf.urls.static import static
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('', views.home, name='home'),
-    path('research', views.research, name='research'),
-    path('favorites/', views.favorites, name='favorites'),
-    path('profile/', views.profile, name='profile'),
-    path('edit-profile/', views.edit_profile, name='edit-profile'),
-    path('registration/', views.Registration.as_view(template_name='authentication/registration.html'), name='registration'),
+    path('', av.home, name='home'),
+    path('research', av.research, name='research'),
+    path('favorites/', av.favorites, name='favorites'),
+    path('profile/', av.profile, name='profile'),
+    path('edit-profile/<int:id>/', av.editProfile.as_view(template_name='authentication/editProfile.html'), name='edit-profile'),
+    path('registration/', av.Registration.as_view(template_name='authentication/registration.html'),
+                                                     name='registration'),
+    path('photo/upload/', bv.photo_upload, name='photo_upload'),
+    path('photos/', bv.photos, name='photos'),
 
-    # Login / Logout Urls
-    path('login/', auth_views.LoginView.as_view(), name='login'),
+    # Login / Logout / Change Password Urls
+    path('login/', auth_views.LoginView.as_view(template_name='registration/login.html',
+                                                redirect_authenticated_user=True),
+                                                name='login'),
     path('logout/', auth_views.LogoutView.as_view(), name='logout'),
+    path('change-password/', auth_views.PasswordChangeView.as_view(template_name='registration/password_change_form.html'),
+                                                                   name='password_change'),
+    path('change-password-done/', auth_views.PasswordChangeDoneView.as_view(template_name='registration/password_change_done.html'),
+                                                                            name='password_change_done'),
 
     # Reset Password Urls
     path('password_reset/', auth_views.PasswordResetView.as_view(), name='password_reset'),
@@ -38,3 +51,7 @@ urlpatterns = [
     path('reset/<uidb64>/<token>/', auth_views.PasswordResetConfirmView.as_view(), name='password_reset_confirm'),
     path('reset/done/', auth_views.PasswordResetCompleteView.as_view(), name='password_reset_complete'),
 ]
+
+if settings.DEBUG:
+    urlpatterns += static(
+        settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

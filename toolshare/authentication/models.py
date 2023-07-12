@@ -6,8 +6,10 @@ from phonenumber_field.modelfields import PhoneNumberField
 
 class User(AbstractUser):
     fullname = models.fields.CharField(max_length=256, unique=True)
-    email = models.fields.EmailField(max_length=256, unique=True)
     phoneNumber = PhoneNumberField(blank=True)
+    profilePicture = models.ImageField(default='/static/images/logo_user.png')
+    postalAddress = models.fields.CharField(max_length=256, unique=True, null=True)
+
     class Meta:
         ordering = ['id']
 

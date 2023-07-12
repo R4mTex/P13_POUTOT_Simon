@@ -40,6 +40,7 @@ LOGOUT_REDIRECT_URL = LOGIN_URL
 
 INSTALLED_APPS = [
     'authentication',
+    'blog',
     'widget_tweaks',
     "phonenumber_field",
     'django.contrib.admin',
@@ -65,7 +66,9 @@ ROOT_URLCONF = 'toolshare.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
+        'DIRS': [
+            BASE_DIR.joinpath('templates'),
+        ],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -149,3 +152,6 @@ EMAIL_PORT = 587
 EMAIL_USE_TLS = True
 EMAIL_HOST_USER = env('EMAIL_HOST_USER')
 EMAIL_HOST_PASSWORD = env('EMAIL_HOST_PASSWORD')
+
+MEDIA_URL = '/media/'
+MEDIA_ROOT = BASE_DIR.joinpath('media/')

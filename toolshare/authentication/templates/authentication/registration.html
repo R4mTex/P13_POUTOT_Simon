@@ -10,10 +10,10 @@
 background: #f093fb;
 
 /* Chrome 10-25, Safari 5.1-6 */
-background: -webkit-linear-gradient(to bottom right, rgba(240, 147, 251, 1), rgba(245, 87, 108, 1));
+background: -webkit-linear-gradient(to bottom right, rgba(245, 87, 108, 1)), rgba(240, 147, 251, 1);
 
 /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
-background: linear-gradient(to bottom right, rgba(240, 147, 251, 1), rgba(245, 87, 108, 1))
+background: linear-gradient(to bottom right, rgba(245, 87, 108, 1), rgba(240, 147, 251, 1));
 }
 
 .card-registration .select-input.form-control[readonly]:not([disabled]) {
@@ -96,6 +96,8 @@ top: 13px;
                                             <ul>
                                                 <li>Your password can’t be too similar to your other personal information.</li>
                                                 <li>Your password must contain at least 8 characters.</li>
+                                                <li>Your password must contain at least one upper or lower case letter.</li>
+                                                <li>Your password must contain at least one number.</li>
                                                 <li>Your password can’t be a commonly used password.</li>
                                                 <li>Your password can’t be entirely numeric.</li>
                                             </ul>
@@ -121,14 +123,22 @@ top: 13px;
                                     <div class="form-outline">
                                         <label class="form-label fw-bold" for="id_phoneNumber">Phone Number</label>
                                         {% render_field form.phoneNumber class+="form-control form-control-lg" region="CA" %}
-                                        <div class="helptext">Enter a valid phone number (e.g. +12125552368).</div>
+                                        <div class="helptext">Enter a valid phone number (e.g. +33125552368).</div>
                                     </div>
                                 </div>
-                                <div class="col-md-12 mb-4 pb-2 mt-4">
+                            </div>
+                            <div class="row">
+                                <div class="col-md-6 mb-4 pb-2">
                                     <div class="form-outline">
-                                        <label for="formFileMultiple" class="form-label">Please provide your <strong>identity card</strong> (front and back) (for legal purposes)<br>Select files in same times (not one by one)</label>
-                                        <input class="form-control" type="file" id="formFileMultiple" multiple />
+                                        <label class="form-label fw-bold" for="id_postalAddress">Postal Address</label>
+                                        {% render_field form.postalAddress class+="form-control form-control-lg" %}
                                     </div>
+                                </div>
+                            </div>
+                            <div class="col-md-12 mb-4 pb-2 mt-4">
+                                <div class="form-outline">
+                                    <label for="formFileMultiple" class="form-label">Please provide your <strong>identity card</strong> (front and back) (for legal purposes)<br>Select files in same times (not one by one)</label>
+                                    <input class="form-control" type="file" id="formFileMultiple" multiple />
                                 </div>
                             </div>
                             <div class="mt-4 pt-2">

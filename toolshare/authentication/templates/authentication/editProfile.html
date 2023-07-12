@@ -1,5 +1,7 @@
 {% extends 'authentication/base.html' %}
 
+{% load widget_tweaks %}
+
 {% block content %}
 
 <style>
@@ -28,7 +30,17 @@ background: linear-gradient(to right, rgba(251, 194, 235, 1), rgba(166, 193, 238
                                         <div class="col-12 col-sm-auto mb-3">
                                             <div class="mx-auto" style="width: 140px;">
                                                 <div class="d-flex justify-content-center align-items-center rounded" style="height: 140px; background-color: rgb(233, 236, 239);">
-                                                    <img src="https://mdbcdn.b-cdn.net/img/Photos/new-templates/bootstrap-profiles/avatar-1.webp" alt="Generic placeholder image" class="img-fluid img-thumbnail mt-2 mb-2" style="width: 150px; z-index: 1">
+                                                    <img src="{{ user.profilePicture.url }} " alt="Generic placeholder image" class="img-fluid img-thumbnail mt-2 mb-2" style="height: 140px; width: 140px; z-index: 1">
+                                                </div>
+                                                <div class="d-flex mt-2">
+                                                    <form method="post" enctype="multipart/form-data">
+                                                        {% csrf_token %}
+                                                        {{ form.profilePicture }}
+                                                        <button class="btn btn-primary mt-2" type="submit">
+                                                            <i class="bi bi-camera-fill me-1"></i>
+                                                            <span>Change Profile Picture</span>
+                                                        </button>
+                                                    </form>
                                                 </div>
                                             </div>
                                         </div>
@@ -37,12 +49,6 @@ background: linear-gradient(to right, rgba(251, 194, 235, 1), rgba(166, 193, 238
                                                 <h4 class="pt-sm-2 pb-1 mb-0 text-nowrap">Andy Horwitz</h4>
                                                 <p class="mb-0">@andy.h</p>
                                                 <div class="text-muted"><small>Last seen 2 hours ago</small></div>
-                                                <div class="mt-2">
-                                                    <button class="btn btn-primary" type="button">
-                                                        <i class="fa fa-fw fa-camera"></i>
-                                                        <span>Change Photo</span>
-                                                    </button>
-                                                </div>
                                             </div>
                                             <div class="text-center text-sm-right">
                                                 <span class="badge badge-secondary" style="color: black;">administrator</span>

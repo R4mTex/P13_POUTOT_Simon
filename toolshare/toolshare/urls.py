@@ -16,8 +16,8 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path
-from authentication import views as av
-from blog import views as bv
+from authentication import views as authView
+from blog import views as blogView
 from django.contrib.auth import views as auth_views
 
 from django.conf import settings
@@ -25,15 +25,18 @@ from django.conf.urls.static import static
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('', av.home, name='home'),
-    path('research', av.research, name='research'),
-    path('favorites/', av.favorites, name='favorites'),
-    path('profile/', av.Profile.as_view(template_name='authentication/profile.html'), name='profile'),
-    path('edit-profile/<int:id>/', av.editProfile.as_view(template_name='authentication/editProfile.html'), name='edit-profile'),
-    path('registration/', av.Registration.as_view(template_name='authentication/registration.html'),
+    path('', authView.home, name='home'),
+    path('research', authView.research, name='research'),
+    path('favorites/', authView.favorites, name='favorites'),
+    path('profile/', authView.Profile.as_view(template_name='authentication/profile.html'), name='profile'),
+    path('edit-profile/<int:id>/', authView.editProfile.as_view(template_name='authentication/editProfile.html'), name='edit-profile'),
+    path('edit-tool/<int:id>/', blogView.blog_and_photo_upload, name='edit-tool'),
+    path('personal-tools/<int:id>/', blogView.personalTools, name='personal-tools'),
+    path('registration/', authView.Registration.as_view(template_name='authentication/registration.html'),
                                                      name='registration'),
-    path('photo/upload/', bv.photo_upload, name='photo_upload'),
-    path('photos/', bv.photos, name='photos'),
+
+    path('blog/create', blogView.blog_and_photo_upload, name='blog_create'),
+
 
     # Login / Logout / Change Password Urls
     path('login/', auth_views.LoginView.as_view(template_name='registration/login.html',

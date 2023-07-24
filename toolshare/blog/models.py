@@ -7,10 +7,9 @@ from django.db import models
 class Photo(models.Model):
     image = models.ImageField()
     caption = models.CharField(max_length=128, blank=True)
+    category = models.CharField(max_length=128,)
     uploader = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
     date_created = models.DateTimeField(auto_now_add=True)
-    availabality = models.DateField(null=True,)
-    location = models.CharField(max_length=128,)
     
     
 class Blog(models.Model):
@@ -19,4 +18,6 @@ class Blog(models.Model):
     content = models.CharField(max_length=5000)
     author = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
     date_created = models.DateTimeField(auto_now_add=True)
+    availabality = models.DateField(null=True,)
+    location = models.CharField(max_length=128,)
     starred = models.BooleanField(default=False)

@@ -1,0 +1,52 @@
+{% extends 'blog/base.html' %}
+
+{% block content %}
+
+{% for tool in tools %}
+    <div class="col mb-5" name="toolCard">
+        <div class="card h-100 shadow">
+            <!-- Unavailable badge -->
+            <div class="badge bg-danger text-white position-absolute" style="top: 0.5rem; right: 0.5rem">Unavailable</div>
+            <!-- Tool image -->
+            <img class="card-img-top border-bottom p-3" src="{{ tool.photo.image.url }}" alt="..."
+                style="height: 200px; width: auto;" />
+            <!-- Tool details -->
+            <div class="card-body p-4">
+                <div class="text-center">
+                    <!-- Tool name -->
+                    <h5 class="fw-bolder">{{ tool.title }}</h5>
+                    <!-- Tool reviews -->
+                    <div class="d-flex justify-content-center small text-warning mb-2">
+                        <div class="bi bi-star-fill"></div>
+                        <div class="bi bi-star-fill"></div>
+                        <div class="bi bi-star-fill"></div>
+                        <div class="bi bi-star-fill"></div>
+                        <div class="bi bi-star-fill"></div>
+                    </div>
+                    <!-- Tool disponibility -->
+                    <h6 class="fst-italic mt-3">Availability</h5>
+                        11/04/2023 - 25/05/2023
+                        <!-- Tool location -->
+                        <h6 class="fst-italic mt-2">Location</h5>
+                            14 Rue de Saint-Hendré 48900 Pejoul
+                </div>
+            </div>
+            <!-- Tool actions -->
+            <div class="card-footer p-2 pt-0 border-top-0 bg-transparent">
+                <div class="text-center"><a class="btn btn-outline-warning" href="#">View details<i
+                            class="bi bi-gear ms-2"></i></a></div>
+                <div class="text-center"><a class="btn btn-outline-danger mt-2" href="#">Add to bag<i
+                            class="bi bi-heart ms-2"></i></a></div>
+                <!-- Tool publisher -->
+                <h6 class="mt-3 fw-bolder">Published by : <a class="" href="#" style="text-decoration: none;">{{ tool.author }}</a></h5>
+            </div>
+        </div>
+    </div>
+    <h2>{{ tool.title }}</h2>
+    <img src="{{ tool.photo.image.url }}">
+    <p>{{ tool.photo.caption }}</p>
+    <p>{{ tool.content }}</p>
+    <p>{{ tool.starred }}</p>
+{% endfor %}
+
+{% endblock content %}

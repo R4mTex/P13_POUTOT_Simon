@@ -1,26 +1,45 @@
+import json
 from django.contrib.auth.decorators import login_required
-from django.shortcuts import redirect, render
+from django.shortcuts import redirect, render, get_object_or_404
 from . import forms
-from . import models
+from authentication import models as authModels
+from blog import models as blogModels
 
-# Create your views here.
 
 @login_required
-def photo_upload(request):
-    form = forms.PhotoForm()
-    if request.method == 'POST': 
-        form = forms.PhotoForm(request.POST, request.FILES)
-        if form.is_valid():
-            photo = form.save(commit=False)
-            # set the uploader to the user before saving the model
+def blog_and_photo_upload(request, id):
+    blog_form = forms.BlogForm()
+    photo_form = forms.PhotoForm()
+    user = authModels.User.objects.get(id=id)
+    if request.method == 'GET':
+        context = {
+            'blog_form': blog_form,
+            'photo_form': photo_form,
+            'user': user
+        }
+        return render(request, 'blog/editTool.html', context=context)
+    if request.method == 'POST':
+        blog_form = forms.BlogForm(request.POST)
+        photo_form = forms.PhotoForm(request.POST, request.FILES)
+        if all([blog_form.is_valid(), photo_form.is_valid()]):
+            photo = photo_form.save(commit=False)
             photo.uploader = request.user
-            # now we can save
             photo.save()
-            return redirect('photos')
-    return render(request, 'blog/photoUpload.html', context={'form': form})
+            blog = blog_form.save(commit=False)
+            blog.author = request.user
+            blog.photo = photo
+            blog.save()
+            return redirect('profile')
+    context = {
+        'blog_form': blog_form,
+        'photo_form': photo_form,
+        'user': user,
+    }
+    return render(request, 'blog/editTool.html', context=context)
 
 
 @login_required
-def photos(request):
-    photos = models.Photo.objects.all()
-    return render(request, 'blog/photos.html', context={'photos': photos})
+def personalTools(request, id):
+    user = authModels.User.objects.get(id=id)
+    tools = blogModels.Blog.objects.filter(author=user.id)
+    return render(request, 'blog/personalTools.html', {'user': user, 'tools': tools})

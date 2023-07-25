@@ -1,20 +1,24 @@
 from django.conf import settings
 from django.shortcuts import render, redirect
-from django.contrib.auth import login, update_session_auth_hash
+from django.contrib.auth import login
 from django.contrib.auth.mixins import LoginRequiredMixin
+from django.contrib.auth.decorators import login_required
 from django.views.generic import View
 from authentication import forms
 from . import models
 from django.contrib.auth.forms import PasswordChangeForm
 
 # Create your views here.
+@login_required
 def home(request):
     user = models.User.objects.all()
     return render(request, 'authentication/home.html', context={'user': user})
 
+@login_required
 def research(request):
     return render(request, 'authentication/research.html')
 
+@login_required
 def favorites(request):
     return render(request, 'authentication/favorites.html')
 

@@ -51,7 +51,6 @@ class editProfile(LoginRequiredMixin, View):
                 user.profilePicture.delete()
                 form.save()
             else:
-                user.profilePicture = form
                 form.save()
 
             form = self.form_class()

@@ -31,7 +31,7 @@ urlpatterns = [
     path('profile/', authView.Profile.as_view(template_name='authentication/profile.html'), name='profile'),
     path('edit-profile/<int:id>/', authView.editProfile.as_view(template_name='authentication/editProfile.html'), name='edit-profile'),
     path('edit-tool/<int:id>/', blogView.blog_and_photo_upload, name='edit-tool'),
-    path('personal-tools/<int:id>/', blogView.personalTools, name='personal-tools'),
+    path('personal-tools/<int:id>/', blogView.personalTools.as_view(template_name='blog/personalTools.html'), name='personal-tools'),
     path('registration/', authView.Registration.as_view(template_name='authentication/registration.html'),
                                                      name='registration'),
 

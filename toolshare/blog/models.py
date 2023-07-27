@@ -13,7 +13,7 @@ class Photo(models.Model):
     
 class Blog(models.Model):
     name = models.CharField(max_length=128,)
-    photo = models.ForeignKey(Photo, null=True, on_delete=models.SET_NULL, blank=True)
+    photo = models.ForeignKey(Photo, on_delete=models.CASCADE, blank=True)
     CATEGORY_CHOICES = [
         ("Carpentry work", "Carpentry work"),
         ("Secondary work", "Secondary work"),

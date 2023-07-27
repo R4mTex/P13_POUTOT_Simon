@@ -1,6 +1,7 @@
-import json
 from django.contrib.auth.decorators import login_required
-from django.shortcuts import redirect, render, get_object_or_404
+from django.contrib.auth.mixins import LoginRequiredMixin
+from django.views.generic import View
+from django.shortcuts import redirect, render
 from . import forms
 from authentication import models as authModels
 from blog import models as blogModels
@@ -38,8 +39,36 @@ def blog_and_photo_upload(request, id):
     return render(request, 'blog/editTool.html', context=context)
 
 
-@login_required
-def personalTools(request, id):
-    user = authModels.User.objects.get(id=id)
-    tools = blogModels.Blog.objects.filter(author=user.id)
-    return render(request, 'blog/personalTools.html', {'user': user, 'tools': tools})
+class personalTools(LoginRequiredMixin, View):
+    template_name = 'blog/personalTools.html'
+
+    def get(self, request, id):
+        user = authModels.User.objects.get(id=id)
+        personalTools = blogModels.Blog.objects.filter(author=user.id)
+
+        context = {
+            'user': user,
+            'tools': personalTools,
+        }
+        return render(request, self.template_name, context=context)
+    
+    def post(self, request, id):
+        tool_id = int(request.POST.get("submit"))
+
+        user = authModels.User.objects.get(id=id)
+        personalTools = blogModels.Blog.objects.filter(author=user.id)
+
+        for tool in range(len(personalTools)):
+            if personalTools[tool].id == tool_id:
+                blogModels.Blog.objects.filter(id=personalTools[tool].id).delete()
+                blogModels.Photo.objects.filter(image=personalTools[tool].photo.image)[0].image.delete()
+
+        personalTools = blogModels.Blog.objects.filter(author=user.id)
+
+        context = {
+            'user': user,
+            'tools': personalTools,
+        }
+        return render(request, self.template_name, context=context)
+
+

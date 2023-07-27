@@ -28,7 +28,7 @@ urlpatterns = [
     path('', authView.home, name='home'),
     path('research', authView.research, name='research'),
     path('favorites/', authView.favorites, name='favorites'),
-    path('profile/', authView.Profile.as_view(template_name='authentication/profile.html'), name='profile'),
+    path('profile/<int:id>/', authView.Profile.as_view(template_name='authentication/profile.html'), name='profile'),
     path('edit-profile/<int:id>/', authView.editProfile.as_view(template_name='authentication/editProfile.html'), name='edit-profile'),
     path('edit-tool/<int:id>/', blogView.blog_and_photo_upload, name='edit-tool'),
     path('personal-tools/<int:id>/', blogView.personalTools.as_view(template_name='blog/personalTools.html'), name='personal-tools'),

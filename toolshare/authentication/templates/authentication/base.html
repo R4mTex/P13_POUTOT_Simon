@@ -61,12 +61,21 @@
                         Bag
                     </button>
                 </form>
-                <form class="d-flex" action="{% url 'profile' %}">
+                {% if user.is_authenticated %}
+                <form class="d-flex" action="{% url 'profile' user.id %}">
                     <button class="btn btn-outline-dark mx-2" type="submit">
                         <i class="bi bi-person-circle me-1"></i>
                         Profile
                     </button>
                 </form>
+                {% else %}
+                <form class="d-flex" action="">
+                    <button class="btn btn-outline-dark mx-2" type="submit">
+                        <i class="bi bi-person-circle me-1"></i>
+                        Profile
+                    </button>
+                </form>
+                {% endif %}
                 {% if user.is_authenticated %}
                 <form class="d-flex" action="{% url 'logout' %}">
                     <button class="btn btn-outline-dark" type="submit">

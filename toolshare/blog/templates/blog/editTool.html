@@ -17,61 +17,72 @@
     }
 </style>
 
-<!-- {% render_field form.username|remove_attr:"autofocus"|remove_attr:"autocomplete" class+="form-control form-control-lg"%} -->
-
-<h2>Edit a Tool</h2>
-<form method="post" enctype="multipart/form-data" class="ms-3">
-    {% csrf_token %}
-    <div class="col-md-6 mb-4">
-        <div class="form-outline">
-            <label class="form-label fw-bold" for="id_name">Name</label>
-            {% render_field blog_form.name|attr:"autofocus" placeholder="Name" class+="form-control form-control-lg" %}
+<section class="h-100 gradient-custom">
+    <div class="container py-5 h-100">
+        <div class="row d-flex justify-content-center align-items-center h-100">
+            <div class="col col-lg-9 col-xl-7">
+                <div class="card" style="background-color: #f8f9fa;">
+                    <div class="rounded-top text-white d-flex flex-row align-items-center justify-content-center" style="background-color: #000; height: 200px;">
+                        <p class="fs-2">Edit Your Tool</p>
+                    </div>
+                    <form method="post" enctype="multipart/form-data" class="d-flex flex-column align-items-center py-5">
+                        {% csrf_token %}
+                        <div class="col-md-6 mb-4">
+                            <div class="form-outline">
+                                <label class="form-label fw-bold" for="id_name">Name</label>
+                                {% render_field blog_form.name|attr:"autofocus" placeholder="Name" class+="form-control form-control-lg" %}
+                            </div>
+                        </div>
+                        <div class="col-md-6 mb-4">
+                            <div class="form-outline d-flex flex-column">
+                                <label class="form-label fw-bold" for="id_image">Image</label>
+                                {{ photo_form.image }}
+                            </div>
+                        </div>
+                        <div class="col-md-6 mb-4">
+                            <div class="form-outline">
+                                <label class="form-label fw-bold" for="id_category">Category</label>
+                                {% render_field blog_form.category class+="form-control form-control-lg" %}
+                            </div>
+                        </div>
+                        <div class="col-md-6 mb-4">
+                            <div class="form-outline">
+                                <label class="form-label fw-bold" for="id_description">Description</label>
+                                {% render_field blog_form.description placeholder="Few words for discribe your tool" rows="5" class+="form-control form-control-lg" %}
+                            </div>
+                        </div>
+                        <div class="col-md-6 mb-4">
+                            <div class="form-outline">
+                                <label class="form-label fw-bold" for="id_location">Location</label>
+                                {% render_field blog_form.location placeholder="Noelle Adams 6351 Fringilla Avenue Gardena Colorado 37547 (559) 104-5475" class+="form-control form-control-lg" %}
+                            </div>
+                        </div>
+                        <div class="col-md-6 mb-4">
+                            <div class="form-outline">
+                                <label class="form-label fw-bold" for="id_availabalityStart">Availabality Start</label>
+                                {% render_field blog_form.availabalityStart placeholder="25/07/2023" class+="form-control form-control-lg" type="date" %}
+                            </div>
+                        </div>
+                        <div class="col-md-6 mb-4">
+                            <div class="form-outline">
+                                <label class="form-label fw-bold" for="id_availabalityEnd">Availabality End</label>
+                                {% render_field blog_form.availabalityEnd placeholder="25/10/2023" class+="form-control form-control-lg" type="date" %}
+                            </div>
+                        </div>
+                        <div class="col-md-6 mb-4">
+                            <div class="form-outline ">
+                                <label class="form-label fw-bold" for="id_deposit">Deposit :</label>
+                                {% render_field blog_form.deposit class+="ms-1" style="position: relative; top: 1px;" %}
+                            </div>
+                        </div>
+                        <button type="submit" class="btn btn-outline-dark px-4" data-mdb-ripple-color="dark" style="z-index: 1;">
+                            Create
+                        </button>
+                    </form>
+                </div>
+            </div>
         </div>
     </div>
-    <div class="col-md-6 mb-4">
-        <div class="form-outline d-flex flex-column">
-            <label class="form-label fw-bold" for="id_image">Image</label>
-            {{ photo_form.image }}
-        </div>
-    </div>
-    <div class="col-md-6 mb-4">
-        <div class="form-outline">
-            <label class="form-label fw-bold" for="id_category">Category</label>
-            {% render_field blog_form.category placeholder="Select the category" class+="form-control form-control-lg" %}
-        </div>
-    </div>
-    <div class="col-md-6 mb-4">
-        <div class="form-outline">
-            <label class="form-label fw-bold" for="id_description">Description</label>
-            {% render_field blog_form.description placeholder="Few words for discribe your tool" rows="5" class+="form-control form-control-lg" %}
-        </div>
-    </div>
-    <div class="col-md-6 mb-4">
-        <div class="form-outline">
-            <label class="form-label fw-bold" for="id_location">Location</label>
-            {% render_field blog_form.location placeholder="Noelle Adams 6351 Fringilla Avenue Gardena Colorado 37547 (559) 104-5475" class+="form-control form-control-lg" %}
-        </div>
-    </div>
-    <div class="col-md-6 mb-4">
-        <div class="form-outline">
-            <label class="form-label fw-bold" for="id_availabalityStart">Availabality Start</label>
-            {% render_field blog_form.availabalityStart placeholder="25/07/2023" class+="form-control form-control-lg" type="date" %}
-        </div>
-    </div>
-    <div class="col-md-6 mb-4">
-        <div class="form-outline">
-            <label class="form-label fw-bold" for="id_availabalityEnd">Availabality End</label>
-            {% render_field blog_form.availabalityEnd placeholder="25/10/2023" class+="form-control form-control-lg" type="date" %}
-        </div>
-    </div>
-    <div class="col-md-6 mb-4">
-        <div class="form-outline">
-            <label class="form-label fw-bold" for="id_deposit">Deposit</label>
-            {% render_field blog_form.deposit class+="ms-2" %}
-        </div>
-    </div>
-    <button type="submit">Submit</button>
-
-</form>
+</section>
 
 {% endblock %}

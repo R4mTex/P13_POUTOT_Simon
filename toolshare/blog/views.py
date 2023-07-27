@@ -2,6 +2,7 @@ from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.views.generic import View
 from django.shortcuts import redirect, render
+from django.urls import reverse
 from . import forms
 from authentication import models as authModels
 from blog import models as blogModels
@@ -30,7 +31,7 @@ def blog_and_photo_upload(request, id):
             blog.author = request.user
             blog.photo = photo
             blog.save()
-            return redirect('profile')
+            return redirect(reverse('profile', kwargs={'id': id}))
     context = {
         'blog_form': blog_form,
         'photo_form': photo_form,

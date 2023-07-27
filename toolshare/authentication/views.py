@@ -40,14 +40,19 @@ class editProfile(LoginRequiredMixin, View):
         form = self.form_class()
         form_password = self.form_password(id)
         user = models.User.objects.get(id=id)
+        print(user.profilePicture)
         return render(request, self.template_name, context={'form': form, 'form_password': form_password, 'user': user})
 
     def post(self, request, id):
         form = self.form_class(request.POST, request.FILES, instance=request.user)
         user = models.User.objects.get(id=id)
         if form.is_valid():
-            user.profilePicture.delete()
-            form.save()
+            if user.profilePicture != 'userProfilePicture/defaultProfilePicture.png':
+                user.profilePicture.delete()
+                form.save()
+            else:
+                user.profilePicture = form
+                form.save()
 
             form = self.form_class()
             form_password = self.form_password(id)

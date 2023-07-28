@@ -47,9 +47,13 @@ class personalTools(LoginRequiredMixin, View):
         user = authModels.User.objects.get(id=id)
         personalTools = blogModels.Blog.objects.filter(author=user.id)
 
+        reversePersonalToolList = []
+        for tool in reversed(range(len(personalTools))):
+            reversePersonalToolList.append(personalTools[tool])
+
         context = {
             'user': user,
-            'tools': personalTools,
+            'tools': reversePersonalToolList,
         }
         return render(request, self.template_name, context=context)
     
@@ -66,9 +70,13 @@ class personalTools(LoginRequiredMixin, View):
 
         personalTools = blogModels.Blog.objects.filter(author=user.id)
 
+        reversePersonalToolList = []
+        for tool in reversed(range(len(personalTools))):
+            reversePersonalToolList.append(personalTools[tool])
+
         context = {
             'user': user,
-            'tools': personalTools,
+            'tools': reversePersonalToolList,
         }
         return render(request, self.template_name, context=context)
 

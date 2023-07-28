@@ -37,14 +37,17 @@ top: 13px;
             <div class="col-12 col-lg-9 col-xl-7 mb-5">
                 <div class="card shadow-2-strong card-registration" style="border-radius: 15px;">
                     <div class="card-body p-4 p-md-5">
-                        <h3 class="mb-4 pb-2 pb-md-0 mb-md-5">Registration Form</h3>
+                        <h3 class="mb-4 pb-2 pb-md-0 mb-md-4">Registration Form</h3>
                         <!-- Button trigger modal -->
                         <div class="mb-5">
                             <button type="button" class="btn btn-danger text-uppercase" data-bs-toggle="modal" data-bs-target="#exampleModalLong">
                                 Please read the registration conditions carefully
                             </button>
-                            <i class="bi bi-check-square ms-2" style="color: red;"></i>
-                            <i class="bi bi-check-square-fill" style="color: green;"></i>
+                            {% if acceptedConditions == False %}
+                            <i class="bi bi-check-square ms-2" style="color: red; font-size: xx-large; position: relative; top: 8px"></i>
+                            {% else %}
+                            <i class="bi bi-check-square-fill ms-2" style="color: green; font-size: xx-large; position: relative; top: 8px"></i>
+                            {% endif %}
                         </div>
                         <!-- Modal -->
                         <div class="modal fade" id="exampleModalLong" tabindex="-1" role="dialog" aria-labelledby="exampleModalLongTitle"
@@ -60,17 +63,99 @@ top: 13px;
                                     <div class="modal-body">
                                         <p>Test</p>
                                     </div>
-                                    <div class="modal-footer">
-                                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Refuse</button>
-                                        <button type="button" class="btn btn-primary">Agree</button>
-                                    </div>
+                                    <form method="post" novalidate>
+                                        {% csrf_token %}
+                                        <div class="modal-footer">
+                                            <button type="submit" class="btn btn-secondary" data-bs-dismiss="modal" name="refuse">Refuse</button>
+                                            <button type="submit" class="btn btn-primary" data-bs-dismiss="modal" name="accept">Accept</button>
+                                        </div>
+                                    </form>
                                 </div>
                             </div>
                         </div>
+                        {% if acceptedConditions == False %}
+                        <form method="post" novalidate>
+                            {% csrf_token %}
+                            <fieldset disabled>
+                                <div class="row">
+                                    <div class="col-md-6 mb-4">
+                                        <div class="form-outline">
+                                            <label class="form-label fw-bold" for="id_fullname">Full Name</label>
+                                            {% render_field form.fullname|attr:"autofocus" class+="form-control form-control-lg" %}
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6 mb-4">
+                                        <div class="form-outline">
+                                            <label class="form-label fw-bold" for="id_username">Username</label>
+                                            {% render_field form.username|remove_attr:"autofocus"|remove_attr:"autocomplete" class+="form-control form-control-lg" %}
+                                            <div class="helptext">Required. 150 characters or fewer. Letters, digits and @/./+/-/_ only.</div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-6 mb-4">
+                                        <div class="form-outline">
+                                            <label class="form-label fw-bold" for="id_password1">Password</label>
+                                            {% render_field form.password1 class+="form-control form-control-lg" %}
+                                            <div class="helptext">
+                                                <ul>
+                                                    <li>Your password can’t be too similar to your other personal information.</li>
+                                                    <li>Your password must contain at least 8 characters.</li>
+                                                    <li>Your password must contain at least one upper or lower case letter.</li>
+                                                    <li>Your password must contain at least one number.</li>
+                                                    <li>Your password can’t be a commonly used password.</li>
+                                                    <li>Your password can’t be entirely numeric.</li>
+                                                </ul>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6 mb-4">
+                                        <div class="form-outline">
+                                            <label class="form-label fw-bold" for="id_password2">Password Confirmation</label>
+                                            {% render_field form.password2 class+="form-control form-control-lg" %}
+                                            <div class="helptext">Enter the same password as before, for verification.</div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-6 mb-4 pb-2">
+                                        <div class="form-outline">
+                                            <label class="form-label fw-bold" for="id_email">Email</label>
+                                            {% render_field form.email class+="form-control form-control-lg" %}
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6 mb-4 pb-2">
+                                        <div class="form-outline">
+                                            <label class="form-label fw-bold" for="id_phoneNumber">Phone Number</label>
+                                            {% render_field form.phoneNumber class+="form-control form-control-lg" region="CA" %}
+                                            <div class="helptext">Enter a valid phone number (e.g. +33125552368).</div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-6 mb-4 pb-2">
+                                        <div class="form-outline">
+                                            <label class="form-label fw-bold" for="id_postalAddress">Postal Address</label>
+                                            {% render_field form.postalAddress class+="form-control form-control-lg" %}
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-12 mb-4 pb-2 mt-4">
+                                    <div class="form-outline">
+                                        <label for="formFileMultiple" class="form-label">Please provide your <strong>identity card</strong> (front and back) (for legal purposes)<br>Select files in same times (not one by one)</label>
+                                        <input class="form-control" type="file" id="formFileMultiple" multiple />
+                                    </div>
+                                </div>
+                                <div class="mt-4 pt-2">
+                                    <input class="btn btn-primary" type="submit" value="Create" />
+                                </div>
+                            </fieldset>
+                        </form>
+                        {% else %}
                         {% if form.errors %}
                         {{ form.errors }}
                         {% endif %}
-                        <form action="" method="post" novalidate>
+                        <form method="post" novalidate>
                             {% csrf_token %}
                             <div class="row">
                                 <div class="col-md-6 mb-4">
@@ -137,7 +222,8 @@ top: 13px;
                             </div>
                             <div class="col-md-12 mb-4 pb-2 mt-4">
                                 <div class="form-outline">
-                                    <label for="formFileMultiple" class="form-label">Please provide your <strong>identity card</strong> (front and back) (for legal purposes)<br>Select files in same times (not one by one)</label>
+                                    <label for="formFileMultiple" class="form-label">Please provide your <strong>identity card</strong> (front
+                                        and back) (for legal purposes)<br>Select files in same times (not one by one)</label>
                                     <input class="form-control" type="file" id="formFileMultiple" multiple />
                                 </div>
                             </div>
@@ -145,6 +231,7 @@ top: 13px;
                                 <input class="btn btn-primary" type="submit" value="Create" />
                             </div>
                         </form>
+                        {% endif %}
                     </div>
                 </div>
             </div>

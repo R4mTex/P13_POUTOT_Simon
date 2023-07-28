@@ -78,13 +78,36 @@ class Registration(View):
 
     def get(self, request):
         form = self.form_class()
-        return render(request, self.template_name, context={'form': form})
+        acceptedConditions = False
+        context = {
+            'form': form,
+            'acceptedConditions': acceptedConditions,
+        }
+        return render(request, self.template_name, context=context)
 
     def post(self, request):
-        form = forms.SignupForm(request.POST)
-        if form.is_valid():
-            user = form.save()
-            # auto-login user
-            login(request, user)
-            return redirect(settings.LOGIN_REDIRECT_URL)
-        return render(request, self.template_name, context={'form': form})
+        form = self.form_class()
+        if 'fullname' in request.POST:
+            form = self.form_class(request.POST)
+            if form.is_valid():
+                user = form.save()
+                # auto-login user
+                login(request, user)
+                return redirect(settings.LOGIN_REDIRECT_URL)
+            context = {
+                'form': form,
+            }
+            return render(request, self.template_name, context=context)
+        elif 'accept' in request.POST:
+            acceptedConditions = True
+            context = {
+                'form': form,
+                'acceptedConditions': acceptedConditions,
+            }
+            return render(request, self.template_name, context=context)
+        acceptedConditions = False
+        context = {
+            'form': form,
+            'acceptedConditions': acceptedConditions,
+        }
+        return render(request, self.template_name, context=context)

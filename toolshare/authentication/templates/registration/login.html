@@ -24,6 +24,9 @@ background: linear-gradient(to right, rgba(106, 17, 203, 1), rgba(37, 117, 252, 
                         <div class="mb-md-5 mt-md-4 pb-5">
                             <h2 class="fw-bold mb-2 text-uppercase">Login</h2>
                             <p class="text-white-50 mb-5">Please enter your login and password!</p>
+                            {% if form.non_field_errors %}
+                            {{ form.non_field_errors }}
+                            {% endif %}
                             <form class="" method="post">
                                 {% csrf_token %}
                                 <div class="form-outline form-white mb-4">

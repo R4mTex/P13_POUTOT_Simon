@@ -25,17 +25,15 @@ from django.conf.urls.static import static
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('', authView.home, name='home'),
+    path('', authView.Home.as_view(template_name='authentication/home.html'), name='home'),
     path('research', authView.research, name='research'),
     path('favorites/', authView.favorites, name='favorites'),
     path('profile/<int:id>/', authView.Profile.as_view(template_name='authentication/profile.html'), name='profile'),
     path('edit-profile/<int:id>/', authView.editProfile.as_view(template_name='authentication/editProfile.html'), name='edit-profile'),
-    path('edit-tool/<int:id>/', blogView.blog_and_photo_upload, name='edit-tool'),
+    path('edit-tool/<int:id>/', blogView.editTool.as_view(template_name='blog/editTool.html'), name='edit-tool'),
     path('personal-tools/<int:id>/', blogView.personalTools.as_view(template_name='blog/personalTools.html'), name='personal-tools'),
     path('registration/', authView.Registration.as_view(template_name='authentication/registration.html'),
                                                      name='registration'),
-
-    path('blog/create', blogView.blog_and_photo_upload, name='blog_create'),
 
 
     # Login / Logout / Change Password Urls

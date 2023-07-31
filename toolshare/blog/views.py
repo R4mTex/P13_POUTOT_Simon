@@ -6,38 +6,60 @@ from django.urls import reverse
 from . import forms
 from authentication import models as authModels
 from blog import models as blogModels
+import datetime
+import pytz
 
 
-@login_required
-def blog_and_photo_upload(request, id):
-    blog_form = forms.BlogForm()
-    photo_form = forms.PhotoForm()
-    user = authModels.User.objects.get(id=id)
-    if request.method == 'GET':
+class editTool(LoginRequiredMixin, View):
+    template_name = 'blog/editTool.html'
+    dateTimeNow = datetime.datetime.now(pytz.timezone('Europe/Paris')).strftime("%Y-%m-%d %H:%M:%S"+"+02:00")
+
+    def get (self, request, id):
+        blog_form = forms.BlogForm()
+        photo_form = forms.PhotoForm()
+        user = authModels.User.objects.get(id=id)
+        print(self.dateTimeNow)
+
         context = {
             'blog_form': blog_form,
             'photo_form': photo_form,
             'user': user
         }
         return render(request, 'blog/editTool.html', context=context)
-    if request.method == 'POST':
+    
+    def post (self, request, id):
         blog_form = forms.BlogForm(request.POST)
         photo_form = forms.PhotoForm(request.POST, request.FILES)
+        user = authModels.User.objects.get(id=id)
+
         if all([blog_form.is_valid(), photo_form.is_valid()]):
-            photo = photo_form.save(commit=False)
-            photo.uploader = request.user
-            photo.save()
-            blog = blog_form.save(commit=False)
-            blog.author = request.user
-            blog.photo = photo
-            blog.save()
-            return redirect(reverse('profile', kwargs={'id': id}))
-    context = {
-        'blog_form': blog_form,
-        'photo_form': photo_form,
-        'user': user,
-    }
-    return render(request, 'blog/editTool.html', context=context)
+            availabalityStart = str(blog_form.cleaned_data['availabalityStart'])
+            availabalityEnd = str(blog_form.cleaned_data['availabalityEnd'])
+            if self.dateTimeNow <= availabalityStart < availabalityEnd:
+                print('True', self.dateTimeNow, availabalityStart, availabalityEnd)
+                photo = photo_form.save(commit=False)
+                photo.uploader = request.user
+                photo.save()
+                blog = blog_form.save(commit=False)
+                blog.author = request.user
+                blog.photo = photo
+                blog.save()
+                return redirect(reverse('profile', kwargs={'id': id}))
+            else:
+                print('False', self.dateTimeNow, availabalityStart, availabalityEnd)
+                context = {
+                    'blog_form': blog_form,
+                    'photo_form': photo_form,
+                    'user': user,
+                }
+                return render(request, self.template_name, context=context)
+        else:
+            context = {
+                'blog_form': blog_form,
+                'photo_form': photo_form,
+                'user': user,
+            }
+            return render(request, self.template_name, context=context)
 
 
 class personalTools(LoginRequiredMixin, View):
@@ -58,6 +80,7 @@ class personalTools(LoginRequiredMixin, View):
         return render(request, self.template_name, context=context)
     
     def post(self, request, id):
+        # submit = name=""
         tool_id = int(request.POST.get("submit"))
 
         user = authModels.User.objects.get(id=id)

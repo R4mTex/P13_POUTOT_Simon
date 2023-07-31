@@ -10,10 +10,11 @@ from blog import models as blogModels
 from django.contrib.auth.forms import PasswordChangeForm
 
 # Create your views here.
-@login_required
-def home(request):
-    user = authModels.User.objects.all()
-    return render(request, 'authentication/home.html', context={'user': user})
+class Home(LoginRequiredMixin, View):
+    template_name = 'authentication/home.html'
+
+    def get(self, request):
+        return render(request, self.template_name)
 
 @login_required
 def research(request):
@@ -34,9 +35,11 @@ class Profile(LoginRequiredMixin, View):
         for tool in reversed(range(len(personalTools))):
             reversePersonalToolList.append(personalTools[tool])
 
+        reversePersonalToolList4 = reversePersonalToolList[0:4]
+
         context = {
             'user': user,
-            'tools': reversePersonalToolList,
+            'tools': reversePersonalToolList4,
         }
         return render(request, self.template_name, context=context)
     

@@ -1,5 +1,7 @@
 from django.conf import settings
 from django.db import models
+from django.utils import timezone
+from django.core.validators import MaxValueValidator
 
 # Create your models here.
 
@@ -25,8 +27,8 @@ class Blog(models.Model):
     category = models.CharField(max_length=128, choices=CATEGORY_CHOICES)
     location = models.CharField(max_length=128,)
     description = models.TextField(max_length=2048)
-    availabalityStart = models.DateField()
-    availabalityEnd = models.DateField(null=True,)
+    availabalityStart = models.DateTimeField(default=timezone.now, validators=[MaxValueValidator(limit_value=timezone.now)])
+    availabalityEnd = models.DateTimeField(default=timezone.now, null=True,)
     deposit = models.BooleanField(default=False)
     author = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
     date_created = models.DateTimeField(auto_now_add=True)

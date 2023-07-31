@@ -170,7 +170,7 @@
     <section class="py-5">
         <div class="container px-4 px-lg-5 mt-5">
             {% if tools|length >= 4 %}
-            <div class="row gx-4 gx-lg-5 row-cols-2 row-cols-md-3 row-cols-xl-4 justify-content-center">
+            <div class="row gx-4 gx-lg-5 row-cols-2 row-cols-md-3 row-cols-xl-4">
                 {% for tool in tools %}
                 <div class="col mb-5" name="toolCard">
                     <div class="card h-100 shadow">
@@ -195,7 +195,9 @@
                                 </div>
                                 <!-- Tool disponibility -->
                                 <h6 class="fst-italic mt-3">Availability</h5>
-                                    {{ tool.availabalityStart }} - {{ tool.availabalityEnd }}
+                                    {{ tool.availabalityStart }}<br>
+                                    -----<br>
+                                    {{ tool.availabalityEnd }}
                                     <!-- Tool location -->
                                     <h6 class="fst-italic mt-2">Location</h5>
                                         {{ tool.location }}
@@ -208,7 +210,7 @@
                             <form action="" method="post" novalidate>
                                 {% csrf_token %}
                                 <div class="text-center">
-                                    <button class="btn btn-danger mt-2" type="submit" name="remove" value="{{ tool.id }}">Remove from personal tools<i class="bi bi-x-octagon ms-2"></i></button>
+                                    <button class="btn btn-danger mt-2" type="submit" name="submit" value="{{ tool.id }}">Remove from personal tools<i class="bi bi-x-octagon ms-2"></i></button>
                                 </div>
                             </form>
                             <!-- Tool publisher -->
@@ -219,7 +221,7 @@
                 {% endfor %}
             </div>
             {% elif tools|length == 3 %}
-            <div class="row gx-4 gx-lg-5 row-cols-2 row-cols-md-3 row-cols-xl-3 justify-content-center">
+            <div class="row gx-4 gx-lg-5 row-cols-2 row-cols-md-3 row-cols-xl-3">
                 {% for tool in tools %}
                 <div class="col mb-5" name="toolCard">
                     <div class="card h-100 shadow">
@@ -244,7 +246,9 @@
                                 </div>
                                 <!-- Tool disponibility -->
                                 <h6 class="fst-italic mt-3">Availability</h5>
-                                    {{ tool.availabalityStart }} - {{ tool.availabalityEnd }}
+                                    {{ tool.availabalityStart }}<br>
+                                    -----<br>
+                                    {{ tool.availabalityEnd }}
                                     <!-- Tool location -->
                                     <h6 class="fst-italic mt-2">Location</h5>
                                         {{ tool.location }}
@@ -270,7 +274,7 @@
                 {% endfor %}
             </div>
             {% elif tools|length == 2 %}
-            <div class="row gx-4 gx-lg-5 row-cols-2 row-cols-md-2 row-cols-xl-2 justify-content-center">
+            <div class="row gx-4 gx-lg-5 row-cols-2 row-cols-md-2 row-cols-xl-2">
                 {% for tool in tools %}
                 <div class="col mb-5" name="toolCard">
                     <div class="card h-100 shadow">
@@ -295,7 +299,9 @@
                                 </div>
                                 <!-- Tool disponibility -->
                                 <h6 class="fst-italic mt-3">Availability</h5>
-                                    {{ tool.availabalityStart }} - {{ tool.availabalityEnd }}
+                                    {{ tool.availabalityStart }}<br>
+                                    -----<br>
+                                    {{ tool.availabalityEnd }}
                                     <!-- Tool location -->
                                     <h6 class="fst-italic mt-2">Location</h5>
                                         {{ tool.location }}
@@ -321,7 +327,7 @@
                 {% endfor %}
             </div>
             {% else %}
-            <div class="row gx-4 gx-lg-5 row-cols-1 row-cols-md-1 row-cols-xl-1 justify-content-center">
+            <div class="row gx-4 gx-lg-5 row-cols-1 row-cols-md-1 row-cols-xl-1">
                 {% for tool in tools %}
                 <div class="col mb-5" name="toolCard">
                     <div class="card h-100 shadow">
@@ -346,7 +352,9 @@
                                 </div>
                                 <!-- Tool disponibility -->
                                 <h6 class="fst-italic mt-3">Availability</h5>
-                                    {{ tool.availabalityStart }} - {{ tool.availabalityEnd }}
+                                    {{ tool.availabalityStart }}<br>
+                                    -----<br>
+                                    {{ tool.availabalityEnd }}
                                     <!-- Tool location -->
                                     <h6 class="fst-italic mt-2">Location</h5>
                                         {{ tool.location }}
@@ -359,8 +367,7 @@
                             <form action="" method="post" novalidate>
                                 {% csrf_token %}
                                 <div class="text-center">
-                                    <button class="btn btn-danger mt-2" type="submit" name="submit" value="{{ tool.id }}">Remove
-                                        from personal tools<i class="bi bi-x-octagon ms-2"></i></button>
+                                    <button class="btn btn-danger mt-2" type="submit" name="submit" value="{{ tool.id }}">Remove from personal tools<i class="bi bi-x-octagon ms-2"></i></button>
                                 </div>
                             </form>
                             <!-- Tool publisher -->

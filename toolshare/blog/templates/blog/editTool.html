@@ -25,6 +25,9 @@
                     <div class="rounded-top text-white d-flex flex-row align-items-center justify-content-center" style="background-color: #000; height: 200px;">
                         <p class="fs-2">Edit Your Tool</p>
                     </div>
+                    {% if blog_form.errors %}
+                    {{ blog_form.errors }}
+                    {% endif %}
                     <form method="post" enctype="multipart/form-data" class="d-flex flex-column align-items-center py-5">
                         {% csrf_token %}
                         <div class="col-md-6 mb-4">
@@ -60,13 +63,13 @@
                         <div class="col-md-6 mb-4">
                             <div class="form-outline">
                                 <label class="form-label fw-bold" for="id_availabalityStart">Availabality Start</label>
-                                {% render_field blog_form.availabalityStart placeholder="25/07/2023" class+="form-control form-control-lg" type="date" %}
+                                {% render_field blog_form.availabalityStart class+="form-control form-control-lg" type="datetime-local" %}
                             </div>
                         </div>
                         <div class="col-md-6 mb-4">
                             <div class="form-outline">
                                 <label class="form-label fw-bold" for="id_availabalityEnd">Availabality End</label>
-                                {% render_field blog_form.availabalityEnd placeholder="25/10/2023" class+="form-control form-control-lg" type="date" %}
+                                {% render_field blog_form.availabalityEnd class+="form-control form-control-lg" type="datetime-local" %}
                             </div>
                         </div>
                         <div class="col-md-6 mb-4">

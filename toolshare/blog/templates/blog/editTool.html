@@ -39,7 +39,7 @@
                         <div class="col-md-6 mb-4">
                             <div class="form-outline d-flex flex-column">
                                 <label class="form-label fw-bold" for="id_image">Image</label>
-                                {{ photo_form.image }}
+                                {% render_field blog_form.image class+="form-control form-control-lg" %}
                             </div>
                         </div>
                         <div class="col-md-6 mb-4">
@@ -68,7 +68,8 @@
                         </div>
                         <div class="col-md-6 mb-4">
                             <div class="form-outline">
-                                <label class="form-label fw-bold" for="id_availabalityEnd">Availabality End</label>
+                                <label class="form-label fw-bold" for="id_availabalityEnd">Availabality End<br>
+                                (min 24h from today)</label>
                                 {% render_field blog_form.availabalityEnd class+="form-control form-control-lg" type="datetime-local" %}
                             </div>
                         </div>

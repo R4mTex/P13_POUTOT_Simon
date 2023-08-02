@@ -6,6 +6,7 @@ from django.core.validators import MinValueValidator
 
 # Create your models here.
 def oneDayHence():
+    print(timezone.now())
     return timezone.now() + timezone.timedelta(days=1)
 
 
@@ -24,7 +25,7 @@ class Blog(models.Model):
     location = models.CharField(max_length=128,)
     description = models.TextField(max_length=2048)
     availabalityStart = models.DateTimeField(default=timezone.now, validators=[MinValueValidator(limit_value=timezone.now)])
-    availabalityEnd = models.DateTimeField(default=oneDayHence, validators=[MinValueValidator(limit_value=oneDayHence)], null=True,)
+    availabalityEnd = models.DateTimeField(default=oneDayHence, validators=[MinValueValidator(limit_value=oneDayHence)])
     deposit = models.BooleanField(default=False)
     author = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
     date_created = models.DateTimeField(auto_now_add=True)

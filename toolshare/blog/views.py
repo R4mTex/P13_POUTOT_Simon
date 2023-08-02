@@ -64,7 +64,11 @@ class personalTools(LoginRequiredMixin, View):
 
         for tool in range(len(personalTools)):
             if personalTools[tool].id == tool_id:
-                blogModels.Blog.objects.filter(id=personalTools[tool].id).delete()
+                if personalTools[tool].image == "userPersonalToolPicture/defaultPersonalToolPicture.png":
+                    blogModels.Blog.objects.filter(id=personalTools[tool].id).delete()
+                else:
+                    blogModels.Blog.objects.filter(id=personalTools[tool].id)[0].image.delete()
+                    blogModels.Blog.objects.filter(id=personalTools[tool].id).delete()
 
         personalTools = blogModels.Blog.objects.filter(author=user.id)
 

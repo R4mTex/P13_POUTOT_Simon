@@ -48,32 +48,49 @@ class Profile(LoginRequiredMixin, View):
 
 class editProfile(LoginRequiredMixin, View):
     template_name = 'authentication/editProfile.html'
-    form_class = forms.UploadProfilePhotoForm
+    form_picture = forms.UploadProfilePictureForm
+    form_profile = forms.SignupForm
     form_password = PasswordChangeForm
 
     def get(self, request, id):
-        form = self.form_class()
+        form_picture = self.form_picture()
+        form_profile = self.form_profile()
         form_password = self.form_password(id)
         user = authModels.User.objects.get(id=id)
-        return render(request, self.template_name, context={'form': form, 'form_password': form_password, 'user': user})
+
+        context = {
+            'form_picture': form_picture,
+            'form_profile': form_profile,
+            'form_password': form_password,
+            'user': user,
+        }
+        return render(request, self.template_name, context=context)
 
     def post(self, request, id):
-        form = self.form_class(request.POST, request.FILES, instance=request.user)
+        form_picture = self.form_picture(request.POST, request.FILES, instance=request.user)
         user = authModels.User.objects.get(id=id)
-        if form.is_valid():
+        if form_picture.is_valid():
             if user.profilePicture != 'userProfilePicture/defaultProfilePicture.png':
                 user.profilePicture.delete()
-                form.save()
+                form_picture.save()
             else:
-                form.save()
+                form_picture.save()
 
-            form = self.form_class()
+            form_picture = self.form_picture()
+            form_profile = self.form_profile()
             form_password = self.form_password(id)
-
             user = authModels.User.objects.get(id=id)
 
-            return render(request, self.template_name, context={'form': form, 'form_password': form_password, 'user': user})
-        return render(request, self.template_name, context={'form': form, 'form_password': form_password, 'user': user})
+            context = {
+                'form_picture': form_picture,
+                'form_profile': form_profile,
+                'form_password': form_password,
+                'user': user,
+            }
+            return render(request, self.template_name, context=context)
+        # if form profile
+        # same picture = suppr
+        
 
 class Registration(View):
     template_name = 'authentication/registration.html'
@@ -114,3 +131,14 @@ class Registration(View):
             'acceptedConditions': acceptedConditions,
         }
         return render(request, self.template_name, context=context)
+
+"""
+        user = authModels.User.objects.get(id=id)
+        context = {
+            'form_picture': self.form_picture,
+            'form_profile': self.form_profile,
+            'form_password': self.form_password,
+            'user': user,
+        }
+        return render(request, self.template_name, context=context)
+"""

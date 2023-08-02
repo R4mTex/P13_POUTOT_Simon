@@ -52,10 +52,7 @@ background: linear-gradient(to right, rgba(251, 194, 235, 1), rgba(166, 193, 238
                         <div class="mb-5">
                             <p class="lead fw-normal mb-1">About</p>
                             <div class="p-4" style="background-color: #f8f9fa;">
-                                <!--{{ user.bio }}-->
-                                <p class="font-italic mb-1">Software Developer</p>
-                                <p class="font-italic mb-1">Lives in France</p>
-                                <p class="font-italic mb-0">Sportif</p>
+                                <p class="font-italic mb-1">{{ user.bio }}</p>
                             </div>
                         </div>
                         <div class="d-flex justify-content-between align-items-center mb-4">
@@ -65,18 +62,30 @@ background: linear-gradient(to right, rgba(251, 194, 235, 1), rgba(166, 193, 238
                         {% if tools|length == 0 %}
                         <div class="row g-2">
                             <div class="col mb-2">
-                                <div class="w-100 rounded-3" style="height: 200px; width: auto; border: gray solid 1px;"></div>
+                                <div class="d-flex align-items-center justify-content-center w-100 rounded-3"
+                                    style="height: 200px; width: auto; border: gray solid 1px;">
+                                    <h3 class="text-muted" style="transform: skewY(-11deg);">Empty</h3>
+                                </div>
                             </div>
                             <div class="col mb-2">
-                                <div class="w-100 rounded-3" style="height: 200px; width: auto; border: gray solid 1px;"></div>
+                                <div class="d-flex align-items-center justify-content-center w-100 rounded-3"
+                                    style="height: 200px; width: auto; border: gray solid 1px;">
+                                    <h3 class="text-muted" style="transform: skewY(-11deg);">Empty</h3>
+                                </div>
                             </div>
                         </div>
                         <div class="row g-2">
                             <div class="col mb-2">
-                                <div class="w-100 rounded-3" style="height: 200px; width: auto; border: gray solid 1px;"></div>
+                                <div class="d-flex align-items-center justify-content-center w-100 rounded-3"
+                                    style="height: 200px; width: auto; border: gray solid 1px;">
+                                    <h3 class="text-muted" style="transform: skewY(-11deg);">Empty</h3>
+                                </div>
                             </div>
                             <div class="col mb-2">
-                                <div class="w-100 rounded-3" style="height: 200px; width: auto; border: gray solid 1px;"></div>
+                                <div class="d-flex align-items-center justify-content-center w-100 rounded-3"
+                                    style="height: 200px; width: auto; border: gray solid 1px;">
+                                    <h3 class="text-muted" style="transform: skewY(-11deg);">Empty</h3>
+                                </div>
                             </div>
                         </div>
                         {% elif tools|length == 1 %}
@@ -88,15 +97,24 @@ background: linear-gradient(to right, rgba(251, 194, 235, 1), rgba(166, 193, 238
                             </div>
                             {% endfor %}
                             <div class="col-6 mb-2">
-                                <div class="w-100 rounded-3" style="height: 200px; width: auto; border: gray solid 1px;"></div>
+                                <div class="d-flex align-items-center justify-content-center w-100 rounded-3"
+                                    style="height: 200px; width: auto; border: gray solid 1px;">
+                                    <h3 class="text-muted" style="transform: skewY(-11deg);">Empty</h3>
+                                </div>
                             </div>
                         </div>
                         <div class="row g-2">
                             <div class="col-6 mb-2">
-                                <div class="w-100 rounded-3" style="height: 200px; width: auto; border: gray solid 1px;"></div>
+                                <div class="d-flex align-items-center justify-content-center w-100 rounded-3"
+                                    style="height: 200px; width: auto; border: gray solid 1px;">
+                                    <h3 class="text-muted" style="transform: skewY(-11deg);">Empty</h3>
+                                </div>
                             </div>
                             <div class="col-6 mb-2">
-                                <div class="w-100 rounded-3" style="height: 200px; width: auto; border: gray solid 1px;"></div>
+                                <div class="d-flex align-items-center justify-content-center w-100 rounded-3"
+                                    style="height: 200px; width: auto; border: gray solid 1px;">
+                                    <h3 class="text-muted" style="transform: skewY(-11deg);">Empty</h3>
+                                </div>
                             </div>
                         </div>
                         {% elif tools|length == 2 %}
@@ -110,10 +128,16 @@ background: linear-gradient(to right, rgba(251, 194, 235, 1), rgba(166, 193, 238
                         </div>
                         <div class="row g-2">
                             <div class="col-6 mb-2">
-                                <div class="w-100 rounded-3" style="height: 200px; width: auto; border: gray solid 1px;"></div>
+                                <div class="d-flex align-items-center justify-content-center w-100 rounded-3"
+                                    style="height: 200px; width: auto; border: gray solid 1px;">
+                                    <h3 class="text-muted" style="transform: skewY(-11deg);">Empty</h3>
+                                </div>
                             </div>
                             <div class="col-6 mb-2">
-                                <div class="w-100 rounded-3" style="height: 200px; width: auto; border: gray solid 1px;"></div>
+                                <div class="d-flex align-items-center justify-content-center w-100 rounded-3"
+                                    style="height: 200px; width: auto; border: gray solid 1px;">
+                                    <h3 class="text-muted" style="transform: skewY(-11deg);">Empty</h3>
+                                </div>
                             </div>
                         </div>
                         {% elif tools|length == 3 %}
@@ -125,7 +149,10 @@ background: linear-gradient(to right, rgba(251, 194, 235, 1), rgba(166, 193, 238
                             </div>
                             {% endfor %}
                             <div class="col-6 mb-2">
-                                <div class="w-100 rounded-3" style="height: 200px; width: auto; border: gray solid 1px;"></div>
+                                <div class="d-flex align-items-center justify-content-center w-100 rounded-3"
+                                    style="height: 200px; width: auto; border: gray solid 1px;">
+                                    <h3 class="text-muted" style="transform: skewY(-11deg);">Empty</h3>
+                                </div>
                             </div>
                         </div>
                         {% elif tools|length >= 4 %}

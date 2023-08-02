@@ -35,7 +35,7 @@ background: linear-gradient(to right, rgba(251, 194, 235, 1), rgba(166, 193, 238
                                                 <div class="d-flex mt-2">
                                                     <form method="post" enctype="multipart/form-data">
                                                         {% csrf_token %}
-                                                        {{ form.profilePicture }}
+                                                        {{ form_picture.profilePicture }}
                                                         <button class="btn btn-primary mt-2" type="submit">
                                                             <i class="bi bi-camera-fill me-1"></i>
                                                             <span>Change Profile Picture</span>
@@ -55,44 +55,55 @@ background: linear-gradient(to right, rgba(251, 194, 235, 1), rgba(166, 193, 238
                                         </div>
                                     </div>
                                     <ul class="nav nav-tabs">
-                                        <li class="nav-item"><a href="" class="active nav-link">Settings</a></li>
+                                        <li class="nav-item"><a class="active nav-link mt-3">Settings</a></li>
                                     </ul>
                                     <div class="tab-content pt-3">
                                         <div class="tab-pane active">
-                                            <form method="post">
+                                            <form method="post" novalidate>
                                                 {% csrf_token %}
                                                 <div class="row">
                                                     <div class="col">
                                                         <div class="row">
                                                             <div class="col">
                                                                 <div class="form-group">
-                                                                    <label>Full Name</label>
-                                                                    <input class="form-control" type="text" name="name"
-                                                                        placeholder="fullname" value="{{ user.fullname }}">
+                                                                    <label class="mb-1 fw-bold">Full Name</label>
+                                                                    {% render_field form_profile.fullname|attr:"autofocus" class+="form-control mb-2" type="text" name="fullname" placeholder="fullname" value=user.fullname required="false" %}
                                                                 </div>
                                                             </div>
                                                             <div class="col">
                                                                 <div class="form-group">
-                                                                    <label>Username</label>
-                                                                    <input class="form-control" type="text" name="username"
-                                                                        placeholder="username" value="{{ user.username }}">
+                                                                    <label class="mb-1 fw-bold">Username</label>
+                                                                    {% render_field form_profile.username class+="form-control mb-2" type="text" name="username" placeholder="username" value=user.username %}
                                                                 </div>
                                                             </div>
                                                         </div>
                                                         <div class="row">
                                                             <div class="col">
                                                                 <div class="form-group">
-                                                                    <label>Email</label>
-                                                                    <input class="form-control" type="text"
-                                                                        placeholder="user@example.com" value="{{ user.email }}">
+                                                                    <label class="mb-1 fw-bold">Email</label>
+                                                                    {% render_field form_profile.email class+="form-control mb-2" type="email" name="email" placeholder="user@example.com" value=user.email %}
+                                                                </div>
+                                                            </div>
+                                                            <div class="col">
+                                                                <div class="form-group">
+                                                                    <label class="mb-1 fw-bold">Phone Number</label>
+                                                                    {% render_field form_profile.phoneNumber class+="form-control mb-2" type="tel" name="phoneNumber" placeholder="+33.." value=user.phoneNumber %}
                                                                 </div>
                                                             </div>
                                                         </div>
+                                                        <div class="row">
+                                                            <div class="col">
+                                                                <div class="form-group">
+                                                                    <label class="mb-1 fw-bold">Address</label>
+                                                                    {% render_field form_profile.postalAddress class+="form-control mb-2" type="text" name="postalAddress" placeholder="Noelle Adams 6351 Fringilla Avenue Gardena Colorado 37547 (559) 104-5475" value=user.postalAddress %}
+                                                                </div>
+                                                            </div>
+                                                        </div
                                                         <div class="row">
                                                             <div class="col mb-3">
                                                                 <div class="form-group">
-                                                                    <label>About</label>
-                                                                    <textarea class="form-control fst-italic" rows="5" placeholder="My Bio"></textarea>
+                                                                    <label class="mb-1 fw-bold">About</label>
+                                                                    {% render_field form_profile.bio class+="form-control" type="tel" name="bio" placeholder="My bio" value=user.bio rows="5" %}
                                                                 </div>
                                                             </div>
                                                         </div>
@@ -106,8 +117,8 @@ background: linear-gradient(to right, rgba(251, 194, 235, 1), rgba(166, 193, 238
                                                         <div class="row">
                                                             <div class="col">
                                                                 <div class="form-group">
-                                                                    <label>Current Password</label>
-                                                                    <input class="form-control" type="text"
+                                                                    <label class="mb-1 fw-bold">Current Password</label>
+                                                                    <input class="form-control mb-2" type="text"
                                                                         placeholder="" value="{{ user.password }}">
                                                                 </div>
                                                             </div>
@@ -115,8 +126,8 @@ background: linear-gradient(to right, rgba(251, 194, 235, 1), rgba(166, 193, 238
                                                         <div class="row">
                                                             <div class="col">
                                                                 <div class="form-group">
-                                                                    <label>New Password</label>
-                                                                    <input class="form-control" type="password"
+                                                                    <label class="mb-1 fw-bold">New Password</label>
+                                                                    <input class="form-control mb-2" type="password"
                                                                         placeholder="••••••">
                                                                 </div>
                                                             </div>
@@ -124,9 +135,9 @@ background: linear-gradient(to right, rgba(251, 194, 235, 1), rgba(166, 193, 238
                                                         <div class="row">
                                                             <div class="col">
                                                                 <div class="form-group">
-                                                                    <label>Confirm <span
+                                                                    <label class="mb-1 fw-bold">Confirm <span
                                                                             class="d-none d-xl-inline">Password</span></label>
-                                                                    <input class="form-control" type="password"
+                                                                    <input class="form-control mb-2" type="password"
                                                                         placeholder="••••••">
                                                                 </div>
                                                             </div>

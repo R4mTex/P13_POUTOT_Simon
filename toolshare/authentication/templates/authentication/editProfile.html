@@ -36,7 +36,7 @@ background: linear-gradient(to right, rgba(251, 194, 235, 1), rgba(166, 193, 238
                                                     <form method="post" enctype="multipart/form-data">
                                                         {% csrf_token %}
                                                         {{ form_picture.profilePicture }}
-                                                        <button class="btn btn-primary mt-2" type="submit">
+                                                        <button class="btn btn-primary mt-2" type="submit" name="profilePicture">
                                                             <i class="bi bi-camera-fill me-1"></i>
                                                             <span>Change Profile Picture</span>
                                                         </button>
@@ -59,6 +59,9 @@ background: linear-gradient(to right, rgba(251, 194, 235, 1), rgba(166, 193, 238
                                     </ul>
                                     <div class="tab-content pt-3">
                                         <div class="tab-pane active">
+                                            {% if form_profile.errors %}
+                                            {{ form_profile.errorlist }}
+                                            {% endif %}
                                             <form method="post" novalidate>
                                                 {% csrf_token %}
                                                 <div class="row">
@@ -67,13 +70,13 @@ background: linear-gradient(to right, rgba(251, 194, 235, 1), rgba(166, 193, 238
                                                             <div class="col">
                                                                 <div class="form-group">
                                                                     <label class="mb-1 fw-bold">Full Name</label>
-                                                                    {% render_field form_profile.fullname|attr:"autofocus" class+="form-control mb-2" type="text" name="fullname" placeholder="fullname" value=user.fullname required="false" %}
+                                                                    {% render_field form_profile.fullname|attr:"autofocus" class+="form-control mb-2" type="text" name="fullname" placeholder="fullname" %}
                                                                 </div>
                                                             </div>
                                                             <div class="col">
                                                                 <div class="form-group">
                                                                     <label class="mb-1 fw-bold">Username</label>
-                                                                    {% render_field form_profile.username class+="form-control mb-2" type="text" name="username" placeholder="username" value=user.username %}
+                                                                    {% render_field form_profile.username class+="form-control mb-2" type="text" name="username" placeholder="username" %}
                                                                 </div>
                                                             </div>
                                                         </div>
@@ -81,13 +84,13 @@ background: linear-gradient(to right, rgba(251, 194, 235, 1), rgba(166, 193, 238
                                                             <div class="col">
                                                                 <div class="form-group">
                                                                     <label class="mb-1 fw-bold">Email</label>
-                                                                    {% render_field form_profile.email class+="form-control mb-2" type="email" name="email" placeholder="user@example.com" value=user.email %}
+                                                                    {% render_field form_profile.email class+="form-control mb-2" type="email" name="email" placeholder="user@example.com" %}
                                                                 </div>
                                                             </div>
                                                             <div class="col">
                                                                 <div class="form-group">
                                                                     <label class="mb-1 fw-bold">Phone Number</label>
-                                                                    {% render_field form_profile.phoneNumber class+="form-control mb-2" type="tel" name="phoneNumber" placeholder="+33.." value=user.phoneNumber %}
+                                                                    {% render_field form_profile.phoneNumber class+="form-control mb-2" type="tel" name="phoneNumber" placeholder="+33.." %}
                                                                 </div>
                                                             </div>
                                                         </div>
@@ -95,20 +98,27 @@ background: linear-gradient(to right, rgba(251, 194, 235, 1), rgba(166, 193, 238
                                                             <div class="col">
                                                                 <div class="form-group">
                                                                     <label class="mb-1 fw-bold">Address</label>
-                                                                    {% render_field form_profile.postalAddress class+="form-control mb-2" type="text" name="postalAddress" placeholder="Noelle Adams 6351 Fringilla Avenue Gardena Colorado 37547 (559) 104-5475" value=user.postalAddress %}
+                                                                    {% render_field form_profile.postalAddress class+="form-control mb-2" type="text" name="postalAddress" placeholder="Noelle Adams 6351 Fringilla Avenue Gardena Colorado 37547 (559) 104-5475" %}
                                                                 </div>
                                                             </div>
                                                         </div
                                                         <div class="row">
-                                                            <div class="col mb-3">
+                                                            <div class="col">
                                                                 <div class="form-group">
                                                                     <label class="mb-1 fw-bold">About</label>
-                                                                    {% render_field form_profile.bio class+="form-control" type="tel" name="bio" placeholder="My bio" value=user.bio rows="5" %}
+                                                                    {% render_field form_profile.bio class+="form-control mb-2" type="text" name="bio" placeholder="My bio" rows="5" %}
                                                                 </div>
                                                             </div>
                                                         </div>
                                                     </div>
                                                 </div>
+                                            <div class="row">
+                                                <div class="col d-flex justify-content-center">
+                                                    <button class="btn btn-primary" type="submit" name="updateUserProfile">Save Changes</button>
+                                                </div>
+                                            </div>
+                                            </form>
+                                            <form>
                                                 <div class="row">
                                                     <div class="col-12 col-sm-6 mb-3">
                                                         <div class="mb-2"><b>Change Password</b></div>
@@ -146,8 +156,8 @@ background: linear-gradient(to right, rgba(251, 194, 235, 1), rgba(166, 193, 238
                                                     </div>
                                                 </div>
                                                 <div class="row">
-                                                    <div class="col d-flex justify-content-end">
-                                                        <button class="btn btn-primary" type="submit">Save Changes</button>
+                                                    <div class="col d-flex justify-content-start">
+                                                        <button class="btn btn-primary" type="submit" name="changePassword">Set New Password</button>
                                                     </div>
                                                 </div>
                                             </form>

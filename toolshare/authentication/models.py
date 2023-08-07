@@ -5,12 +5,12 @@ from blog.models import Blog
 
 # Create your models here.
 class User(AbstractUser):
-    fullname = models.fields.CharField(max_length=256, unique=True)
-    phoneNumber = PhoneNumberField(blank=True)
-    profilePicture = models.ImageField(default='userProfilePicture/defaultProfilePicture.png', upload_to='userProfilePicture')
-    postalAddress = models.fields.CharField(max_length=256, null=True)
-    personalTools = models.ForeignKey(Blog, on_delete=models.CASCADE, null=True)
-    bio = models.fields.TextField(null=True)
+    fullname = models.fields.CharField(max_length=256, unique=True,)
+    phoneNumber = PhoneNumberField(unique=True,)
+    profilePicture = models.ImageField(default='userProfilePicture/defaultProfilePicture.png', upload_to='userProfilePicture',)
+    postalAddress = models.fields.CharField(max_length=256, null=True,)
+    personalTools = models.ForeignKey(Blog, on_delete=models.CASCADE, null=True,)
+    bio = models.fields.TextField(null=True, blank=True)
 
     class Meta:
         ordering = ['id']

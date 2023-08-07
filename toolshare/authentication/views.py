@@ -49,48 +49,91 @@ class Profile(LoginRequiredMixin, View):
 class editProfile(LoginRequiredMixin, View):
     template_name = 'authentication/editProfile.html'
     form_picture = forms.UploadProfilePictureForm
-    form_profile = forms.SignupForm
+    form_profile = forms.UpdateUserProfile
     form_password = PasswordChangeForm
 
     def get(self, request, id):
-        form_picture = self.form_picture()
-        form_profile = self.form_profile()
-        form_password = self.form_password(id)
         user = authModels.User.objects.get(id=id)
+        form_picture = self.form_picture()
+        form_profile = self.form_profile(instance=user)
+        form_password = self.form_password(id)
 
         context = {
+            'user': user,
             'form_picture': form_picture,
             'form_profile': form_profile,
             'form_password': form_password,
-            'user': user,
         }
         return render(request, self.template_name, context=context)
 
     def post(self, request, id):
-        form_picture = self.form_picture(request.POST, request.FILES, instance=request.user)
         user = authModels.User.objects.get(id=id)
-        if form_picture.is_valid():
-            if user.profilePicture != 'userProfilePicture/defaultProfilePicture.png':
-                user.profilePicture.delete()
-                form_picture.save()
+        if 'profilePicture' in request.POST:
+            form_picture = self.form_picture(request.POST, request.FILES, instance=request.user)
+            if form_picture.is_valid():
+                if user.profilePicture == 'userProfilePicture/defaultProfilePicture.png' or user.profilePicture == form_picture.cleaned_data['profilePicture']:
+                    form_picture.save()
+                else:
+                    user.profilePicture.delete()
+                    form_picture.save()
+                
+                user = authModels.User.objects.get(id=id)
+                form_picture = self.form_picture()
+                form_profile = self.form_profile(instance=user)
+                form_password = self.form_password(id)
+
+                context = {
+                    'user': user,
+                    'form_picture': form_picture,
+                    'form_profile': form_profile,
+                    'form_password': form_password,
+                }
+                return render(request, self.template_name, context=context)
             else:
-                form_picture.save()
+                user = authModels.User.objects.get(id=id)
+                form_picture = self.form_picture()
+                form_profile = self.form_profile(instance=user)
+                form_password = self.form_password(id)
 
-            form_picture = self.form_picture()
-            form_profile = self.form_profile()
-            form_password = self.form_password(id)
-            user = authModels.User.objects.get(id=id)
+                context = {
+                    'user': user,
+                    'form_picture': form_picture,
+                    'form_profile': form_profile,
+                    'form_password': form_password,
+                }
+                return render(request, self.template_name, context=context)
+        if 'updateUserProfile' in request.POST:
+            form_profile = self.form_profile(request.POST)
+            if form_profile.is_valid():
+                print("yes")
+                user = authModels.User.objects.get(id=id)
+                form_picture = self.form_picture()
+                form_profile = self.form_profile(instance=request.user)
+                form_password = self.form_password(id)
 
-            context = {
-                'form_picture': form_picture,
-                'form_profile': form_profile,
-                'form_password': form_password,
-                'user': user,
-            }
-            return render(request, self.template_name, context=context)
-        # if form profile
-        # same picture = suppr
-        
+                context = {
+                    'user': user,
+                    'form_picture': form_picture,
+                    'form_profile': form_profile,
+                    'form_password': form_password,
+                }
+                return render(request, self.template_name, context=context)
+            else:
+                print('Error')
+                print(form_profile.errors)
+                user = authModels.User.objects.get(id=id)
+                form_picture = self.form_picture()
+                form_profile = self.form_profile(instance=request.user)
+                form_password = self.form_password(id)
+
+                context = {
+                    'user': user,
+                    'form_picture': form_picture,
+                    'form_profile': form_profile,
+                    'form_password': form_password,
+                }
+                return render(request, self.template_name, context=context)
+            
 
 class Registration(View):
     template_name = 'authentication/registration.html'

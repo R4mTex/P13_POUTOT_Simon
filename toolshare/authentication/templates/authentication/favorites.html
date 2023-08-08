@@ -1,4 +1,4 @@
-{% extends 'authentication/base.html' %}
+{% extends 'blog/base.html' %}
 
 {% block content %}
 
@@ -11,18 +11,39 @@
         cursor: pointer;
         transform: scale(1.04);
     }
+    .gradient-custom-card {
+        /* fallback for old browsers */
+        background: #E0DABC;
+
+        /* Chrome 10-25, Safari 5.1-6 */
+        background: -webkit-linear-gradient(to bottom, #CED4DA, #F4EDE1);
+
+        /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
+        background: linear-gradient(to bottom, #CED4DA, #F4EDE1)
+    }
+    .gradient-custom {
+        /* fallback for old browsers */
+        background: #E0DABC;
+
+        /* Chrome 10-25, Safari 5.1-6 */
+        background: -webkit-linear-gradient(to right, #6D7D8E, #E0DABC, #FEDA3B);
+
+        /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
+        background: linear-gradient(to right, #6D7D8E, #E0DABC, #FEDA3B)
+        }
 </style>
 
-<body>
-    <!-- Header -->
-    <header class="bg-dark py-5">
-        <div class="container px-4 px-lg-5 my-5">
-            <div class="text-center text-white">
-                <h1 class="display-4 fw-bolder">Your Favorites</h1>
-                <p class="lead fw-normal text-white-50 mb-0">Find your saved tools</p>
-            </div>
+
+<!-- Header -->
+<header class="bg-dark py-5">
+    <div class="container px-4 px-lg-5 my-5">
+        <div class="text-center text-white">
+            <h1 class="display-4 fw-bolder">Your Favorites</h1>
+            <p class="lead fw-normal text-white-50 mb-0">Find your saved tools</p>
         </div>
-    </header>
+    </div>
+</header>
+<div class="gradient-custom">
     <div class="d-flex flex-row">
         <!-- Table -->
         <div class="col-2 py-5 px-2">
@@ -92,8 +113,8 @@
                         <td>
                             <!-- Default checked -->
                             <div class="form-check">
-                                <input class="form-check-input" type="radio" name="flexRadioDefaultB"
-                                    id="flexRadioDefault3" checked>
+                                <input class="form-check-input" type="radio" name="flexRadioDefaultB" id="flexRadioDefault3"
+                                    checked>
                                 <label class="form-check-label" for="flexRadioDefault3">From near to far</label>
                             </div>
                             <!-- Default unchecked -->
@@ -110,8 +131,8 @@
                         <td>
                             <!-- Default checked -->
                             <div class="form-check">
-                                <input class="form-check-input" type="radio" name="flexRadioDefaultC"
-                                    id="flexRadioDefault5" checked>
+                                <input class="form-check-input" type="radio" name="flexRadioDefaultC" id="flexRadioDefault5"
+                                    checked>
                                 <label class="form-check-label" for="flexRadioDefault5">From earliest to latest</label>
                             </div>
                             <!-- Default unchecked -->
@@ -165,23 +186,31 @@
             </table>
         </div>
         <!-- Table -->
+        {% if tools|length != 0 %}
         <!-- Section -->
         <section class="py-5">
             <div class="container px-4 px-lg-5 mt-5">
-                <div class="row gx-4 gx-lg-5 row-cols-2 row-cols-md-3 row-cols-xl-4 justify-content-center">
+                {% if tools|length >= 4 %}
+                <div class="row gx-4 gx-lg-5 row-cols-2 row-cols-md-3 row-cols-xl-4" style="background-color: black;">
+                    {% for tool in tools %}
                     <div class="col mb-5" name="toolCard">
-                        <div class="card h-100 shadow">
-                            <!-- Available badge -->
-                            <div class="badge bg-success text-white position-absolute"
-                                style="top: 0.5rem; right: 0.5rem">Available</div>
+                        <div class="card gradient-custom-card h-100 shadow">
+                            <!-- Available/Unavailable badge -->
+                            {% if tool.availabality == True %}
+                            <div class="badge bg-success text-white position-absolute" style="top: 0.5rem; right: 0.5rem">
+                                Available</div>
+                            {% else %}
+                            <div class="badge bg-danger text-white position-absolute" style="top: 0.5rem; right: 0.5rem">
+                                Unavailable</div>
+                            {% endif %}
                             <!-- Tool image -->
-                            <img class="card-img-top border-bottom p-3" src="/static/images/truelle.jpg" alt="..."
-                                style="height: 200px; width: auto;" />
+                            <img class="card-img-top border-bottom p-3" src="{{ tool.image.url }}" alt="..."
+                                style="height: 200px; width: 268px;" />
                             <!-- Tool details -->
                             <div class="card-body p-4">
                                 <div class="text-center">
                                     <!-- Tool name -->
-                                    <h5 class="fw-bolder">Fancy Tool</h5>
+                                    <h5 class="fw-bolder">{{ tool.name }}</h5>
                                     <!-- Tool reviews -->
                                     <div class="d-flex justify-content-center small text-warning mb-2">
                                         <div class="bi bi-star-fill"></div>
@@ -192,319 +221,226 @@
                                     </div>
                                     <!-- Tool disponibility -->
                                     <h6 class="fst-italic mt-3">Availability</h5>
-                                        11/04/2023 - 25/05/2023
+                                        {{ tool.availabalityStart }}<br>
+                                        -----<br>
+                                        {{ tool.availabalityEnd }}
                                         <!-- Tool location -->
                                         <h6 class="fst-italic mt-2">Location</h5>
-                                            14 Rue de Saint-Hendré 48900 Pejoul
+                                            {{ tool.location }}
                                 </div>
                             </div>
                             <!-- Tool actions -->
                             <div class="card-footer p-2 pt-0 border-top-0 bg-transparent">
                                 <div class="text-center"><a class="btn btn-outline-warning" href="#">View details<i
                                             class="bi bi-gear ms-2"></i></a></div>
-                                <div class="text-center"><a class="btn btn-danger mt-2" href="#">Remove from bag<i
-                                            class="bi bi-heart ms-2"></i></a></div>
-                                <!-- Tool publisher -->
-                                <h6 class="mt-3 fw-bolder">Published by : <a class="" href="#"
-                                        style="text-decoration: none;">Roger</a></h5>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col mb-5" name="toolCard">
-                        <div class="card h-100 shadow">
-                            <!-- Unavailable badge -->
-                            <div class="badge bg-danger text-white position-absolute"
-                                style="top: 0.5rem; right: 0.5rem">Unavailable</div>
-                            <!-- Tool image -->
-                            <img class="card-img-top border-bottom p-3" src="/static/images/truelle.jpg" alt="..."
-                                style="height: 200px; width: auto;" />
-                            <!-- Tool details -->
-                            <div class="card-body p-4">
-                                <div class="text-center">
-                                    <!-- Tool name -->
-                                    <h5 class="fw-bolder">Fancy Tool</h5>
-                                    <!-- Tool reviews -->
-                                    <div class="d-flex justify-content-center small text-warning mb-2">
-                                        <div class="bi bi-star-fill"></div>
-                                        <div class="bi bi-star-fill"></div>
-                                        <div class="bi bi-star-fill"></div>
-                                        <div class="bi bi-star-fill"></div>
-                                        <div class="bi bi-star-fill"></div>
+                                <form method="post" novalidate>
+                                    {% csrf_token %}
+                                    <div class="text-center">
+                                        <button class="btn btn-danger mt-2" type="submit" name="submit"
+                                            value="{{ tool.id }}">Remove from bag<i
+                                                class="bi bi-x-octagon ms-2"></i></button>
                                     </div>
-                                    <!-- Tool disponibility -->
-                                    <h6 class="fst-italic mt-3">Availability</h5>
-                                        11/04/2023 - 25/05/2023
-                                        <!-- Tool location -->
-                                        <h6 class="fst-italic mt-2">Location</h5>
-                                            14 Rue de Saint-Hendré 48900 Pejoul
-                                </div>
-                            </div>
-                            <!-- Tool actions -->
-                            <div class="card-footer p-2 pt-0 border-top-0 bg-transparent">
-                                <div class="text-center"><a class="btn btn-outline-warning" href="#">View details<i
-                                            class="bi bi-gear ms-2"></i></a></div>
-                                <div class="text-center"><a class="btn btn-danger mt-2" href="#">Remove from bag<i
-                                            class="bi bi-heart ms-2"></i></a></div>
+                                </form>
                                 <!-- Tool publisher -->
                                 <h6 class="mt-3 fw-bolder">Published by : <a class="" href="#"
-                                        style="text-decoration: none;">Roger</a></h5>
+                                        style="text-decoration: none;">{{ tool.author }}</a></h5>
                             </div>
                         </div>
                     </div>
-                    <div class="col mb-5" name="toolCard">
-                        <div class="card h-100 shadow">
-                            <!-- Available badge -->
-                            <div class="badge bg-success text-white position-absolute"
-                                style="top: 0.5rem; right: 0.5rem">Available</div>
-                            <!-- Tool image -->
-                            <img class="card-img-top border-bottom p-3" src="/static/images/truelle.jpg" alt="..."
-                                style="height: 200px; width: auto;" />
-                            <!-- Tool details -->
-                            <div class="card-body p-4">
-                                <div class="text-center">
-                                    <!-- Tool name -->
-                                    <h5 class="fw-bolder">Fancy Tool</h5>
-                                    <!-- Tool reviews -->
-                                    <div class="d-flex justify-content-center small text-warning mb-2">
-                                        <div class="bi bi-star-fill"></div>
-                                        <div class="bi bi-star-fill"></div>
-                                        <div class="bi bi-star-fill"></div>
-                                        <div class="bi bi-star-fill"></div>
-                                        <div class="bi bi-star-fill"></div>
-                                    </div>
-                                    <!-- Tool disponibility -->
-                                    <h6 class="fst-italic mt-3">Availability</h5>
-                                        11/04/2023 - 25/05/2023
-                                        <!-- Tool location -->
-                                        <h6 class="fst-italic mt-2">Location</h5>
-                                            14 Rue de Saint-Hendré 48900 Pejoul
-                                </div>
-                            </div>
-                            <!-- Tool actions -->
-                            <div class="card-footer p-2 pt-0 border-top-0 bg-transparent">
-                                <div class="text-center"><a class="btn btn-outline-warning" href="#">View details<i
-                                            class="bi bi-gear ms-2"></i></a></div>
-                                <div class="text-center"><a class="btn btn-danger mt-2" href="#">Remove from bag<i
-                                            class="bi bi-heart ms-2"></i></a></div>
-                                <!-- Tool publisher -->
-                                <h6 class="mt-3 fw-bolder">Published by : <a class="" href="#"
-                                        style="text-decoration: none;">Roger</a></h5>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col mb-5" name="toolCard">
-                        <div class="card h-100 shadow">
-                            <!-- Available badge -->
-                            <div class="badge bg-success text-white position-absolute"
-                                style="top: 0.5rem; right: 0.5rem">Available</div>
-                            <!-- Tool image -->
-                            <img class="card-img-top border-bottom p-3" src="/static/images/truelle.jpg" alt="..."
-                                style="height: 200px; width: auto;" />
-                            <!-- Tool details -->
-                            <div class="card-body p-4">
-                                <div class="text-center">
-                                    <!-- Tool name -->
-                                    <h5 class="fw-bolder">Fancy Tool</h5>
-                                    <!-- Tool reviews -->
-                                    <div class="d-flex justify-content-center small text-warning mb-2">
-                                        <div class="bi bi-star-fill"></div>
-                                        <div class="bi bi-star-fill"></div>
-                                        <div class="bi bi-star-fill"></div>
-                                        <div class="bi bi-star-fill"></div>
-                                        <div class="bi bi-star-fill"></div>
-                                    </div>
-                                    <!-- Tool disponibility -->
-                                    <h6 class="fst-italic mt-3">Availability</h5>
-                                        11/04/2023 - 25/05/2023
-                                        <!-- Tool location -->
-                                        <h6 class="fst-italic mt-2">Location</h5>
-                                            14 Rue de Saint-Hendré 48900 Pejoul
-                                </div>
-                            </div>
-                            <!-- Tool actions -->
-                            <div class="card-footer p-2 pt-0 border-top-0 bg-transparent">
-                                <div class="text-center"><a class="btn btn-outline-warning" href="#">View details<i
-                                            class="bi bi-gear ms-2"></i></a></div>
-                                <div class="text-center"><a class="btn btn-danger mt-2" href="#">Remove from bag<i
-                                            class="bi bi-heart ms-2"></i></a></div>
-                                <!-- Tool publisher -->
-                                <h6 class="mt-3 fw-bolder">Published by : <a class="" href="#"
-                                        style="text-decoration: none;">Roger</a></h5>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col mb-5" name="toolCard">
-                        <div class="card h-100 shadow">
-                            <!-- Available badge -->
-                            <div class="badge bg-success text-white position-absolute"
-                                style="top: 0.5rem; right: 0.5rem">Available</div>
-                            <!-- Tool image -->
-                            <img class="card-img-top border-bottom p-3" src="/static/images/truelle.jpg" alt="..."
-                                style="height: 200px; width: auto;" />
-                            <!-- Tool details -->
-                            <div class="card-body p-4">
-                                <div class="text-center">
-                                    <!-- Tool name -->
-                                    <h5 class="fw-bolder">Fancy Tool</h5>
-                                    <!-- Tool reviews -->
-                                    <div class="d-flex justify-content-center small text-warning mb-2">
-                                        <div class="bi bi-star-fill"></div>
-                                        <div class="bi bi-star-fill"></div>
-                                        <div class="bi bi-star-fill"></div>
-                                        <div class="bi bi-star-fill"></div>
-                                        <div class="bi bi-star-fill"></div>
-                                    </div>
-                                    <!-- Tool disponibility -->
-                                    <h6 class="fst-italic mt-3">Availability</h5>
-                                        11/04/2023 - 25/05/2023
-                                        <!-- Tool location -->
-                                        <h6 class="fst-italic mt-2">Location</h5>
-                                            14 Rue de Saint-Hendré 48900 Pejoul
-                                </div>
-                            </div>
-                            <!-- Tool actions -->
-                            <div class="card-footer p-2 pt-0 border-top-0 bg-transparent">
-                                <div class="text-center"><a class="btn btn-outline-warning" href="#">View details<i
-                                            class="bi bi-gear ms-2"></i></a></div>
-                                <div class="text-center"><a class="btn btn-danger mt-2" href="#">Remove from bag<i
-                                            class="bi bi-heart ms-2"></i></a></div>
-                                <!-- Tool publisher -->
-                                <h6 class="mt-3 fw-bolder">Published by : <a class="" href="#"
-                                        style="text-decoration: none;">Roger</a></h5>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col mb-5" name="toolCard">
-                        <div class="card h-100 shadow">
-                            <!-- Available badge -->
-                            <div class="badge bg-success text-white position-absolute"
-                                style="top: 0.5rem; right: 0.5rem">Available</div>
-                            <!-- Tool image -->
-                            <img class="card-img-top border-bottom p-3" src="/static/images/truelle.jpg" alt="..."
-                                style="height: 200px; width: auto;" />
-                            <!-- Tool details -->
-                            <div class="card-body p-4">
-                                <div class="text-center">
-                                    <!-- Tool name -->
-                                    <h5 class="fw-bolder">Fancy Tool</h5>
-                                    <!-- Tool reviews -->
-                                    <div class="d-flex justify-content-center small text-warning mb-2">
-                                        <div class="bi bi-star-fill"></div>
-                                        <div class="bi bi-star-fill"></div>
-                                        <div class="bi bi-star-fill"></div>
-                                        <div class="bi bi-star-fill"></div>
-                                        <div class="bi bi-star-fill"></div>
-                                    </div>
-                                    <!-- Tool disponibility -->
-                                    <h6 class="fst-italic mt-3">Availability</h5>
-                                        11/04/2023 - 25/05/2023
-                                        <!-- Tool location -->
-                                        <h6 class="fst-italic mt-2">Location</h5>
-                                            14 Rue de Saint-Hendré 48900 Pejoul
-                                </div>
-                            </div>
-                            <!-- Tool actions -->
-                            <div class="card-footer p-2 pt-0 border-top-0 bg-transparent">
-                                <div class="text-center"><a class="btn btn-outline-warning" href="#">View details<i
-                                            class="bi bi-gear ms-2"></i></a></div>
-                                <div class="text-center"><a class="btn btn-danger mt-2" href="#">Remove from bag<i
-                                            class="bi bi-heart ms-2"></i></a></div>
-                                <!-- Tool publisher -->
-                                <h6 class="mt-3 fw-bolder">Published by : <a class="" href="#"
-                                        style="text-decoration: none;">Roger</a></h5>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col mb-5" name="toolCard">
-                        <div class="card h-100 shadow">
-                            <!-- Available badge -->
-                            <div class="badge bg-success text-white position-absolute"
-                                style="top: 0.5rem; right: 0.5rem">Available</div>
-                            <!-- Tool image -->
-                            <img class="card-img-top border-bottom p-3" src="/static/images/truelle.jpg" alt="..."
-                                style="height: 200px; width: auto;" />
-                            <!-- Tool details -->
-                            <div class="card-body p-4">
-                                <div class="text-center">
-                                    <!-- Tool name -->
-                                    <h5 class="fw-bolder">Fancy Tool</h5>
-                                    <!-- Tool reviews -->
-                                    <div class="d-flex justify-content-center small text-warning mb-2">
-                                        <div class="bi bi-star-fill"></div>
-                                        <div class="bi bi-star-fill"></div>
-                                        <div class="bi bi-star-fill"></div>
-                                        <div class="bi bi-star-fill"></div>
-                                        <div class="bi bi-star-fill"></div>
-                                    </div>
-                                    <!-- Tool disponibility -->
-                                    <h6 class="fst-italic mt-3">Availability</h5>
-                                        11/04/2023 - 25/05/2023
-                                        <!-- Tool location -->
-                                        <h6 class="fst-italic mt-2">Location</h5>
-                                            14 Rue de Saint-Hendré 48900 Pejoul
-                                </div>
-                            </div>
-                            <!-- Tool actions -->
-                            <div class="card-footer p-2 pt-0 border-top-0 bg-transparent">
-                                <div class="text-center"><a class="btn btn-outline-warning" href="#">View details<i
-                                            class="bi bi-gear ms-2"></i></a></div>
-                                <div class="text-center"><a class="btn btn-danger mt-2" href="#">Remove from bag<i
-                                            class="bi bi-heart ms-2"></i></a></div>
-                                <!-- Tool publisher -->
-                                <h6 class="mt-3 fw-bolder">Published by : <a class="" href="#"
-                                        style="text-decoration: none;">Roger</a></h5>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col mb-5" name="toolCard">
-                        <div class="card h-100 shadow">
-                            <!-- Available badge -->
-                            <div class="badge bg-success text-white position-absolute"
-                                style="top: 0.5rem; right: 0.5rem">Available</div>
-                            <!-- Tool image -->
-                            <img class="card-img-top border-bottom p-3" src="/static/images/truelle.jpg" alt="..."
-                                style="height: 200px; width: auto;" />
-                            <!-- Tool details -->
-                            <div class="card-body p-4">
-                                <div class="text-center">
-                                    <!-- Tool name -->
-                                    <h5 class="fw-bolder">Fancy Tool</h5>
-                                    <!-- Tool reviews -->
-                                    <div class="d-flex justify-content-center small text-warning mb-2">
-                                        <div class="bi bi-star-fill"></div>
-                                        <div class="bi bi-star-fill"></div>
-                                        <div class="bi bi-star-fill"></div>
-                                        <div class="bi bi-star-fill"></div>
-                                        <div class="bi bi-star-fill"></div>
-                                    </div>
-                                    <!-- Tool disponibility -->
-                                    <h6 class="fst-italic mt-3">Availability</h5>
-                                        11/04/2023 - 25/05/2023
-                                        <!-- Tool location -->
-                                        <h6 class="fst-italic mt-2">Location</h5>
-                                            14 Rue de Saint-Hendré 48900 Pejoul
-                                </div>
-                            </div>
-                            <!-- Tool actions -->
-                            <div class="card-footer p-2 pt-0 border-top-0 bg-transparent">
-                                <div class="text-center"><a class="btn btn-outline-warning" href="#">View details<i
-                                            class="bi bi-gear ms-2"></i></a></div>
-                                <div class="text-center"><a class="btn btn-danger mt-2" href="#">Remove from bag<i
-                                            class="bi bi-x-octagon ms-2"></i></a></div>
-                                <!-- Tool publisher -->
-                                <h6 class="mt-3 fw-bolder">Published by : <a class="" href="#"
-                                        style="text-decoration: none;">Roger</a></h5>
-                            </div>
-                        </div>
-                    </div>
+                    {% endfor %}
                 </div>
+                {% elif tools|length == 3 %}
+                <div class="row gx-4 gx-lg-5 row-cols-2 row-cols-md-3 row-cols-xl-3">
+                    {% for tool in tools %}
+                    <div class="col mb-5" name="toolCard">
+                        <div class="card gradient-custom-card h-100 shadow">
+                            <!-- Available/Unavailable badge -->
+                            {% if tool.availabality == True %}
+                            <div class="badge bg-success text-white position-absolute" style="top: 0.5rem; right: 0.5rem">
+                                Available</div>
+                            {% else %}
+                            <div class="badge bg-danger text-white position-absolute" style="top: 0.5rem; right: 0.5rem">
+                                Unavailable</div>
+                            {% endif %}
+                            <!-- Tool image -->
+                            <img class="card-img-top border-bottom p-3" src="{{ tool.image.url }}" alt="..."
+                                style="height: 200px; width: 268px;" />
+                            <!-- Tool details -->
+                            <div class="card-body p-4">
+                                <div class="text-center">
+                                    <!-- Tool name -->
+                                    <h5 class="fw-bolder">{{ tool.name }}</h5>
+                                    <!-- Tool reviews -->
+                                    <div class="d-flex justify-content-center small text-warning mb-2">
+                                        <div class="bi bi-star-fill"></div>
+                                        <div class="bi bi-star-fill"></div>
+                                        <div class="bi bi-star-fill"></div>
+                                        <div class="bi bi-star-fill"></div>
+                                        <div class="bi bi-star-fill"></div>
+                                    </div>
+                                    <!-- Tool disponibility -->
+                                    <h6 class="fst-italic mt-3">Availability</h5>
+                                        {{ tool.availabalityStart }}<br>
+                                        -----<br>
+                                        {{ tool.availabalityEnd }}
+                                        <!-- Tool location -->
+                                        <h6 class="fst-italic mt-2">Location</h5>
+                                            {{ tool.location }}
+                                </div>
+                            </div>
+                            <!-- Tool actions -->
+                            <div class="card-footer p-2 pt-0 border-top-0 bg-transparent">
+                                <div class="text-center"><a class="btn btn-outline-warning" href="#">View details<i
+                                            class="bi bi-gear ms-2"></i></a></div>
+                                <form action="" method="post" novalidate>
+                                    {% csrf_token %}
+                                    <div class="text-center">
+                                        <button class="btn btn-danger mt-2" type="submit" name="submit"
+                                            value="{{ tool.id }}">Remove
+                                            from bag<i class="bi bi-x-octagon ms-2"></i></button>
+                                    </div>
+                                </form>
+                                <!-- Tool publisher -->
+                                <h6 class="mt-3 fw-bolder">Published by : <a class="" href="#"
+                                        style="text-decoration: none;">
+                                        {{ tool.author }}</a></h5>
+                            </div>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+                {% elif tools|length == 2 %}
+                <div class="row gx-4 gx-lg-5 row-cols-2 row-cols-md-2 row-cols-xl-2">
+                    {% for tool in tools %}
+                    <div class="col mb-5" name="toolCard">
+                        <div class="card gradient-custom-card h-100 shadow">
+                            <!-- Available/Unavailable badge -->
+                            {% if tool.availabality == True %}
+                            <div class="badge bg-success text-white position-absolute" style="top: 0.5rem; right: 0.5rem">
+                                Available</div>
+                            {% else %}
+                            <div class="badge bg-danger text-white position-absolute" style="top: 0.5rem; right: 0.5rem">
+                                Unavailable</div>
+                            {% endif %}
+                            <!-- Tool image -->
+                            <img class="card-img-top border-bottom p-3" src="{{ tool.image.url }}" alt="..."
+                                style="height: 200px; width: 268px;" />
+                            <!-- Tool details -->
+                            <div class="card-body p-4">
+                                <div class="text-center">
+                                    <!-- Tool name -->
+                                    <h5 class="fw-bolder">{{ tool.name }}</h5>
+                                    <!-- Tool reviews -->
+                                    <div class="d-flex justify-content-center small text-warning mb-2">
+                                        <div class="bi bi-star-fill"></div>
+                                        <div class="bi bi-star-fill"></div>
+                                        <div class="bi bi-star-fill"></div>
+                                        <div class="bi bi-star-fill"></div>
+                                        <div class="bi bi-star-fill"></div>
+                                    </div>
+                                    <!-- Tool disponibility -->
+                                    <h6 class="fst-italic mt-3">Availability</h5>
+                                        {{ tool.availabalityStart }}<br>
+                                        -----<br>
+                                        {{ tool.availabalityEnd }}
+                                        <!-- Tool location -->
+                                        <h6 class="fst-italic mt-2">Location</h5>
+                                            {{ tool.location }}
+                                </div>
+                            </div>
+                            <!-- Tool actions -->
+                            <div class="card-footer p-2 pt-0 border-top-0 bg-transparent">
+                                <div class="text-center"><a class="btn btn-outline-warning" href="#">View details<i
+                                            class="bi bi-gear ms-2"></i></a></div>
+                                <form action="" method="post" novalidate>
+                                    {% csrf_token %}
+                                    <div class="text-center">
+                                        <button class="btn btn-danger mt-2" type="submit" name="submit"
+                                            value="{{ tool.id }}">Remove
+                                            from bag<i class="bi bi-x-octagon ms-2"></i></button>
+                                    </div>
+                                </form>
+                                <!-- Tool publisher -->
+                                <h6 class="mt-3 fw-bolder">Published by : <a class="" href="#"
+                                        style="text-decoration: none;">
+                                        {{ tool.author }}</a></h5>
+                            </div>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+                {% else %}
+                <div class="row gx-4 gx-lg-5 row-cols-1 row-cols-md-1 row-cols-xl-1">
+                    {% for tool in tools %}
+                    <div class="col mb-5" name="toolCard">
+                        <div class="card gradient-custom-card h-100 shadow">
+                            <!-- Available/Unavailable badge -->
+                            {% if tool.availabality == True %}
+                            <div class="badge bg-success text-white position-absolute" style="top: 0.5rem; right: 0.5rem">
+                                Available</div>
+                            {% else %}
+                            <div class="badge bg-danger text-white position-absolute" style="top: 0.5rem; right: 0.5rem">
+                                Unavailable</div>
+                            {% endif %}
+                            <!-- Tool image -->
+                            <img class="card-img-top border-bottom p-3" src="{{ tool.image.url }}" alt="..."
+                                style="height: 200px; width: 268px;" />
+                            <!-- Tool details -->
+                            <div class="card-body p-4">
+                                <div class="text-center">
+                                    <!-- Tool name -->
+                                    <h5 class="fw-bolder">{{ tool.name }}</h5>
+                                    <!-- Tool reviews -->
+                                    <div class="d-flex justify-content-center small text-warning mb-2">
+                                        <div class="bi bi-star-fill"></div>
+                                        <div class="bi bi-star-fill"></div>
+                                        <div class="bi bi-star-fill"></div>
+                                        <div class="bi bi-star-fill"></div>
+                                        <div class="bi bi-star-fill"></div>
+                                    </div>
+                                    <!-- Tool disponibility -->
+                                    <h6 class="fst-italic mt-3">Availability</h5>
+                                        {{ tool.availabalityStart }}<br>
+                                        -----<br>
+                                        {{ tool.availabalityEnd }}
+                                        <!-- Tool location -->
+                                        <h6 class="fst-italic mt-2">Location</h5>
+                                            {{ tool.location }}
+                                </div>
+                            </div>
+                            <!-- Tool actions -->
+                            <div class="card-footer p-2 pt-0 border-top-0 bg-transparent">
+                                <div class="text-center"><a class="btn btn-outline-warning" href="#">View details<i
+                                            class="bi bi-gear ms-2"></i></a></div>
+                                <form action="" method="post" novalidate>
+                                    {% csrf_token %}
+                                    <div class="text-center">
+                                        <button class="btn btn-outline-danger mt-2" type="submit" name="submit"
+                                            value="{{ tool.id }}">Remove from bag<i class="bi bi-heart ms-2"></i></button>
+                                    </div>
+                                </form>
+                                <!-- Tool publisher -->
+                                <h6 class="mt-3 fw-bolder">Published by : <a class="" href="#"
+                                        style="text-decoration: none;">
+                                        {{ tool.author }}</a></h5>
+                            </div>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+                {% endif %}
             </div>
         </section>
         <!-- Section -->
+        {% else %}
+        <div class="col-8 d-flex align-items-center justify-content-center">
+            <p class="fs-1 text-muted" style="transform: skewY(-11deg);">No published tools</p>
+        </div>
+        {% endif %}
     </div>
-    <div class="d-flex justify-content-center mb-5">
+    <div class="d-flex justify-content-center pb-5">
         <button class="btn btn-secondary shadow-sm fw-bolder" type="submit">More</button>
     </div>
-</body>
+</div>
 
-{% endblock %}
+{% endblock content %}

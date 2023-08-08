@@ -28,7 +28,7 @@
                     {% if blog_form.errors %}
                     {{ blog_form.errors }}
                     {% endif %}
-                    <form method="post" enctype="multipart/form-data" class="d-flex flex-column align-items-center py-5">
+                    <form method="post" enctype="multipart/form-data" class="d-flex flex-column align-items-center py-5" novalidate>
                         {% csrf_token %}
                         <div class="col-md-6 mb-4">
                             <div class="form-outline">

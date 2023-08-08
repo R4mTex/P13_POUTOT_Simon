@@ -41,7 +41,6 @@ class Research(LoginRequiredMixin, View):
     
     def post(self, request, id):
         toolId = int(request.POST.get("submit"))
-        print(toolId)
 
         toolSelected = blogModels.Blog.objects.get(id=toolId)
         userFavorites = blogModels.Favorite.objects.filter(user=id)
@@ -63,7 +62,6 @@ class Research(LoginRequiredMixin, View):
         favorites = []
         for favorite in range(len(userFavorites)):
             favorites.append(userFavorites[favorite].blog)
-        print(favorites)
 
         reverseFavoritesToolsList = []
         for tool in reversed(range(len(favorites))):
@@ -76,20 +74,24 @@ class Favorites(LoginRequiredMixin, View):
     template_name = 'authentication/favorites.html'
 
     def get(self, request, id):
-        tools = blogModels.Blog.objects.all()
+        userFavorites = blogModels.Favorite.objects.filter(user=id)
+        
+        favorites = []
+        for favorite in range(len(userFavorites)):
+            favorites.append(userFavorites[favorite].blog)
 
-        for tool in range(len(tools)):
-            if tools[tool].availabalityStart <= timezone.now() <= tools[tool].availabalityEnd:
-                tools[tool].availabality = True
+        for tool in range(len(favorites)):
+            if favorites[tool].availabalityStart <= timezone.now() <= favorites[tool].availabalityEnd:
+                favorites[tool].availabality = True
             else:
-                tools[tool].availabality = False
+                favorites[tool].availabality = False
 
-        reverseToolsList = []
-        for tool in reversed(range(len(tools))):
-            reverseToolsList.append(tools[tool])
+        reverseFavoritesList = []
+        for tool in reversed(range(len(favorites))):
+            reverseFavoritesList.append(favorites[tool])
         
         context = {
-            'tools': reverseToolsList,
+            'tools': reverseFavoritesList,
         }
         return render(request, self.template_name, context=context)
         

@@ -38,8 +38,12 @@ background: linear-gradient(to right, rgba(251, 194, 235, 1), rgba(166, 193, 238
                     <div class="p-4 text-black" style="background-color: #f8f9fa;">
                         <div class="d-flex flex-column text-center py-1">
                             <div>
-                                <p class="mb-1 h5">253</p>
+                                <p class="mb-1 h5">{{ tools|length }}</p>
+                                {% if tools|length == 1 %}
+                                <p class="small text-muted mb-0">Tool</p>
+                                {% else %}
                                 <p class="small text-muted mb-0">Tools</p>
+                                {% endif %}
                             </div>
                             <form class="mt-1" action="{% url 'edit-tool' user.id %}">
                                 <button type="submit" class="btn btn-outline-dark px-4" data-mdb-ripple-color="dark" style="z-index: 1;">

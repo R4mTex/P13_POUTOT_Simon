@@ -1,4 +1,3 @@
-from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.views.generic import View
 from django.shortcuts import redirect, render
@@ -6,6 +5,7 @@ from django.urls import reverse
 from . import forms
 from authentication import models as authModels
 from blog import models as blogModels
+from django.utils import timezone
 
 
 class editTool(LoginRequiredMixin, View):
@@ -44,6 +44,12 @@ class personalTools(LoginRequiredMixin, View):
     def get(self, request, id):
         user = authModels.User.objects.get(id=id)
         personalTools = blogModels.Blog.objects.filter(author=user.id)
+
+        for tool in range(len(personalTools)):
+            if personalTools[tool].availabalityStart <= timezone.now() <= personalTools[tool].availabalityEnd:
+                personalTools[tool].availabality = True
+            else:
+                personalTools[tool].availabality = False
 
         reversePersonalToolList = []
         for tool in reversed(range(len(personalTools))):

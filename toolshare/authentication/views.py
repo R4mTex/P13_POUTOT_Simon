@@ -8,6 +8,8 @@ from authentication import forms
 from authentication import models as authModels
 from blog import models as blogModels
 from django.contrib.auth.forms import PasswordChangeForm
+from django.utils import timezone
+from django.urls import reverse
 
 # Create your views here.
 class Home(LoginRequiredMixin, View):
@@ -16,13 +18,81 @@ class Home(LoginRequiredMixin, View):
     def get(self, request):
         return render(request, self.template_name)
 
-@login_required
-def research(request):
-    return render(request, 'authentication/research.html')
+class Research(LoginRequiredMixin, View):
+    template_name = 'authentication/research.html'
 
-@login_required
-def favorites(request):
-    return render(request, 'authentication/favorites.html')
+    def get(self, request, id):
+        tools = blogModels.Blog.objects.all()
+
+        for tool in range(len(tools)):
+            if tools[tool].availabalityStart <= timezone.now() <= tools[tool].availabalityEnd:
+                tools[tool].availabality = True
+            else:
+                tools[tool].availabality = False
+
+        reverseToolsList = []
+        for tool in reversed(range(len(tools))):
+            reverseToolsList.append(tools[tool])
+        
+        context = {
+            'tools': reverseToolsList,
+        }
+        return render(request, self.template_name, context=context)
+    
+    def post(self, request, id):
+        toolId = int(request.POST.get("submit"))
+        print(toolId)
+
+        toolSelected = blogModels.Blog.objects.get(id=toolId)
+        userFavorites = blogModels.Favorite.objects.filter(user=id)
+
+        favoritesNames = []
+        for favorite in range(len(userFavorites)):
+            favoritesNames.append(userFavorites[favorite].blog.name)
+
+        if toolSelected.name not in favoritesNames:
+            newFavorite = blogModels.Favorite()
+            newFavorite.blog = toolSelected
+            newFavorite.user = authModels.User.objects.get(id=id)
+            newFavorite.save()
+        else:
+            print("Already in your favorites")
+
+        userFavorites = blogModels.Favorite.objects.filter(user=id)
+        
+        favorites = []
+        for favorite in range(len(userFavorites)):
+            favorites.append(userFavorites[favorite].blog)
+        print(favorites)
+
+        reverseFavoritesToolsList = []
+        for tool in reversed(range(len(favorites))):
+            reverseFavoritesToolsList.append(favorites[tool])
+
+        return redirect(reverse('favorites', kwargs={'id': id}))
+
+
+class Favorites(LoginRequiredMixin, View):
+    template_name = 'authentication/favorites.html'
+
+    def get(self, request, id):
+        tools = blogModels.Blog.objects.all()
+
+        for tool in range(len(tools)):
+            if tools[tool].availabalityStart <= timezone.now() <= tools[tool].availabalityEnd:
+                tools[tool].availabality = True
+            else:
+                tools[tool].availabality = False
+
+        reverseToolsList = []
+        for tool in reversed(range(len(tools))):
+            reverseToolsList.append(tools[tool])
+        
+        context = {
+            'tools': reverseToolsList,
+        }
+        return render(request, self.template_name, context=context)
+        
 
 class Profile(LoginRequiredMixin, View):
     template_name = 'authentication/profile.html'

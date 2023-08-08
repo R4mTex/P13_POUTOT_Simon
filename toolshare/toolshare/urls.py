@@ -26,8 +26,8 @@ from django.conf.urls.static import static
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('', authView.Home.as_view(template_name='authentication/home.html'), name='home'),
-    path('research', authView.research, name='research'),
-    path('favorites/', authView.favorites, name='favorites'),
+    path('research/<int:id>/', authView.Research.as_view(template_name='authentication/research.html'), name='research'),
+    path('favorites/<int:id>/', authView.Favorites.as_view(template_name='authentication/favorites.html'), name='favorites'),
     path('profile/<int:id>/', authView.Profile.as_view(template_name='authentication/profile.html'), name='profile'),
     path('edit-profile/<int:id>/', authView.editProfile.as_view(template_name='authentication/editProfile.html'), name='edit-profile'),
     path('edit-tool/<int:id>/', blogView.editTool.as_view(template_name='blog/editTool.html'), name='edit-tool'),

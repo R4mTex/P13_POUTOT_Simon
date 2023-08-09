@@ -10,6 +10,7 @@ from blog import models as blogModels
 from django.contrib.auth.forms import PasswordChangeForm
 from django.utils import timezone
 from django.urls import reverse
+from django.contrib import messages
 
 # Create your views here.
 class Home(LoginRequiredMixin, View):
@@ -54,20 +55,26 @@ class Research(LoginRequiredMixin, View):
             newFavorite.blog = toolSelected
             newFavorite.user = authModels.User.objects.get(id=id)
             newFavorite.save()
+            messages.success(request, "Tool saved !")
         else:
-            print("Already in your favorites")
+            messages.warning(request, "Tool already saved !")
 
-        userFavorites = blogModels.Favorite.objects.filter(user=id)
+        tools = blogModels.Blog.objects.all()
+
+        for tool in range(len(tools)):
+            if tools[tool].availabalityStart <= timezone.now() <= tools[tool].availabalityEnd:
+                tools[tool].availabality = True
+            else:
+                tools[tool].availabality = False
+
+        reverseToolsList = []
+        for tool in reversed(range(len(tools))):
+            reverseToolsList.append(tools[tool])
         
-        favorites = []
-        for favorite in range(len(userFavorites)):
-            favorites.append(userFavorites[favorite].blog)
-
-        reverseFavoritesToolsList = []
-        for tool in reversed(range(len(favorites))):
-            reverseFavoritesToolsList.append(favorites[tool])
-
-        return redirect(reverse('favorites', kwargs={'id': id}))
+        context = {
+            'tools': reverseToolsList,
+        }
+        return render(request, self.template_name, context=context)
 
 
 class Favorites(LoginRequiredMixin, View):
@@ -75,7 +82,37 @@ class Favorites(LoginRequiredMixin, View):
 
     def get(self, request, id):
         userFavorites = blogModels.Favorite.objects.filter(user=id)
+
+        favorites = []
+        for favorite in range(len(userFavorites)):
+            favorites.append(userFavorites[favorite].blog)
+
+        for tool in range(len(favorites)):
+            if favorites[tool].availabalityStart <= timezone.now() <= favorites[tool].availabalityEnd:
+                favorites[tool].availabality = True
+            else:
+                favorites[tool].availabality = False
+
+        reverseFavoritesList = []
+        for tool in reversed(range(len(favorites))):
+            reverseFavoritesList.append(favorites[tool])
         
+        context = {
+            'tools': reverseFavoritesList,
+        }
+        return render(request, self.template_name, context=context)
+    
+    def post(self, request, id):
+        favoriteId = int(request.POST.get("submit"))
+
+        userFavorites = blogModels.Favorite.objects.filter(user=id)
+
+        for favorite in range(len(userFavorites)):
+            if userFavorites[favorite].blog.id == favoriteId:
+                blogModels.Favorite.objects.filter(id=userFavorites[favorite].id).delete()
+        
+        userFavorites = blogModels.Favorite.objects.filter(user=id)
+
         favorites = []
         for favorite in range(len(userFavorites)):
             favorites.append(userFavorites[favorite].blog)

@@ -78,6 +78,12 @@ class personalTools(LoginRequiredMixin, View):
 
         personalTools = blogModels.Blog.objects.filter(author=user.id)
 
+        for tool in range(len(personalTools)):
+            if personalTools[tool].availabalityStart <= timezone.now() <= personalTools[tool].availabalityEnd:
+                personalTools[tool].availabality = True
+            else:
+                personalTools[tool].availabality = False
+
         reversePersonalToolList = []
         for tool in reversed(range(len(personalTools))):
             reversePersonalToolList.append(personalTools[tool])

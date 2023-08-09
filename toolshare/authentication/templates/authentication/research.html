@@ -23,16 +23,15 @@
     }
     .gradient-custom {
         /* fallback for old browsers */
-        background: #6a11cb;
+        background: #EAE1D2;
 
         /* Chrome 10-25, Safari 5.1-6 */
-        background: -webkit-linear-gradient(to right, #937B71, #EAE1D2, #E03E42);
+        background: -webkit-linear-gradient(to right, #937B71, #EAE1D2, #B63133);
 
         /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
-        background: linear-gradient(to right, #937B71, #EAE1D2, #E03E42)
+        background: linear-gradient(to right, #937B71, #EAE1D2, #B63133)
         }
 </style>
-
 
 <!-- Header -->
 <header class="bg-dark py-5">
@@ -44,6 +43,23 @@
     </div>
 </header>
 <div class="gradient-custom">
+    {% for message in messages %}
+        {% if 'success' in message.tags %}
+        <div class="d-inline-flex alert alert-success alert-dismissible fade show mt-1 ms-1 p-2 pe-3" role="alert">
+            <strong>{{ message }}</strong>
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close" style="position: relative; left: 6px; font-size: smaller;">
+                <span aria-hidden="true">&times;</span>
+            </button>
+        </div>
+        {% else %}
+        <div class="d-inline-flex alert alert-warning alert-dismissible fade show mt-1 ms-1 p-2 pe-3" role="alert">
+            <strong>{{ message }}</strong>
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close" style="position: relative; left: 5px; font-size: smaller;">
+                <span aria-hidden="true">&times;</span>
+            </button>
+        </div>
+        {% endif %}
+    {% endfor %}
     <div class="d-flex flex-row">
         <!-- Table -->
         <div class="col-2 py-5 px-2">
@@ -51,7 +67,7 @@
                 style="position: sticky; top: 1px">
                 <!-- Table body -->
                 <tbody>
-                    <caption style="margin-left: 10px;">Filter by :</caption>
+                    <caption style="margin-left: 10px; color: black;">Filter by :</caption>
                     <tr>
                         <th>Alphabetic</th>
                     </tr>

@@ -188,12 +188,12 @@
         <!-- Table -->
         {% if tools|length != 0 %}
         <!-- Section -->
-        <section class="py-5">
+        <section class="col-10 py-5">
             <div class="container px-4 px-lg-5 mt-5">
+                <div class="row ps-4 ps-md-0 gx-4 gx-lg-5 row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-xl-4">
                 {% if tools|length >= 4 %}
-                <div class="row gx-4 gx-lg-5 row-cols-2 row-cols-md-3 row-cols-xl-4">
                     {% for tool in tools %}
-                    <div class="col mb-5" name="toolCard">
+                    <div class="col col-sm-6 col-md-4 col-xl-3 mb-5" name="toolCard">
                         <div class="card gradient-custom-card h-100 shadow">
                             <!-- Available/Unavailable badge -->
                             {% if tool.availabality == True %}
@@ -205,7 +205,7 @@
                             {% endif %}
                             <!-- Tool image -->
                             <img class="card-img-top border-bottom p-3" src="{{ tool.image.url }}" alt="..."
-                                style="height: 200px; width: 268px;" />
+                                style="height: 200px; width: auto;" />
                             <!-- Tool details -->
                             <div class="card-body p-4">
                                 <div class="text-center">
@@ -245,11 +245,9 @@
                         </div>
                     </div>
                     {% endfor %}
-                </div>
                 {% elif tools|length == 3 %}
-                <div class="row gx-4 gx-lg-5 row-cols-2 row-cols-md-3 row-cols-xl-3">
                     {% for tool in tools %}
-                    <div class="col mb-5" name="toolCard">
+                    <div class="col col-sm-6 col-md-4 col-xl-3 mb-5" name="toolCard">
                         <div class="card gradient-custom-card h-100 shadow">
                             <!-- Available/Unavailable badge -->
                             {% if tool.availabality == True %}
@@ -261,7 +259,7 @@
                             {% endif %}
                             <!-- Tool image -->
                             <img class="card-img-top border-bottom p-3" src="{{ tool.image.url }}" alt="..."
-                                style="height: 200px; width: 268px;" />
+                                style="height: 200px; width: auto;" />
                             <!-- Tool details -->
                             <div class="card-body p-4">
                                 <div class="text-center">
@@ -303,11 +301,9 @@
                         </div>
                     </div>
                     {% endfor %}
-                </div>
                 {% elif tools|length == 2 %}
-                <div class="row gx-4 gx-lg-5 row-cols-2 row-cols-md-2 row-cols-xl-2">
                     {% for tool in tools %}
-                    <div class="col mb-5" name="toolCard">
+                    <div class="col col-sm-6 col-md-4 col-xl-3 mb-5" name="toolCard">
                         <div class="card gradient-custom-card h-100 shadow">
                             <!-- Available/Unavailable badge -->
                             {% if tool.availabality == True %}
@@ -319,7 +315,7 @@
                             {% endif %}
                             <!-- Tool image -->
                             <img class="card-img-top border-bottom p-3" src="{{ tool.image.url }}" alt="..."
-                                style="height: 200px; width: 268px;" />
+                                style="height: 200px; width: auto;" />
                             <!-- Tool details -->
                             <div class="card-body p-4">
                                 <div class="text-center">
@@ -361,11 +357,9 @@
                         </div>
                     </div>
                     {% endfor %}
-                </div>
                 {% else %}
-                <div class="row gx-4 gx-lg-5 row-cols-1 row-cols-md-1 row-cols-xl-1">
                     {% for tool in tools %}
-                    <div class="col mb-5" name="toolCard">
+                    <div class="col col-sm-6 col-md-4 col-xl-3 mb-5" name="toolCard">
                         <div class="card gradient-custom-card h-100 shadow">
                             <!-- Available/Unavailable badge -->
                             {% if tool.availabality == True %}
@@ -377,7 +371,7 @@
                             {% endif %}
                             <!-- Tool image -->
                             <img class="card-img-top border-bottom p-3" src="{{ tool.image.url }}" alt="..."
-                                style="height: 200px; width: 268px;" />
+                                style="height: 200px; width: auto;" />
                             <!-- Tool details -->
                             <div class="card-body p-4">
                                 <div class="text-center">
@@ -418,8 +412,8 @@
                         </div>
                     </div>
                     {% endfor %}
-                </div>
                 {% endif %}
+                </div>
             </div>
         </section>
         <!-- Section -->
@@ -431,7 +425,7 @@
     </div>
     <div class="d-flex justify-content-center pb-5">
         <button class="btn btn-secondary shadow-sm fw-bolder" type="submit">More</button>
-    </div>
+    </div>   
 </div>
 
 {% endblock content %}

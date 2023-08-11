@@ -41,16 +41,16 @@ class Research(LoginRequiredMixin, View):
         return render(request, self.template_name, context=context)
     
     def post(self, request, id):
-        toolId = int(request.POST.get("submit"))
+        toolID = int(request.POST.get("submit"))
 
-        toolSelected = blogModels.Blog.objects.get(id=toolId)
+        toolSelected = blogModels.Blog.objects.get(id=toolID)
         userFavorites = blogModels.Favorite.objects.filter(user=id)
 
-        favoritesNames = []
+        favoritesID = []
         for favorite in range(len(userFavorites)):
-            favoritesNames.append(userFavorites[favorite].blog.name)
+            favoritesID.append(userFavorites[favorite].blog.id)
 
-        if toolSelected.name not in favoritesNames:
+        if toolSelected.id not in favoritesID:
             newFavorite = blogModels.Favorite()
             newFavorite.blog = toolSelected
             newFavorite.user = authModels.User.objects.get(id=id)

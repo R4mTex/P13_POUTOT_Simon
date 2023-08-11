@@ -22,7 +22,7 @@ class Home(LoginRequiredMixin, View):
 class Research(LoginRequiredMixin, View):
     template_name = 'authentication/research.html'
 
-    def get(self, request, id):
+    def get(self, request, userID):
         tools = blogModels.Blog.objects.all()
 
         for tool in range(len(tools)):
@@ -40,11 +40,11 @@ class Research(LoginRequiredMixin, View):
         }
         return render(request, self.template_name, context=context)
     
-    def post(self, request, id):
+    def post(self, request, userID):
         toolID = int(request.POST.get("submit"))
 
         toolSelected = blogModels.Blog.objects.get(id=toolID)
-        userFavorites = blogModels.Favorite.objects.filter(user=id)
+        userFavorites = blogModels.Favorite.objects.filter(user=userID)
 
         favoritesID = []
         for favorite in range(len(userFavorites)):
@@ -53,7 +53,7 @@ class Research(LoginRequiredMixin, View):
         if toolSelected.id not in favoritesID:
             newFavorite = blogModels.Favorite()
             newFavorite.blog = toolSelected
-            newFavorite.user = authModels.User.objects.get(id=id)
+            newFavorite.user = authModels.User.objects.get(id=userID)
             newFavorite.save()
             messages.success(request, "Tool saved !")
         else:
@@ -80,8 +80,8 @@ class Research(LoginRequiredMixin, View):
 class Favorites(LoginRequiredMixin, View):
     template_name = 'authentication/favorites.html'
 
-    def get(self, request, id):
-        userFavorites = blogModels.Favorite.objects.filter(user=id)
+    def get(self, request, userID):
+        userFavorites = blogModels.Favorite.objects.filter(user=userID)
 
         favorites = []
         for favorite in range(len(userFavorites)):
@@ -102,16 +102,16 @@ class Favorites(LoginRequiredMixin, View):
         }
         return render(request, self.template_name, context=context)
     
-    def post(self, request, id):
+    def post(self, request, userID):
         favoriteId = int(request.POST.get("submit"))
 
-        userFavorites = blogModels.Favorite.objects.filter(user=id)
+        userFavorites = blogModels.Favorite.objects.filter(user=userID)
 
         for favorite in range(len(userFavorites)):
             if userFavorites[favorite].blog.id == favoriteId:
                 blogModels.Favorite.objects.filter(id=userFavorites[favorite].id).delete()
         
-        userFavorites = blogModels.Favorite.objects.filter(user=id)
+        userFavorites = blogModels.Favorite.objects.filter(user=userID)
 
         favorites = []
         for favorite in range(len(userFavorites)):
@@ -136,8 +136,8 @@ class Favorites(LoginRequiredMixin, View):
 class Profile(LoginRequiredMixin, View):
     template_name = 'authentication/profile.html'
 
-    def get(self, request, id):
-        user = authModels.User.objects.get(id=id)
+    def get(self, request, userID):
+        user = authModels.User.objects.get(id=userID)
         personalTools = blogModels.Blog.objects.filter(author=user.id)
 
         reversePersonalToolList = []
@@ -152,7 +152,7 @@ class Profile(LoginRequiredMixin, View):
         }
         return render(request, self.template_name, context=context)
     
-    def post(self, request, id):
+    def post(self, request, userID):
         return render(request, self.template_name)
 
 class editProfile(LoginRequiredMixin, View):
@@ -161,8 +161,8 @@ class editProfile(LoginRequiredMixin, View):
     form_profile = forms.UpdateUserProfile
     form_password = PasswordChangeForm
 
-    def get(self, request, id):
-        user = authModels.User.objects.get(id=id)
+    def get(self, request, userID):
+        user = authModels.User.objects.get(id=userID)
         form_picture = self.form_picture()
         form_profile = self.form_profile(instance=user)
         form_password = self.form_password(id)
@@ -175,8 +175,8 @@ class editProfile(LoginRequiredMixin, View):
         }
         return render(request, self.template_name, context=context)
 
-    def post(self, request, id):
-        user = authModels.User.objects.get(id=id)
+    def post(self, request, userID):
+        user = authModels.User.objects.get(id=userID)
         if 'profilePicture' in request.POST:
             form_picture = self.form_picture(request.POST, request.FILES, instance=request.user)
             if form_picture.is_valid():
@@ -186,7 +186,7 @@ class editProfile(LoginRequiredMixin, View):
                     user.profilePicture.delete()
                     form_picture.save()
                 
-                user = authModels.User.objects.get(id=id)
+                user = authModels.User.objects.get(id=userID)
                 form_picture = self.form_picture()
                 form_profile = self.form_profile(instance=user)
                 form_password = self.form_password(id)
@@ -199,10 +199,10 @@ class editProfile(LoginRequiredMixin, View):
                 }
                 return render(request, self.template_name, context=context)
             else:
-                user = authModels.User.objects.get(id=id)
+                user = authModels.User.objects.get(id=userID)
                 form_picture = self.form_picture()
                 form_profile = self.form_profile(instance=user)
-                form_password = self.form_password(id)
+                form_password = self.form_password(userID)
 
                 context = {
                     'user': user,
@@ -215,10 +215,10 @@ class editProfile(LoginRequiredMixin, View):
             form_profile = self.form_profile(request.POST)
             if form_profile.is_valid():
                 print("yes")
-                user = authModels.User.objects.get(id=id)
+                user = authModels.User.objects.get(id=userID)
                 form_picture = self.form_picture()
                 form_profile = self.form_profile(instance=request.user)
-                form_password = self.form_password(id)
+                form_password = self.form_password(userID)
 
                 context = {
                     'user': user,
@@ -230,10 +230,10 @@ class editProfile(LoginRequiredMixin, View):
             else:
                 print('Error')
                 print(form_profile.errors)
-                user = authModels.User.objects.get(id=id)
+                user = authModels.User.objects.get(id=userID)
                 form_picture = self.form_picture()
                 form_profile = self.form_profile(instance=request.user)
-                form_password = self.form_password(id)
+                form_password = self.form_password(userID)
 
                 context = {
                     'user': user,

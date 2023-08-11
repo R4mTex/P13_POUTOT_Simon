@@ -11,9 +11,9 @@ from django.utils import timezone
 class editTool(LoginRequiredMixin, View):
     template_name = 'blog/editTool.html'
 
-    def get (self, request, id):
+    def get (self, request, userID):
         blog_form = forms.BlogForm()
-        user = authModels.User.objects.get(id=id)
+        user = authModels.User.objects.get(id=userID)
 
         context = {
             'blog_form': blog_form,
@@ -21,15 +21,15 @@ class editTool(LoginRequiredMixin, View):
         }
         return render(request, 'blog/editTool.html', context=context)
     
-    def post (self, request, id):
+    def post (self, request, userID):
         blog_form = forms.BlogForm(request.POST, request.FILES)
-        user = authModels.User.objects.get(id=id)
+        user = authModels.User.objects.get(id=userID)
 
         if blog_form.is_valid():
             blog = blog_form.save(commit=False)
             blog.author = request.user
             blog.save()
-            return redirect(reverse('profile', kwargs={'id': id}))
+            return redirect(reverse('profile', kwargs={'userID': userID}))
         else:
             context = {
                 'blog_form': blog_form,
@@ -41,8 +41,8 @@ class editTool(LoginRequiredMixin, View):
 class personalTools(LoginRequiredMixin, View):
     template_name = 'blog/personalTools.html'
 
-    def get(self, request, id):
-        user = authModels.User.objects.get(id=id)
+    def get(self, request, userID):
+        user = authModels.User.objects.get(id=userID)
         personalTools = blogModels.Blog.objects.filter(author=user.id)
 
         for tool in range(len(personalTools)):
@@ -61,11 +61,11 @@ class personalTools(LoginRequiredMixin, View):
         }
         return render(request, self.template_name, context=context)
     
-    def post(self, request, id):
+    def post(self, request, userID):
         # submit = name=""
         tool_id = int(request.POST.get("submit"))
 
-        user = authModels.User.objects.get(id=id)
+        user = authModels.User.objects.get(id=userID)
         personalTools = blogModels.Blog.objects.filter(author=user.id)
 
         for tool in range(len(personalTools)):
@@ -94,4 +94,13 @@ class personalTools(LoginRequiredMixin, View):
         }
         return render(request, self.template_name, context=context)
 
+class ToolDetails(LoginRequiredMixin, View):
+    template_name = "blog/toolDetails.html"
 
+    def get(self, request, userID, toolID):
+        tool = blogModels.Blog.objects.get(id=toolID)
+
+        context = {
+            'tool': tool,
+        }
+        return render(request, self.template_name, context=context)

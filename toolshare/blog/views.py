@@ -62,37 +62,44 @@ class personalTools(LoginRequiredMixin, View):
         return render(request, self.template_name, context=context)
     
     def post(self, request, userID):
-        # submit = name=""
-        tool_id = int(request.POST.get("submit"))
+        if "supprTool" in request.POST:
+            toolID = int(request.POST.get("supprTool"))
 
-        user = authModels.User.objects.get(id=userID)
-        personalTools = blogModels.Blog.objects.filter(author=user.id)
+            user = authModels.User.objects.get(id=userID)
+            personalTools = blogModels.Blog.objects.filter(author=user.id)
 
-        for tool in range(len(personalTools)):
-            if personalTools[tool].id == tool_id:
-                if personalTools[tool].image == "userPersonalToolPicture/defaultPersonalToolPicture.png":
-                    blogModels.Blog.objects.filter(id=personalTools[tool].id).delete()
+            for tool in range(len(personalTools)):
+                if personalTools[tool].id == toolID:
+                    if personalTools[tool].image == "userPersonalToolPicture/defaultPersonalToolPicture.png":
+                        blogModels.Blog.objects.filter(id=personalTools[tool].id).delete()
+                    else:
+                        blogModels.Blog.objects.filter(id=personalTools[tool].id)[0].image.delete()
+                        blogModels.Blog.objects.filter(id=personalTools[tool].id).delete()
+
+            personalTools = blogModels.Blog.objects.filter(author=user.id)
+
+            for tool in range(len(personalTools)):
+                if personalTools[tool].availabalityStart <= timezone.now() <= personalTools[tool].availabalityEnd:
+                    personalTools[tool].availabality = True
                 else:
-                    blogModels.Blog.objects.filter(id=personalTools[tool].id)[0].image.delete()
-                    blogModels.Blog.objects.filter(id=personalTools[tool].id).delete()
+                    personalTools[tool].availabality = False
 
-        personalTools = blogModels.Blog.objects.filter(author=user.id)
+            reversePersonalToolList = []
+            for tool in reversed(range(len(personalTools))):
+                reversePersonalToolList.append(personalTools[tool])
 
-        for tool in range(len(personalTools)):
-            if personalTools[tool].availabalityStart <= timezone.now() <= personalTools[tool].availabalityEnd:
-                personalTools[tool].availabality = True
-            else:
-                personalTools[tool].availabality = False
+            context = {
+                'user': user,
+                'tools': reversePersonalToolList,
+            }
+            return render(request, self.template_name, context=context)
+        if "toolDetails" in request.POST:
+            toolID = int(request.POST.get("toolDetails"))
+            print(toolID)
+            tool = blogModels.Blog.objects.get(id=toolID)
+            print(tool.location)
 
-        reversePersonalToolList = []
-        for tool in reversed(range(len(personalTools))):
-            reversePersonalToolList.append(personalTools[tool])
-
-        context = {
-            'user': user,
-            'tools': reversePersonalToolList,
-        }
-        return render(request, self.template_name, context=context)
+    
 
 class ToolDetails(LoginRequiredMixin, View):
     template_name = "blog/toolDetails.html"

@@ -41,15 +41,15 @@
             <div class="col col-lg-9 col-xl-7" name="toolCard">
                 <div class="card gradient-custom-card h-100 shadow">
                     <!-- Tool date_created -->
-                    <h5 class="text-muted text-end pt-3 pe-4">Date Created : {{ tool.date_created }}</h5>
+                    <h6 class="text-muted text-end pt-3 pe-4">Date Created : {{ tool.date_created }}</h6>
                     <!-- Tool image -->
                     <img class="card-img-top border-bottom p-3" src="{{ tool.image.url }}" alt="..." style="height: 600px; width: auto;" />
                     <!-- Tool details -->
-                    <div class="card-body fs-3 p-4">
+                    <div class="card-body fs-5 p-4">
                         <div class="text-center">
-                            <div class="p-3" style="background-color: #f8f9fa;">
+                            <div class="py-3" style="background-color: #f8f9fa;">
                                 <!-- Tool name -->
-                                <h1 class="fw-bolder">{{ tool.name }}</h1>
+                                <h4 class="fw-bolder">{{ tool.name }}</h4>
                                 <!-- Tool reviews -->
                                 <div class="d-flex justify-content-center small text-warning mb-2">
                                     <div class="bi bi-star-fill"></div>
@@ -60,30 +60,34 @@
                                 </div>
                             </div>
                             <!-- Tool category -->
-                            <h2 class="p-3">Category : <span class="text-muted">{{ tool.category }}</span></h2>
+                            <h5 class="py-3">Category : <span class="text-muted">{{ tool.category }}</span></h5>
                             <!-- Tool description -->
                             <div class="p-3" style="background-color: #f8f9fa;">
-                                <h2 class="d-flex">Description : </h2>
+                                <h5 class="d-flex">Description : </h5>
                                 {{ tool.description }}
                             </div>
                             <!-- Tool disponibility -->
-                            <h3 class="fst-italic mt-3">Availability</h3>
-                                {{ tool.availabalityStart }}<br>
-                                -----<br>
-                                {{ tool.availabalityEnd }}
-                                <!-- Tool location -->
-                            <h3 class="fst-italic mt-2">Location</h3>
-                                {{ tool.location }}    
+                            <div class="py-3">
+                                <h5 class="fst-italic pb-1">Availability</h5>
+                                    {{ tool.availabalityStart }}<br>
+                                    -----<br>
+                                    {{ tool.availabalityEnd }}
+                            </div>
+                            <!-- Tool location -->
+                            <div class="py-3" style="background-color: #f8f9fa;">
+                                <h5 class="fst-italic pb-1">Location</h5>
+                                    {{ tool.location }}
+                            </div>
                         </div>
                         <!-- Tool depost -->
                         {% if tool.deposit == True %}
-                        <h4 class="mt-5">He has a deposit</h4>
+                        <h6 class="mt-5">He has a deposit</h6>
                         {% else %}
-                        <h4 class="mt-5">There is no deposit</h4>
+                        <h6 class="mt-5">There is no deposit</h6>
                         {% endif %}
                         <!-- Tool publisher -->
-                        <h3 class="mt-3"><span class="fw-bolder">Published by : </span><a class="" href="#" style="text-decoration: none;">
-                                {{ tool.author }}</a></h3>
+                        <h5 class="mt-3"><span class="fw-bolder">Published by : </span><a class="" href="#" style="text-decoration: none;">
+                                {{ tool.author }}</a></h5>
                     </div>
                     <div class="card-body p-4 text-black">
                         <div class="mb-5">

@@ -1,10 +1,9 @@
 import string
 import unidecode
 import nltk
-nltk.download('punkt')
 from nltk.tokenize import word_tokenize
 
-oc_stop_words = ["a", "abord", "absolument", "afin", "ah", "ai", "aie", "ailleurs",
+ocStopWords = ["a", "abord", "absolument", "afin", "ah", "ai", "aie", "ailleurs",
                  "ainsi", "ait", "allaient", "allo", "allons", "allô", "alors", "anterieur", "anterieure",
                  "anterieures", "apres", "après", "as", "assez", "attendu", "au", "aucun", "aucune",
                  "aujourd", "aujourd'hui", "aupres", "auquel", "aura", "auraient", "aurait", "auront", "aussi",
@@ -95,30 +94,30 @@ oc_stop_words = ["a", "abord", "absolument", "afin", "ah", "ai", "aie", "ailleur
                  "vous-mêmes", "vu", "vé", "vôtre", "vôtres", "w", "x", "y", "z",
                  "zut", "à", "â", "ça", "ès", "étaient", "étais", "était", "étant",
                  "été", "être", "ô"]
-custom_stop_words = ["salut", "grandpy", "estce", "connais", "l", "m", "d",
+customStopWords = ["salut", "grandpy", "estce", "connais", "l", "m", "d",
                      "n", "t", "ladresse", "coucou", "saistu", "trouve", "cherche", "sais", "aller", "centre"]
 
 
 class Parser:
-    def remove_upper_case(text_to_parse):
-        return str(text_to_parse).lower()
+    def removeUpperCase(textToParse):
+        return str(textToParse).lower()
 
-    def remove_ponctuation(text_to_parse):
-        return text_to_parse.translate(str.maketrans('', '', string.punctuation))
+    def removePonctuation(textToParse):
+        return textToParse.translate(str.maketrans('', '', string.punctuation))
 
-    def remove_accent(text_to_parse):
-        return unidecode.unidecode(text_to_parse)
+    def removeAccent(textToParse):
+        return unidecode.unidecode(textToParse)
 
-    def remove_stop_word(text_to_parse):
-        stop_words = set(oc_stop_words + custom_stop_words)
-        word_tokens = word_tokenize(text_to_parse)
+    def removeStopWord(textToParse):
+        stopWords = set(ocStopWords + customStopWords)
+        wordTokens = word_tokenize(textToParse)
 
-        text_removed_stop_word = [word for word in word_tokens if not word.lower() in stop_words]
-        return text_removed_stop_word
+        textRemovedStopWord = [word for word in wordTokens if not word.lower() in stopWords]
+        return textRemovedStopWord
 
-    def script_for_parse(text_to_parse):
-        text_removed_upper_case = Parser.remove_upper_case(text_to_parse)
-        text_removed_ponctuation = Parser.remove_ponctuation(text_removed_upper_case)
-        text_removed_accent = Parser.remove_accent(text_removed_ponctuation)
-        text_removed_stop_word = Parser.remove_stop_word(text_removed_accent)
-        return text_removed_stop_word
+    def scriptForParse(textToParse):
+        textRemovedUpperCase = Parser.removeUpperCase(textToParse)
+        textRemovedPonctuation = Parser.removePonctuation(textRemovedUpperCase)
+        textRemovedAccent = Parser.removeAccent(textRemovedPonctuation)
+        textRemovedStopWord = Parser.removeStopWord(textRemovedAccent)
+        return textRemovedStopWord

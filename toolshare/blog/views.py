@@ -6,6 +6,8 @@ from . import forms
 from authentication import models as authModels
 from blog import models as blogModels
 from django.utils import timezone
+from blog.scripts.parser import Parser
+from blog.scripts.geocoderApi import Geocoder
 
 
 class editTool(LoginRequiredMixin, View):
@@ -95,10 +97,27 @@ class personalTools(LoginRequiredMixin, View):
             return render(request, self.template_name, context=context)
         if "toolDetails" in request.POST:
             toolID = int(request.POST.get("toolDetails"))
-            print(toolID)
-            tool = blogModels.Blog.objects.get(id=toolID)
-            print(tool.location)
 
+            tool = blogModels.Blog.objects.get(id=toolID)
+            toolLocationParsed = Parser.scriptForParse(tool.location)
+
+            geocoderRequest = Geocoder(toolLocationParsed).geocoderApiRequest()
+            queryLocation = Geocoder(geocoderRequest).dataRequest()
+
+            if queryLocation['status'] == 'OK':
+                data = {
+                    'status': queryLocation['status'],
+                    'longName': queryLocation['longName'],
+                    'lat': queryLocation['lat'],
+                    'lng': queryLocation['lng'],
+                    'placeID': queryLocation['placeID'],
+                    }
+            elif queryLocation['status'] != 'OK':
+                data = {
+                    'status': queryLocation['status'],
+                    }
+            request.session['data'] = data
+            return redirect(reverse('tool-details', kwargs={'userID': userID, 'toolID': toolID}))
     
 
 class ToolDetails(LoginRequiredMixin, View):
@@ -111,3 +130,6 @@ class ToolDetails(LoginRequiredMixin, View):
             'tool': tool,
         }
         return render(request, self.template_name, context=context)
+    
+    def post(self, request, userID, toolID):
+        return render(request, self.template_name)

@@ -33,7 +33,6 @@
         }
 </style>
 
-
 <!-- Header -->
 <header class="bg-dark py-5">
     <div class="container px-4 px-lg-5 my-5">
@@ -231,7 +230,7 @@
                             </div>
                             <!-- Tool actions -->
                             <div class="card-footer p-2 pt-0 border-top-0 bg-transparent">
-                                <form action="" method="post" novalidate>
+                                <form method="post" role="form" novalidate>
                                     {% csrf_token %}
                                     <div class="text-center">
                                         <button class="btn btn-outline-warning" type="submit" name="toolDetails" value="{{ tool.id }}">View details<i class="bi bi-gear ms-2"></i>
@@ -288,13 +287,15 @@
                             </div>
                             <!-- Tool actions -->
                             <div class="card-footer p-2 pt-0 border-top-0 bg-transparent">
-                                <div class="text-center"><a class="btn btn-outline-warning" href="{% url 'tool-details' user.id tool.id %}">View details<i
-                                            class="bi bi-gear ms-2"></i></a></div>
-                                <form action="" method="post" novalidate>
+                                <form method="post" role="form" novalidate>
                                     {% csrf_token %}
                                     <div class="text-center">
-                                        <button class="btn btn-danger mt-2" type="submit" name="supprTool" value="{{ tool.id }}">Remove
-                                            from personal tools<i class="bi bi-x-octagon ms-2"></i></button>
+                                        <button class="btn btn-outline-warning" type="submit" name="toolDetails" value="{{ tool.id }}">View details<i class="bi bi-gear ms-2"></i>
+                                        </button>
+                                    </div>
+                                    <div class="text-center">
+                                        <button class="btn btn-danger mt-2" type="submit" name="supprTool" value="{{ tool.id }}">Remove from personal tools<i class="bi bi-x-octagon ms-2"></i>
+                                        </button>
                                     </div>
                                 </form>
                                 <!-- Tool publisher -->
@@ -344,13 +345,15 @@
                             </div>
                             <!-- Tool actions -->
                             <div class="card-footer p-2 pt-0 border-top-0 bg-transparent">
-                                <div class="text-center"><a class="btn btn-outline-warning" href="{% url 'tool-details' user.id tool.id %}">View details<i
-                                            class="bi bi-gear ms-2"></i></a></div>
-                                <form action="" method="post" novalidate>
+                                <form method="post" role="form" novalidate>
                                     {% csrf_token %}
                                     <div class="text-center">
-                                        <button class="btn btn-danger mt-2" type="submit" name="supprTool" value="{{ tool.id }}">Remove
-                                            from personal tools<i class="bi bi-x-octagon ms-2"></i></button>
+                                        <button class="btn btn-outline-warning" type="submit" name="toolDetails" value="{{ tool.id }}">View details<i class="bi bi-gear ms-2"></i>
+                                        </button>
+                                    </div>
+                                    <div class="text-center">
+                                        <button class="btn btn-danger mt-2" type="submit" name="supprTool" value="{{ tool.id }}">Remove from personal tools<i class="bi bi-x-octagon ms-2"></i>
+                                        </button>
                                     </div>
                                 </form>
                                 <!-- Tool publisher -->
@@ -400,12 +403,17 @@
                             </div>
                             <!-- Tool actions -->
                             <div class="card-footer p-2 pt-0 border-top-0 bg-transparent">
-                                <div class="text-center"><a class="btn btn-outline-warning" href="{% url 'tool-details' user.id tool.id %}">View details<i
-                                            class="bi bi-gear ms-2"></i></a></div>
-                                <form action="" method="post" novalidate>
+                                <form method="post" role="form" novalidate>
                                     {% csrf_token %}
                                     <div class="text-center">
-                                        <button class="btn btn-danger mt-2" type="submit" name="supprTool" value="{{ tool.id }}">Remove from personal tools<i class="bi bi-x-octagon ms-2"></i></button>
+                                        <button class="btn btn-outline-warning" type="submit" name="toolDetails" value="{{ tool.id }}">View details<i
+                                                class="bi bi-gear ms-2"></i>
+                                        </button>
+                                    </div>
+                                    <div class="text-center">
+                                        <button class="btn btn-danger mt-2" type="submit" name="supprTool" value="{{ tool.id }}">Remove from personal
+                                            tools<i class="bi bi-x-octagon ms-2"></i>
+                                        </button>
                                     </div>
                                 </form>
                                 <!-- Tool publisher -->

@@ -18,10 +18,10 @@
         background: #F4EDE1;
 
         /* Chrome 10-25, Safari 5.1-6 */
-        background: -webkit-linear-gradient(to bottom, #CED4DA, #F4EDE1);
+        background: -webkit-linear-gradient(to bottom, #CED4DA, #F4EDE1, #CED4DA);
 
         /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
-        background: linear-gradient(to bottom, #CED4DA, #F4EDE1, #ffffff)
+        background: linear-gradient(to bottom, #CED4DA, #F4EDE1, #CED4DA)
     }
     .gradient-custom {
         /* fallback for old browsers */
@@ -33,6 +33,12 @@
         /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
         background: linear-gradient(to right, #ffa8a8, #fcff00)
         }
+    [name="map"]{
+        display: none;
+        width: 100%;
+        height: 400px;
+        margin-top: 25px;
+    }
 </style>
 
 <section class="h-100 gradient-custom">
@@ -74,10 +80,15 @@
                                     {{ tool.availabalityEnd }}
                             </div>
                             <!-- Tool location -->
-                            <div class="py-3" style="background-color: #f8f9fa;">
+                            <div class="py-3" style="background-color: #f8f9fa;" id="location">
                                 <h5 class="fst-italic pb-1">Location</h5>
                                     {{ tool.location }}
                             </div>
+                            <!-- Google Map API values -->
+                            <input type="hidden" value="{{ request.session.data.status }}" id="status">
+                            <input type="hidden" value="{{ request.session.data.longName }}" id="longName">
+                            <input type="hidden" value="{{ request.session.data.lat }}" id="lat">
+                            <input type="hidden" value="{{ request.session.data.lng }}" id="lng">
                         </div>
                         <!-- Tool depost -->
                         {% if tool.deposit == True %}
@@ -89,129 +100,12 @@
                         <h5 class="mt-3"><span class="fw-bolder">Published by : </span><a class="" href="#" style="text-decoration: none;">
                                 {{ tool.author }}</a></h5>
                     </div>
-                    <div class="card-body p-4 text-black">
-                        <div class="mb-5">
-                            <p class="lead fw-normal mb-1">About</p>
-                            <div class="p-4" style="background-color: #f8f9fa;">
-                                <p class="font-italic mb-1">{{ user.bio }}</p>
-                            </div>
-                        </div>
-                        <div class="d-flex justify-content-between align-items-center mb-4">
-                            <p class="lead fw-normal mb-0">Recent tools</p>
-                            <p class="mb-0"><a href="{% url 'personal-tools' user.id %}" class="text-muted">Show all</a>
-                            </p>
-                        </div>
-                        {% if tools|length == 0 %}
-                        <div class="row g-2">
-                            <div class="col mb-2">
-                                <div class="d-flex align-items-center justify-content-center w-100 rounded-3"
-                                    style="height: 200px; width: auto; border: gray solid 1px;">
-                                    <h3 class="text-muted" style="transform: skewY(-11deg);">Empty</h3>
-                                </div>
-                            </div>
-                            <div class="col mb-2">
-                                <div class="d-flex align-items-center justify-content-center w-100 rounded-3"
-                                    style="height: 200px; width: auto; border: gray solid 1px;">
-                                    <h3 class="text-muted" style="transform: skewY(-11deg);">Empty</h3>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="row g-2">
-                            <div class="col mb-2">
-                                <div class="d-flex align-items-center justify-content-center w-100 rounded-3"
-                                    style="height: 200px; width: auto; border: gray solid 1px;">
-                                    <h3 class="text-muted" style="transform: skewY(-11deg);">Empty</h3>
-                                </div>
-                            </div>
-                            <div class="col mb-2">
-                                <div class="d-flex align-items-center justify-content-center w-100 rounded-3"
-                                    style="height: 200px; width: auto; border: gray solid 1px;">
-                                    <h3 class="text-muted" style="transform: skewY(-11deg);">Empty</h3>
-                                </div>
-                            </div>
-                        </div>
-                        {% elif tools|length == 1 %}
-                        <div class="row g-2">
-                            {% for tool in tools %}
-                            <div class="col-6 mb-2">
-                                <img src="{{ tool.image.url }}" alt="{{ tool.id }}" class="w-100 rounded-3"
-                                    style="height: 200px; width: auto; border: gray solid 1px;">
-                            </div>
-                            {% endfor %}
-                            <div class="col-6 mb-2">
-                                <div class="d-flex align-items-center justify-content-center w-100 rounded-3"
-                                    style="height: 200px; width: auto; border: gray solid 1px;">
-                                    <h3 class="text-muted" style="transform: skewY(-11deg);">Empty</h3>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="row g-2">
-                            <div class="col-6 mb-2">
-                                <div class="d-flex align-items-center justify-content-center w-100 rounded-3"
-                                    style="height: 200px; width: auto; border: gray solid 1px;">
-                                    <h3 class="text-muted" style="transform: skewY(-11deg);">Empty</h3>
-                                </div>
-                            </div>
-                            <div class="col-6 mb-2">
-                                <div class="d-flex align-items-center justify-content-center w-100 rounded-3"
-                                    style="height: 200px; width: auto; border: gray solid 1px;">
-                                    <h3 class="text-muted" style="transform: skewY(-11deg);">Empty</h3>
-                                </div>
-                            </div>
-                        </div>
-                        {% elif tools|length == 2 %}
-                        <div class="row g-2">
-                            {% for tool in tools %}
-                            <div class="col-6 mb-2">
-                                <img src="{{ tool.image.url }}" alt="{{ tool.id }}" class="w-100 rounded-3"
-                                    style="height: 200px; width: auto; border: gray solid 1px;">
-                            </div>
-                            {% endfor %}
-                        </div>
-                        <div class="row g-2">
-                            <div class="col-6 mb-2">
-                                <div class="d-flex align-items-center justify-content-center w-100 rounded-3"
-                                    style="height: 200px; width: auto; border: gray solid 1px;">
-                                    <h3 class="text-muted" style="transform: skewY(-11deg);">Empty</h3>
-                                </div>
-                            </div>
-                            <div class="col-6 mb-2">
-                                <div class="d-flex align-items-center justify-content-center w-100 rounded-3"
-                                    style="height: 200px; width: auto; border: gray solid 1px;">
-                                    <h3 class="text-muted" style="transform: skewY(-11deg);">Empty</h3>
-                                </div>
-                            </div>
-                        </div>
-                        {% elif tools|length == 3 %}
-                        <div class="row g-2">
-                            {% for tool in tools %}
-                            <div class="col-6 mb-2">
-                                <img src="{{ tool.image.url }}" alt="{{ tool.id }}" class="w-100 rounded-3"
-                                    style="height: 200px; width: auto; border: gray solid 1px;">
-                            </div>
-                            {% endfor %}
-                            <div class="col-6 mb-2">
-                                <div class="d-flex align-items-center justify-content-center w-100 rounded-3"
-                                    style="height: 200px; width: auto; border: gray solid 1px;">
-                                    <h3 class="text-muted" style="transform: skewY(-11deg);">Empty</h3>
-                                </div>
-                            </div>
-                        </div>
-                        {% elif tools|length >= 4 %}
-                        <div class="row g-2">
-                            {% for tool in tools %}
-                            <div class="col-6 mb-2">
-                                <img src="{{ tool.image.url }}" alt="{{ tool.id }}" class="w-100 rounded-3"
-                                    style="height: 200px; width: auto; border: gray solid 1px;">
-                            </div>
-                            {% endfor %}
-                        </div>
-                        {% endif %}
-                    </div>
                 </div>
             </div>
         </div>
     </div>
 </section>
+
+<script src="/static/js/mapRequest.js"></script>
 
 {% endblock content %}

@@ -251,13 +251,17 @@
                             </div>
                             <!-- Tool actions -->
                             <div class="card-footer p-2 pt-0 border-top-0 bg-transparent">
-                                <div class="text-center"><a class="btn btn-outline-warning" href="#">View details<i
-                                            class="bi bi-gear ms-2"></i></a></div>
-                                <form method="post" novalidate>
+                                <form method="post" role="form" novalidate>
                                     {% csrf_token %}
                                     <div class="text-center">
-                                        <button class="btn btn-outline-danger mt-2" type="submit" name="submit" value="{{ tool.id }}">Add to bag<i
-                                                class="bi bi-heart ms-2"></i></button>
+                                        <button class="btn btn-outline-warning" type="submit" name="toolDetails" value="{{ tool.id }}">View details<i
+                                                class="bi bi-gear ms-2"></i>
+                                        </button>
+                                    </div>
+                                    <div class="text-center">
+                                        <button class="btn btn-outline-danger mt-2" type="submit" name="supprTool" value="{{ tool.id }}">Add to bag<i
+                                                class="bi bi-x-octagon ms-2"></i>
+                                        </button>
                                     </div>
                                 </form>
                                 <!-- Tool publisher -->
@@ -307,13 +311,17 @@
                             </div>
                             <!-- Tool actions -->
                             <div class="card-footer p-2 pt-0 border-top-0 bg-transparent">
-                                <div class="text-center"><a class="btn btn-outline-warning" href="#">View details<i
-                                            class="bi bi-gear ms-2"></i></a></div>
-                                <form action="" method="post" novalidate>
+                                <form method="post" role="form" novalidate>
                                     {% csrf_token %}
                                     <div class="text-center">
-                                        <button class="btn btn-outline-danger mt-2" type="submit" name="submit" value="{{ tool.id }}">Add to bag<i
-                                                class="bi bi-heart ms-2"></i></button>
+                                        <button class="btn btn-outline-warning" type="submit" name="toolDetails" value="{{ tool.id }}">View details<i
+                                                class="bi bi-gear ms-2"></i>
+                                        </button>
+                                    </div>
+                                    <div class="text-center">
+                                        <button class="btn btn-outline-danger mt-2" type="submit" name="supprTool" value="{{ tool.id }}">Add to bag<i
+                                                class="bi bi-x-octagon ms-2"></i>
+                                        </button>
                                     </div>
                                 </form>
                                 <!-- Tool publisher -->
@@ -364,13 +372,17 @@
                             </div>
                             <!-- Tool actions -->
                             <div class="card-footer p-2 pt-0 border-top-0 bg-transparent">
-                                <div class="text-center"><a class="btn btn-outline-warning" href="#">View details<i
-                                            class="bi bi-gear ms-2"></i></a></div>
-                                <form action="" method="post" novalidate>
+                                <form method="post" role="form" novalidate>
                                     {% csrf_token %}
                                     <div class="text-center">
-                                        <button class="btn btn-outline-danger mt-2" type="submit" name="submit" value="{{ tool.id }}">Add to bag<i
-                                                class="bi bi-heart ms-2"></i></button>
+                                        <button class="btn btn-outline-warning" type="submit" name="toolDetails" value="{{ tool.id }}">View details<i
+                                                class="bi bi-gear ms-2"></i>
+                                        </button>
+                                    </div>
+                                    <div class="text-center">
+                                        <button class="btn btn-outline-danger mt-2" type="submit" name="supprTool" value="{{ tool.id }}">Add to bag<i
+                                                class="bi bi-x-octagon ms-2"></i>
+                                        </button>
                                     </div>
                                 </form>
                                 <!-- Tool publisher -->
@@ -421,14 +433,17 @@
                             </div>
                             <!-- Tool actions -->
                             <div class="card-footer p-2 pt-0 border-top-0 bg-transparent">
-                                <div class="text-center"><a class="btn btn-outline-warning" href="#">View details<i
-                                            class="bi bi-gear ms-2"></i></a></div>
-                                <form action="" method="post" novalidate>
+                                <form method="post" role="form" novalidate>
                                     {% csrf_token %}
                                     <div class="text-center">
-                                        <button class="btn btn-outline-danger mt-2" type="submit" name="submit"
-                                            value="{{ tool.id }}">Add to bag<i
-                                                class="bi bi-heart ms-2"></i></button>
+                                        <button class="btn btn-outline-warning" type="submit" name="toolDetails" value="{{ tool.id }}">View details<i
+                                                class="bi bi-gear ms-2"></i>
+                                        </button>
+                                    </div>
+                                    <div class="text-center">
+                                        <button class="btn btn-outline-danger mt-2" type="submit" name="supprTool" value="{{ tool.id }}">Add to bag<i
+                                                class="bi bi-x-octagon ms-2"></i>
+                                        </button>
                                     </div>
                                 </form>
                                 <!-- Tool publisher -->

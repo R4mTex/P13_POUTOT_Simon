@@ -1,7 +1,7 @@
 import requests
 
 # Put Your API Key Google Maps here (between quotes)
-gmk = "AIzaSyAVtCfvLbfgSm8528irK1sEq5SpSA0zcKY"
+gmk = "AIzaSyD1ckgetM8cnzdgwd1XpEetOhxghe5w82M"
 
 
 class Geocoder:

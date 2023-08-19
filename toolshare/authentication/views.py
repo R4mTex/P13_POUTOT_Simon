@@ -11,6 +11,8 @@ from django.contrib.auth.forms import PasswordChangeForm
 from django.utils import timezone
 from django.urls import reverse
 from django.contrib import messages
+from blog.scripts.parser import Parser
+from blog.scripts.geocoderApi import Geocoder
 
 # Create your views here.
 class Home(LoginRequiredMixin, View):
@@ -41,40 +43,64 @@ class Research(LoginRequiredMixin, View):
         return render(request, self.template_name, context=context)
     
     def post(self, request, userID):
-        toolID = int(request.POST.get("submit"))
+        if "toolDetails" in request.POST:
+            toolID = int(request.POST.get("toolDetails"))
 
-        toolSelected = blogModels.Blog.objects.get(id=toolID)
-        userFavorites = blogModels.Favorite.objects.filter(user=userID)
+            tool = blogModels.Blog.objects.get(id=toolID)
+            toolLocationParsed = Parser.scriptForParse(tool.location)
 
-        favoritesID = []
-        for favorite in range(len(userFavorites)):
-            favoritesID.append(userFavorites[favorite].blog.id)
+            geocoderRequest = Geocoder(toolLocationParsed).geocoderApiRequest()
+            queryLocation = Geocoder(geocoderRequest).dataRequest()
 
-        if toolSelected.id not in favoritesID:
-            newFavorite = blogModels.Favorite()
-            newFavorite.blog = toolSelected
-            newFavorite.user = authModels.User.objects.get(id=userID)
-            newFavorite.save()
-            messages.success(request, "Tool saved !")
+            if queryLocation['status'] == 'OK':
+                data = {
+                    'status': queryLocation['status'],
+                    'longName': queryLocation['longName'],
+                    'lat': queryLocation['lat'],
+                    'lng': queryLocation['lng'],
+                    'placeID': queryLocation['placeID'],
+                    }
+            elif queryLocation['status'] != 'OK':
+                data = {
+                    'status': queryLocation['status'],
+                    }
+            request.session['data'] = data
+            return redirect(reverse('tool-details', kwargs={'userID': userID, 'toolID': toolID}))
         else:
-            messages.warning(request, "Tool already saved !")
+            toolID = int(request.POST.get("submit"))
 
-        tools = blogModels.Blog.objects.all()
+            toolSelected = blogModels.Blog.objects.get(id=toolID)
+            userFavorites = blogModels.Favorite.objects.filter(user=userID)
 
-        for tool in range(len(tools)):
-            if tools[tool].availabalityStart <= timezone.now() <= tools[tool].availabalityEnd:
-                tools[tool].availabality = True
+            favoritesID = []
+            for favorite in range(len(userFavorites)):
+                favoritesID.append(userFavorites[favorite].blog.id)
+
+            if toolSelected.id not in favoritesID:
+                newFavorite = blogModels.Favorite()
+                newFavorite.blog = toolSelected
+                newFavorite.user = authModels.User.objects.get(id=userID)
+                newFavorite.save()
+                messages.success(request, "Tool saved !")
             else:
-                tools[tool].availabality = False
+                messages.warning(request, "Tool already saved !")
 
-        reverseToolsList = []
-        for tool in reversed(range(len(tools))):
-            reverseToolsList.append(tools[tool])
-        
-        context = {
-            'tools': reverseToolsList,
-        }
-        return render(request, self.template_name, context=context)
+            tools = blogModels.Blog.objects.all()
+
+            for tool in range(len(tools)):
+                if tools[tool].availabalityStart <= timezone.now() <= tools[tool].availabalityEnd:
+                    tools[tool].availabality = True
+                else:
+                    tools[tool].availabality = False
+
+            reverseToolsList = []
+            for tool in reversed(range(len(tools))):
+                reverseToolsList.append(tools[tool])
+            
+            context = {
+                'tools': reverseToolsList,
+            }
+            return render(request, self.template_name, context=context)
 
 
 class Favorites(LoginRequiredMixin, View):
@@ -103,34 +129,58 @@ class Favorites(LoginRequiredMixin, View):
         return render(request, self.template_name, context=context)
     
     def post(self, request, userID):
-        favoriteId = int(request.POST.get("submit"))
+        if "toolDetails" in request.POST:
+            toolID = int(request.POST.get("toolDetails"))
 
-        userFavorites = blogModels.Favorite.objects.filter(user=userID)
+            tool = blogModels.Blog.objects.get(id=toolID)
+            toolLocationParsed = Parser.scriptForParse(tool.location)
 
-        for favorite in range(len(userFavorites)):
-            if userFavorites[favorite].blog.id == favoriteId:
-                blogModels.Favorite.objects.filter(id=userFavorites[favorite].id).delete()
-        
-        userFavorites = blogModels.Favorite.objects.filter(user=userID)
+            geocoderRequest = Geocoder(toolLocationParsed).geocoderApiRequest()
+            queryLocation = Geocoder(geocoderRequest).dataRequest()
 
-        favorites = []
-        for favorite in range(len(userFavorites)):
-            favorites.append(userFavorites[favorite].blog)
+            if queryLocation['status'] == 'OK':
+                data = {
+                    'status': queryLocation['status'],
+                    'longName': queryLocation['longName'],
+                    'lat': queryLocation['lat'],
+                    'lng': queryLocation['lng'],
+                    'placeID': queryLocation['placeID'],
+                    }
+            elif queryLocation['status'] != 'OK':
+                data = {
+                    'status': queryLocation['status'],
+                    }
+            request.session['data'] = data
+            return redirect(reverse('tool-details', kwargs={'userID': userID, 'toolID': toolID}))
+        else:
+            favoriteId = int(request.POST.get("submit"))
 
-        for tool in range(len(favorites)):
-            if favorites[tool].availabalityStart <= timezone.now() <= favorites[tool].availabalityEnd:
-                favorites[tool].availabality = True
-            else:
-                favorites[tool].availabality = False
+            userFavorites = blogModels.Favorite.objects.filter(user=userID)
 
-        reverseFavoritesList = []
-        for tool in reversed(range(len(favorites))):
-            reverseFavoritesList.append(favorites[tool])
-        
-        context = {
-            'tools': reverseFavoritesList,
-        }
-        return render(request, self.template_name, context=context)
+            for favorite in range(len(userFavorites)):
+                if userFavorites[favorite].blog.id == favoriteId:
+                    blogModels.Favorite.objects.filter(id=userFavorites[favorite].id).delete()
+            
+            userFavorites = blogModels.Favorite.objects.filter(user=userID)
+
+            favorites = []
+            for favorite in range(len(userFavorites)):
+                favorites.append(userFavorites[favorite].blog)
+
+            for tool in range(len(favorites)):
+                if favorites[tool].availabalityStart <= timezone.now() <= favorites[tool].availabalityEnd:
+                    favorites[tool].availabality = True
+                else:
+                    favorites[tool].availabality = False
+
+            reverseFavoritesList = []
+            for tool in reversed(range(len(favorites))):
+                reverseFavoritesList.append(favorites[tool])
+            
+            context = {
+                'tools': reverseFavoritesList,
+            }
+            return render(request, self.template_name, context=context)
         
 
 class Profile(LoginRequiredMixin, View):

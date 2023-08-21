@@ -29,9 +29,11 @@ urlpatterns = [
     path('user/<int:userID>/research/', authView.Research.as_view(template_name='authentication/research.html'), name='research'),
     path('user/<int:userID>/favorites/', authView.Favorites.as_view(template_name='authentication/favorites.html'), name='favorites'),
     path('user/<int:userID>/profile/', authView.Profile.as_view(template_name='authentication/profile.html'), name='profile'),
+    path('user/<int:userID>/member/<int:memberID>/profile/', authView.memberProfile.as_view(template_name='authentication/profile.html'), name='member-profile'),
     path('user/<int:userID>/edit-profile/', authView.editProfile.as_view(template_name='authentication/editProfile.html'), name='edit-profile'),
     path('user/<int:userID>/edit-tool/', blogView.editTool.as_view(template_name='blog/editTool.html'), name='edit-tool'),
     path('user/<int:userID>/personal-tools/', blogView.personalTools.as_view(template_name='blog/personalTools.html'), name='personal-tools'),
+    path('user/<int:userID>/member/<int:memberID>/member-tools/', blogView.memberTools.as_view(template_name='blog/personalTools.html'), name='member-tools'),
     path('registration/', authView.Registration.as_view(template_name='authentication/registration.html'), name='registration'),
     path('user/<int:userID>/tool/<int:toolID>/details/', blogView.ToolDetails.as_view(template_name='blog/toolDetails.html'), name='tool-details'),
 

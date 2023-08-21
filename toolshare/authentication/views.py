@@ -66,8 +66,8 @@ class Research(LoginRequiredMixin, View):
                     }
             request.session['data'] = data
             return redirect(reverse('tool-details', kwargs={'userID': userID, 'toolID': toolID}))
-        else:
-            toolID = int(request.POST.get("submit"))
+        elif "addTool" in request.POST:
+            toolID = int(request.POST.get("addTool"))
 
             toolSelected = blogModels.Blog.objects.get(id=toolID)
             userFavorites = blogModels.Favorite.objects.filter(user=userID)
@@ -101,7 +101,55 @@ class Research(LoginRequiredMixin, View):
                 'tools': reverseToolsList,
             }
             return render(request, self.template_name, context=context)
+        elif "authorProfile" in request.POST:
+            authorID = int(request.POST.get("authorProfile"))
+            return redirect(reverse('member-profile', kwargs={'userID': userID, 'memberID': authorID}))
+        
 
+class memberProfile(LoginRequiredMixin, View):
+    template_name = "authentication/profile.html"
+
+    def get(self, request, userID, memberID):
+        member = authModels.User.objects.get(id=memberID)
+        personalTools = blogModels.Blog.objects.filter(author=member.id)
+
+        reversePersonalToolList = []
+        for tool in reversed(range(len(personalTools))):
+            reversePersonalToolList.append(personalTools[tool])
+
+        reversePersonalToolList4 = reversePersonalToolList[0:4]
+
+        context = {
+            'member': member,
+            'tools': reversePersonalToolList4,
+        }
+        return render(request, self.template_name, context=context)
+    
+    def post(self, request, userID, memberID):
+        if "toolDetails" in request.POST:
+            toolID = int(request.POST.get("toolDetails"))
+
+            tool = blogModels.Blog.objects.get(id=toolID)
+            toolLocationParsed = Parser.scriptForParse(tool.location)
+
+            geocoderRequest = Geocoder(toolLocationParsed).geocoderApiRequest()
+            queryLocation = Geocoder(geocoderRequest).dataRequest()
+
+            if queryLocation['status'] == 'OK':
+                data = {
+                    'status': queryLocation['status'],
+                    'longName': queryLocation['longName'],
+                    'lat': queryLocation['lat'],
+                    'lng': queryLocation['lng'],
+                    'placeID': queryLocation['placeID'],
+                    }
+            elif queryLocation['status'] != 'OK':
+                data = {
+                    'status': queryLocation['status'],
+                    }
+            request.session['data'] = data
+            return redirect(reverse('tool-details', kwargs={'userID': userID, 'toolID': toolID}))
+        
 
 class Favorites(LoginRequiredMixin, View):
     template_name = 'authentication/favorites.html'
@@ -152,8 +200,8 @@ class Favorites(LoginRequiredMixin, View):
                     }
             request.session['data'] = data
             return redirect(reverse('tool-details', kwargs={'userID': userID, 'toolID': toolID}))
-        else:
-            favoriteId = int(request.POST.get("submit"))
+        elif "removeTool" in request.POST:
+            favoriteId = int(request.POST.get("removeTool"))
 
             userFavorites = blogModels.Favorite.objects.filter(user=userID)
 

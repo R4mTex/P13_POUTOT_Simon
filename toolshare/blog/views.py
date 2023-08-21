@@ -118,6 +118,30 @@ class personalTools(LoginRequiredMixin, View):
                     }
             request.session['data'] = data
             return redirect(reverse('tool-details', kwargs={'userID': userID, 'toolID': toolID}))
+        
+
+class memberTools(LoginRequiredMixin, View):
+    template_name = 'blog/personalTools.html'
+
+    def get(self, request, userID, memberID):
+        member = authModels.User.objects.get(id=memberID)
+        personalTools = blogModels.Blog.objects.filter(author=member.id)
+
+        for tool in range(len(personalTools)):
+            if personalTools[tool].availabalityStart <= timezone.now() <= personalTools[tool].availabalityEnd:
+                personalTools[tool].availabality = True
+            else:
+                personalTools[tool].availabality = False
+
+        reversePersonalToolList = []
+        for tool in reversed(range(len(personalTools))):
+            reversePersonalToolList.append(personalTools[tool])
+
+        context = {
+            'member': member,
+            'tools': reversePersonalToolList,
+        }
+        return render(request, self.template_name, context=context)
     
 
 class ToolDetails(LoginRequiredMixin, View):

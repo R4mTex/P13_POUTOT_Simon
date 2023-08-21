@@ -23,14 +23,14 @@
     }
     .gradient-custom {
         /* fallback for old browsers */
-        background: #EAE1D2;
+        background: #CDBDA5;
 
         /* Chrome 10-25, Safari 5.1-6 */
-        background: -webkit-linear-gradient(to right, #937B71, #EAE1D2, #911a1c);
+        background: -webkit-linear-gradient(to right, #A2B4B5, #CDBDA5, #032331);
 
         /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
-        background: linear-gradient(to right, #937B71, #EAE1D2, #911a1c)
-        }
+        background: linear-gradient(to right, #A2B4B5, #CDBDA5, #032331)
+    }
 </style>
 
 <!-- Header -->
@@ -259,14 +259,21 @@
                                         </button>
                                     </div>
                                     <div class="text-center">
-                                        <button class="btn btn-outline-danger mt-2" type="submit" name="supprTool" value="{{ tool.id }}">Add to bag<i
-                                                class="bi bi-x-octagon ms-2"></i>
+                                        <button class="btn btn-outline-danger mt-2" type="submit" name="addTool" value="{{ tool.id }}">Add to bag<i
+                                                class="bi bi-heart ms-2"></i>
                                         </button>
                                     </div>
+                                    <!-- Tool deposit -->
+                                    {% if tool.deposit == True %}
+                                    <h6 class="mt-4">He has a deposit</h6>
+                                    {% else %}
+                                    <h6 class="mt-4">There is no deposit</h6>
+                                    {% endif %}
+                                    <!-- Tool publisher -->
+                                    <h6 class="mt-3 fw-bolder">Published by :
+                                        <button type="submit" name="authorProfile" value="{{ tool.author.id }}" class="btn btn-link" style="text-decoration: none; padding: 0; margin: 0; position: relative; bottom: 2px;">{{ tool.author }}</button>
+                                    </h6>
                                 </form>
-                                <!-- Tool publisher -->
-                                <h6 class="mt-3 fw-bolder">Published by : <a class="" href="#"
-                                        style="text-decoration: none;">{{ tool.author }}</a></h6>
                             </div>
                         </div>
                     </div>
@@ -319,11 +326,17 @@
                                         </button>
                                     </div>
                                     <div class="text-center">
-                                        <button class="btn btn-outline-danger mt-2" type="submit" name="supprTool" value="{{ tool.id }}">Add to bag<i
-                                                class="bi bi-x-octagon ms-2"></i>
+                                        <button class="btn btn-outline-danger mt-2" type="submit" name="addTool" value="{{ tool.id }}">Add to bag<i
+                                                class="bi bi-heart ms-2"></i>
                                         </button>
                                     </div>
                                 </form>
+                                <!-- Tool deposit -->
+                                {% if tool.deposit == True %}
+                                <h6 class="mt-4">He has a deposit</h6>
+                                {% else %}
+                                <h6 class="mt-4">There is no deposit</h6>
+                                {% endif %}
                                 <!-- Tool publisher -->
                                 <h6 class="mt-3 fw-bolder">Published by : <a class="" href="#"
                                         style="text-decoration: none;">
@@ -380,11 +393,17 @@
                                         </button>
                                     </div>
                                     <div class="text-center">
-                                        <button class="btn btn-outline-danger mt-2" type="submit" name="supprTool" value="{{ tool.id }}">Add to bag<i
-                                                class="bi bi-x-octagon ms-2"></i>
+                                        <button class="btn btn-outline-danger mt-2" type="submit" name="addTool" value="{{ tool.id }}">Add to bag<i
+                                                class="bi bi-heart ms-2"></i>
                                         </button>
                                     </div>
                                 </form>
+                                <!-- Tool deposit -->
+                                {% if tool.deposit == True %}
+                                <h6 class="mt-4">He has a deposit</h6>
+                                {% else %}
+                                <h6 class="mt-4">There is no deposit</h6>
+                                {% endif %}
                                 <!-- Tool publisher -->
                                 <h6 class="mt-3 fw-bolder">Published by : <a class="" href="#"
                                         style="text-decoration: none;">
@@ -441,11 +460,17 @@
                                         </button>
                                     </div>
                                     <div class="text-center">
-                                        <button class="btn btn-outline-danger mt-2" type="submit" name="supprTool" value="{{ tool.id }}">Add to bag<i
-                                                class="bi bi-x-octagon ms-2"></i>
+                                        <button class="btn btn-outline-danger mt-2" type="submit" name="addTool" value="{{ tool.id }}">Add to bag<i
+                                                class="bi bi-heart ms-2"></i>
                                         </button>
                                     </div>
                                 </form>
+                                <!-- Tool deposit -->
+                                {% if tool.deposit == True %}
+                                <h6 class="mt-4">He has a deposit</h6>
+                                {% else %}
+                                <h6 class="mt-4">There is no deposit</h6>
+                                {% endif %}
                                 <!-- Tool publisher -->
                                 <h6 class="mt-3 fw-bolder">Published by : <a class="" href="#"
                                         style="text-decoration: none;">

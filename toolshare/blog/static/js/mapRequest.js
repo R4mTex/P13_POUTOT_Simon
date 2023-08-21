@@ -13,7 +13,11 @@ $(document).ready(function () {
 		initMap(data['longName'], data['lat'], data['lng'], mapID);
 		mapID += 1
 	}
-})
+	else{
+		let divMap = "<div class='mt-3 text-muted fst-italic'>This location doesn't exist on Google Maps</div>";
+		$('#location').after(divMap);
+	}
+});
 
 function initMap(longName, lat, lng, mapID){
     if($('[name="map"]').css("display", "none")){

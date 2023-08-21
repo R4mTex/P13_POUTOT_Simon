@@ -203,7 +203,29 @@ class Profile(LoginRequiredMixin, View):
         return render(request, self.template_name, context=context)
     
     def post(self, request, userID):
-        return render(request, self.template_name)
+        if "toolDetails" in request.POST:
+            toolID = int(request.POST.get("toolDetails"))
+
+            tool = blogModels.Blog.objects.get(id=toolID)
+            toolLocationParsed = Parser.scriptForParse(tool.location)
+
+            geocoderRequest = Geocoder(toolLocationParsed).geocoderApiRequest()
+            queryLocation = Geocoder(geocoderRequest).dataRequest()
+
+            if queryLocation['status'] == 'OK':
+                data = {
+                    'status': queryLocation['status'],
+                    'longName': queryLocation['longName'],
+                    'lat': queryLocation['lat'],
+                    'lng': queryLocation['lng'],
+                    'placeID': queryLocation['placeID'],
+                    }
+            elif queryLocation['status'] != 'OK':
+                data = {
+                    'status': queryLocation['status'],
+                    }
+            request.session['data'] = data
+            return redirect(reverse('tool-details', kwargs={'userID': userID, 'toolID': toolID}))
 
 class editProfile(LoginRequiredMixin, View):
     template_name = 'authentication/editProfile.html'
@@ -278,8 +300,6 @@ class editProfile(LoginRequiredMixin, View):
                 }
                 return render(request, self.template_name, context=context)
             else:
-                print('Error')
-                print(form_profile.errors)
                 user = authModels.User.objects.get(id=userID)
                 form_picture = self.form_picture()
                 form_profile = self.form_profile(instance=request.user)
@@ -333,14 +353,3 @@ class Registration(View):
             'acceptedConditions': acceptedConditions,
         }
         return render(request, self.template_name, context=context)
-
-"""
-        user = authModels.User.objects.get(id=id)
-        context = {
-            'form_picture': self.form_picture,
-            'form_profile': self.form_profile,
-            'form_password': self.form_password,
-            'user': user,
-        }
-        return render(request, self.template_name, context=context)
-"""

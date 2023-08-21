@@ -104,8 +104,12 @@
                         <div class="row g-2">
                             {% for tool in tools %}
                             <div class="col-6 mb-2" name="toolCard">
-                                <button type="submit" class="w-100 rounded-4" style="padding: 0;"><img src="{{ tool.image.url }}" alt="{{ tool.id }}"
-                                        class="w-100 rounded-3" style="height: 200px; width: auto;"></button>
+                                <form method="post">
+                                    {% csrf_token %}
+                                    <button type="submit" name="toolDetails" value="{{ tool.id }}" class="w-100 rounded-4" style="padding: 0;"><img
+                                            src="{{ tool.image.url }}" alt="{{ tool.id }}" class="w-100 rounded-3"
+                                            style="height: 200px; width: auto;"></button>
+                                </form>
                             </div>
                             {% endfor %}
                             <div class="col-6 mb-2">
@@ -133,8 +137,12 @@
                         <div class="row g-2">
                             {% for tool in tools %}
                             <div class="col-6 mb-2" name="toolCard">
-                                <button type="submit" class="w-100 rounded-4" style="padding: 0;"><img src="{{ tool.image.url }}" alt="{{ tool.id }}"
-                                        class="w-100 rounded-3" style="height: 200px; width: auto;"></button>
+                                <form method="post">
+                                    {% csrf_token %}
+                                    <button type="submit" name="toolDetails" value="{{ tool.id }}" class="w-100 rounded-4" style="padding: 0;"><img
+                                            src="{{ tool.image.url }}" alt="{{ tool.id }}" class="w-100 rounded-3"
+                                            style="height: 200px; width: auto;"></button>
+                                </form>
                             </div>
                             {% endfor %}
                         </div>
@@ -156,8 +164,12 @@
                         <div class="row g-2">
                             {% for tool in tools %}
                             <div class="col-6 mb-2" name="toolCard">
-                                <button type="submit" class="w-100 rounded-4" style="padding: 0;"><img src="{{ tool.image.url }}" alt="{{ tool.id }}"
-                                        class="w-100 rounded-3" style="height: 200px; width: auto;"></button>
+                                <form method="post">
+                                    {% csrf_token %}
+                                    <button type="submit" name="toolDetails" value="{{ tool.id }}" class="w-100 rounded-4" style="padding: 0;"><img
+                                            src="{{ tool.image.url }}" alt="{{ tool.id }}" class="w-100 rounded-3"
+                                            style="height: 200px; width: auto;"></button>
+                                </form>
                             </div>
                             {% endfor %}
                             <div class="col-6 mb-2">
@@ -171,8 +183,11 @@
                         <div class="row g-2">
                             {% for tool in tools %}
                             <div class="col-6 mb-2" name="toolCard">
-                                <button type="submit" class="w-100 rounded-4" style="padding: 0;"><img src="{{ tool.image.url }}" alt="{{ tool.id }}"
-                                        class="w-100 rounded-3" style="height: 200px; width: auto;"></button>
+                                <form method="post">
+                                    {% csrf_token %}
+                                    <button type="submit" name="toolDetails" value="{{ tool.id }}" class="w-100 rounded-4" style="padding: 0;"><img src="{{ tool.image.url }}" alt="{{ tool.id }}"
+                                            class="w-100 rounded-3" style="height: 200px; width: auto;"></button>
+                                </form>
                             </div>
                             {% endfor %}
                         </div>

@@ -1,7 +1,5 @@
 import requests
-
-# Put Your API Key Google Maps here (between quotes)
-gmk = "AIzaSyD1ckgetM8cnzdgwd1XpEetOhxghe5w82M"
+from toolshare.settings import GOOGLE_MAPS_API_KEY
 
 
 class Geocoder:
@@ -9,7 +7,8 @@ class Geocoder:
         self.query = query
 
     def geocoderApiRequest(self):
-        request = requests.get(f"https://maps.googleapis.com/maps/api/geocode/json?address={self.query}&key={gmk}")
+        # Put your Google Maps API Key here (between quotes)
+        request = requests.get(f"https://maps.googleapis.com/maps/api/geocode/json?address={self.query}&key={GOOGLE_MAPS_API_KEY}")
         return request.json()
 
     def dataRequest(self):

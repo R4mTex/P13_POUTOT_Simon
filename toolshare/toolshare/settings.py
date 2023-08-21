@@ -77,6 +77,7 @@ TEMPLATES = [
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
+                'toolshare.context_processors.get_GOOGLE_MAPS_API_KEY',
             ],
         },
     },
@@ -158,3 +159,5 @@ EMAIL_HOST_PASSWORD = env('EMAIL_HOST_PASSWORD')
 
 MEDIA_URL = 'media/'
 MEDIA_ROOT = BASE_DIR.joinpath('media/')
+
+GOOGLE_MAPS_API_KEY = env('GOOGLE_MAPS_API_KEY')

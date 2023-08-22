@@ -110,6 +110,7 @@ class memberProfile(LoginRequiredMixin, View):
     template_name = "authentication/profile.html"
 
     def get(self, request, userID, memberID):
+        user = authModels.User.objects.get(id=userID)
         member = authModels.User.objects.get(id=memberID)
         personalTools = blogModels.Blog.objects.filter(author=member.id)
 
@@ -120,6 +121,7 @@ class memberProfile(LoginRequiredMixin, View):
         reversePersonalToolList4 = reversePersonalToolList[0:4]
 
         context = {
+            'user': user,
             'member': member,
             'tools': reversePersonalToolList4,
         }
@@ -238,6 +240,19 @@ class Profile(LoginRequiredMixin, View):
         user = authModels.User.objects.get(id=userID)
         personalTools = blogModels.Blog.objects.filter(author=user.id)
 
+        users = authModels.User.objects.all()
+        usersFullname = []
+        for fullname in range(len(users)):
+            usersFullname.append(users[fullname].fullname)
+
+        if "Fictive" not in usersFullname:
+            authModels.User.objects.create(fullname="Fictive",
+                                            username="Fic",
+                                            phoneNumber="+33680111133",
+                                            email="Fictive@Fic.com",)
+
+        member = authModels.User.objects.get(fullname="Fictive")
+
         reversePersonalToolList = []
         for tool in reversed(range(len(personalTools))):
             reversePersonalToolList.append(personalTools[tool])
@@ -246,6 +261,7 @@ class Profile(LoginRequiredMixin, View):
 
         context = {
             'user': user,
+            'member': member,
             'tools': reversePersonalToolList4,
         }
         return render(request, self.template_name, context=context)

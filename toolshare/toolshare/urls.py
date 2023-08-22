@@ -35,7 +35,7 @@ urlpatterns = [
     path('user/<int:userID>/personal-tools/', blogView.personalTools.as_view(template_name='blog/personalTools.html'), name='personal-tools'),
     path('user/<int:userID>/member/<int:memberID>/member-tools/', blogView.memberTools.as_view(template_name='blog/personalTools.html'), name='member-tools'),
     path('registration/', authView.Registration.as_view(template_name='authentication/registration.html'), name='registration'),
-    path('user/<int:userID>/tool/<int:toolID>/details/', blogView.ToolDetails.as_view(template_name='blog/toolDetails.html'), name='tool-details'),
+    path('user/<int:userID>/tool/<int:toolID>/details/', blogView.toolDetails.as_view(template_name='blog/toolDetails.html'), name='tool-details'),
 
 
     # Login / Logout / Change Password Urls

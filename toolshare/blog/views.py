@@ -144,7 +144,7 @@ class memberTools(LoginRequiredMixin, View):
         return render(request, self.template_name, context=context)
     
 
-class ToolDetails(LoginRequiredMixin, View):
+class toolDetails(LoginRequiredMixin, View):
     template_name = "blog/toolDetails.html"
 
     def get(self, request, userID, toolID):

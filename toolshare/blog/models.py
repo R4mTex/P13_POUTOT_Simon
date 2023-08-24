@@ -6,7 +6,6 @@ from django.core.validators import MinValueValidator
 
 # Create your models here.
 def oneDayHence():
-    print(timezone.now())
     return timezone.now() + timezone.timedelta(days=1)
 
 
@@ -31,6 +30,7 @@ class Blog(models.Model):
     author = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
     date_created = models.DateTimeField(auto_now_add=True)
     starred = models.BooleanField(default=False)
+    match = models.BooleanField(default=False)
 
 
 class Favorite(models.Model):

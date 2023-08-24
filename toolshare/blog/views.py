@@ -8,6 +8,7 @@ from blog import models as blogModels
 from django.utils import timezone
 from blog.scripts.parser import Parser
 from blog.scripts.geocoderApi import Geocoder
+from django.contrib import messages
 
 
 class editTool(LoginRequiredMixin, View):
@@ -149,11 +150,55 @@ class toolDetails(LoginRequiredMixin, View):
 
     def get(self, request, userID, toolID):
         tool = blogModels.Blog.objects.get(id=toolID)
+        favorite = blogModels.Favorite.objects.filter(blog=tool)
+
+        favoriteUsers = []
+        for users in range(len(favorite)):
+            favoriteUsers.append(favorite[users].user)
 
         context = {
             'tool': tool,
+            'favoriteUsers': favoriteUsers,
         }
         return render(request, self.template_name, context=context)
     
     def post(self, request, userID, toolID):
-        return render(request, self.template_name)
+        if "addTool" in request.POST:
+            toolID = int(request.POST.get("addTool"))
+
+            toolSelected = blogModels.Blog.objects.get(id=toolID)
+            userFavorites = blogModels.Favorite.objects.filter(user=userID)
+
+            favoritesID = []
+            for favorite in range(len(userFavorites)):
+                favoritesID.append(userFavorites[favorite].blog.id)
+
+            if toolSelected.id not in favoritesID:
+                newFavorite = blogModels.Favorite()
+                newFavorite.blog = toolSelected
+                newFavorite.user = authModels.User.objects.get(id=userID)
+                newFavorite.save()
+                messages.success(request, "Tool saved !")
+            else:
+                messages.warning(request, "Tool already saved !")
+        elif "removeTool" in request.POST:
+            favoriteId = int(request.POST.get("removeTool"))
+
+            userFavorites = blogModels.Favorite.objects.filter(user=userID)
+
+            for favorite in range(len(userFavorites)):
+                if userFavorites[favorite].blog.id == favoriteId:
+                    blogModels.Favorite.objects.filter(id=userFavorites[favorite].id).delete()
+        elif "supprTool" in request.POST:
+            toolID = int(request.POST.get("supprTool"))
+
+            user = authModels.User.objects.get(id=userID)
+            personalTools = blogModels.Blog.objects.filter(author=user.id)
+
+            for tool in range(len(personalTools)):
+                if personalTools[tool].id == toolID:
+                    if personalTools[tool].image == "userPersonalToolPicture/defaultPersonalToolPicture.png":
+                        blogModels.Blog.objects.filter(id=personalTools[tool].id).delete()
+                    else:
+                        blogModels.Blog.objects.filter(id=personalTools[tool].id)[0].image.delete()
+                        blogModels.Blog.objects.filter(id=personalTools[tool].id).delete()

@@ -257,11 +257,19 @@
                                         <button class="btn btn-outline-warning" type="submit" name="toolDetails" value="{{ tool.id }}">View details<i
                                                 class="bi bi-gear ms-2"></i>
                                         </button>
-                                    </div>
-                                    <div class="text-center">
+                                        {% if tool.author.username != request.user.username and tool.match == False %}
                                         <button class="btn btn-outline-danger mt-2" type="submit" name="addTool" value="{{ tool.id }}">Add to bag<i
                                                 class="bi bi-heart ms-2"></i>
                                         </button>
+                                        {% elif tool.author.username != request.user.username and tool.match == True %}
+                                        <button class="btn btn-danger mt-2" type="submit" name="removeTool" value="{{ tool.id }}">Remove from bag<i
+                                                class="bi bi-x-octagon ms-2"></i>
+                                        </button>
+                                        {% elif tool.author.username == request.user.username %}
+                                        <button class="btn btn-danger mt-2" type="submit" name="supprTool" value="{{ tool.id }}">Remove from personal
+                                            tools<i class="bi bi-x-octagon ms-2"></i>
+                                        </button>
+                                        {% endif %}
                                     </div>
                                     <!-- Tool deposit -->
                                     {% if tool.deposit == True %}
@@ -271,7 +279,15 @@
                                     {% endif %}
                                     <!-- Tool publisher -->
                                     <h6 class="mt-3 fw-bolder">Published by :
-                                        <button type="submit" name="authorProfile" value="{{ tool.author.id }}" class="btn btn-link" style="text-decoration: none; padding: 0; margin: 0; position: relative; bottom: 2px;">{{ tool.author }}</button>
+                                        {% if tool.author.username != request.user.username %}
+                                        <button type="submit" name="authorProfile" value="{{ tool.author.id }}" class="btn btn-link" 
+                                            style="text-decoration: none; padding: 0; margin: 0; position: relative; bottom: 2px;">{{ tool.author }}
+                                        </button>
+                                        {% else %}
+                                        <button type="submit" name="authorProfile" value="{{ tool.author.id }}" class="btn btn-link"
+                                            style="text-decoration: none; padding: 0; margin: 0; position: relative; bottom: 2px;">You
+                                        </button>
+                                        {% endif %}
                                     </h6>
                                 </form>
                             </div>
@@ -324,23 +340,39 @@
                                         <button class="btn btn-outline-warning" type="submit" name="toolDetails" value="{{ tool.id }}">View details<i
                                                 class="bi bi-gear ms-2"></i>
                                         </button>
-                                    </div>
-                                    <div class="text-center">
+                                        {% if tool.author.username != request.user.username and tool.match == False %}
                                         <button class="btn btn-outline-danger mt-2" type="submit" name="addTool" value="{{ tool.id }}">Add to bag<i
                                                 class="bi bi-heart ms-2"></i>
                                         </button>
+                                        {% elif tool.author.username != request.user.username and tool.match == True %}
+                                        <button class="btn btn-danger mt-2" type="submit" name="removeTool" value="{{ tool.id }}">Remove from bag<i
+                                                class="bi bi-x-octagon ms-2"></i>
+                                        </button>
+                                        {% elif tool.author.username == request.user.username %}
+                                        <button class="btn btn-danger mt-2" type="submit" name="supprTool" value="{{ tool.id }}">Remove from personal
+                                            tools<i class="bi bi-x-octagon ms-2"></i>
+                                        </button>
+                                        {% endif %}
                                     </div>
+                                    <!-- Tool deposit -->
+                                    {% if tool.deposit == True %}
+                                    <h6 class="mt-4">He has a deposit</h6>
+                                    {% else %}
+                                    <h6 class="mt-4">There is no deposit</h6>
+                                    {% endif %}
+                                    <!-- Tool publisher -->
+                                    <h6 class="mt-3 fw-bolder">Published by :
+                                        {% if tool.author.username != request.user.username %}
+                                        <button type="submit" name="authorProfile" value="{{ tool.author.id }}" class="btn btn-link"
+                                            style="text-decoration: none; padding: 0; margin: 0; position: relative; bottom: 2px;">{{ tool.author }}
+                                        </button>
+                                        {% else %}
+                                        <button type="submit" name="authorProfile" value="{{ tool.author.id }}" class="btn btn-link"
+                                            style="text-decoration: none; padding: 0; margin: 0; position: relative; bottom: 2px;">You
+                                        </button>
+                                        {% endif %}
+                                    </h6>
                                 </form>
-                                <!-- Tool deposit -->
-                                {% if tool.deposit == True %}
-                                <h6 class="mt-4">He has a deposit</h6>
-                                {% else %}
-                                <h6 class="mt-4">There is no deposit</h6>
-                                {% endif %}
-                                <!-- Tool publisher -->
-                                <h6 class="mt-3 fw-bolder">Published by : <a class="" href="#"
-                                        style="text-decoration: none;">
-                                        {{ tool.author }}</a></h6>
                             </div>
                         </div>
                     </div>
@@ -391,23 +423,39 @@
                                         <button class="btn btn-outline-warning" type="submit" name="toolDetails" value="{{ tool.id }}">View details<i
                                                 class="bi bi-gear ms-2"></i>
                                         </button>
-                                    </div>
-                                    <div class="text-center">
+                                        {% if tool.author.username != request.user.username and tool.match == False %}
                                         <button class="btn btn-outline-danger mt-2" type="submit" name="addTool" value="{{ tool.id }}">Add to bag<i
                                                 class="bi bi-heart ms-2"></i>
                                         </button>
+                                        {% elif tool.author.username != request.user.username and tool.match == True %}
+                                        <button class="btn btn-danger mt-2" type="submit" name="removeTool" value="{{ tool.id }}">Remove from bag<i
+                                                class="bi bi-x-octagon ms-2"></i>
+                                        </button>
+                                        {% elif tool.author.username == request.user.username %}
+                                        <button class="btn btn-danger mt-2" type="submit" name="supprTool" value="{{ tool.id }}">Remove from personal
+                                            tools<i class="bi bi-x-octagon ms-2"></i>
+                                        </button>
+                                        {% endif %}
                                     </div>
+                                    <!-- Tool deposit -->
+                                    {% if tool.deposit == True %}
+                                    <h6 class="mt-4">He has a deposit</h6>
+                                    {% else %}
+                                    <h6 class="mt-4">There is no deposit</h6>
+                                    {% endif %}
+                                    <!-- Tool publisher -->
+                                    <h6 class="mt-3 fw-bolder">Published by :
+                                        {% if tool.author.username != request.user.username %}
+                                        <button type="submit" name="authorProfile" value="{{ tool.author.id }}" class="btn btn-link"
+                                            style="text-decoration: none; padding: 0; margin: 0; position: relative; bottom: 2px;">{{ tool.author }}
+                                        </button>
+                                        {% else %}
+                                        <button type="submit" name="authorProfile" value="{{ tool.author.id }}" class="btn btn-link"
+                                            style="text-decoration: none; padding: 0; margin: 0; position: relative; bottom: 2px;">You
+                                        </button>
+                                        {% endif %}
+                                    </h6>
                                 </form>
-                                <!-- Tool deposit -->
-                                {% if tool.deposit == True %}
-                                <h6 class="mt-4">He has a deposit</h6>
-                                {% else %}
-                                <h6 class="mt-4">There is no deposit</h6>
-                                {% endif %}
-                                <!-- Tool publisher -->
-                                <h6 class="mt-3 fw-bolder">Published by : <a class="" href="#"
-                                        style="text-decoration: none;">
-                                        {{ tool.author }}</a></h6>
                             </div>
                         </div>
                     </div>
@@ -458,23 +506,39 @@
                                         <button class="btn btn-outline-warning" type="submit" name="toolDetails" value="{{ tool.id }}">View details<i
                                                 class="bi bi-gear ms-2"></i>
                                         </button>
-                                    </div>
-                                    <div class="text-center">
+                                        {% if tool.author.username != request.user.username and tool.match == False %}
                                         <button class="btn btn-outline-danger mt-2" type="submit" name="addTool" value="{{ tool.id }}">Add to bag<i
                                                 class="bi bi-heart ms-2"></i>
                                         </button>
+                                        {% elif tool.author.username != request.user.username and tool.match == True %}
+                                        <button class="btn btn-danger mt-2" type="submit" name="removeTool" value="{{ tool.id }}">Remove from bag<i
+                                                class="bi bi-x-octagon ms-2"></i>
+                                        </button>
+                                        {% elif tool.author.username == request.user.username %}
+                                        <button class="btn btn-danger mt-2" type="submit" name="supprTool" value="{{ tool.id }}">Remove from personal
+                                            tools<i class="bi bi-x-octagon ms-2"></i>
+                                        </button>
+                                        {% endif %}
                                     </div>
+                                    <!-- Tool deposit -->
+                                    {% if tool.deposit == True %}
+                                    <h6 class="mt-4">He has a deposit</h6>
+                                    {% else %}
+                                    <h6 class="mt-4">There is no deposit</h6>
+                                    {% endif %}
+                                    <!-- Tool publisher -->
+                                    <h6 class="mt-3 fw-bolder">Published by :
+                                        {% if tool.author.username != request.user.username %}
+                                        <button type="submit" name="authorProfile" value="{{ tool.author.id }}" class="btn btn-link"
+                                            style="text-decoration: none; padding: 0; margin: 0; position: relative; bottom: 2px;">{{ tool.author }}
+                                        </button>
+                                        {% else %}
+                                        <button type="submit" name="authorProfile" value="{{ tool.author.id }}" class="btn btn-link"
+                                            style="text-decoration: none; padding: 0; margin: 0; position: relative; bottom: 2px;">You
+                                        </button>
+                                        {% endif %}
+                                    </h6>
                                 </form>
-                                <!-- Tool deposit -->
-                                {% if tool.deposit == True %}
-                                <h6 class="mt-4">He has a deposit</h6>
-                                {% else %}
-                                <h6 class="mt-4">There is no deposit</h6>
-                                {% endif %}
-                                <!-- Tool publisher -->
-                                <h6 class="mt-3 fw-bolder">Published by : <a class="" href="#"
-                                        style="text-decoration: none;">
-                                        {{ tool.author }}</a></h6>
                             </div>
                         </div>
                     </div>
@@ -489,7 +553,7 @@
         <!-- Section -->
         {% else %}
         <div class="col-8 d-flex align-items-center justify-content-center">
-            <p class="fs-1 text-muted" style="transform: skewY(-11deg);">You haven't personal tools</p>
+            <p class="fs-1 text-muted" style="transform: skewY(-11deg);">There are no tools</p>
         </div>
         {% endif %}
     </div>

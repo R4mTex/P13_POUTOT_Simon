@@ -89,6 +89,28 @@
                             <input type="hidden" value="{{ request.session.data.longName }}" id="longName">
                             <input type="hidden" value="{{ request.session.data.lat }}" id="lat">
                             <input type="hidden" value="{{ request.session.data.lng }}" id="lng">
+                            <!-- Tool actions -->
+                            <div class="card-footer mt-5 border-top-0 bg-transparent">
+                                <form method="post" action="{{request.META.HTTP_REFERER}}" role="form" novalidate>
+                                    {% csrf_token %}
+                                    <div class="text-center">
+                                        {% if tool.author.username != user.username and request.user not in favoriteUsers %}
+                                        <button class="btn btn-outline-danger fs-5" type="submit" name="addTool" value="{{ tool.id }}">Add to bag<i
+                                                class="bi bi-heart ms-2"></i>
+                                        </button>
+                                        {% elif request.user in favoriteUsers %}
+                                        <button class="btn btn-danger fs-5" type="submit" name="removeTool" value="{{ tool.id }}">Remove from bag<i
+                                                class="bi bi-x-octagon ms-2"></i>
+                                        </button>
+                                        {% else %}
+                                        <p class="pt-1 fst-italic fs-5" style="color: #17A2B8;">You cannot add your tools to your favorites</p>
+                                        <button class="btn btn-danger mt-2 fs-5" type="submit" name="supprTool" value="{{ tool.id }}">Remove from personal
+                                            tools<i class="bi bi-x-octagon ms-2"></i>
+                                        </button>
+                                        {% endif %}
+                                    </div>
+                                </form>
+                            </div>
                         </div>
                         <!-- Tool deposit -->
                         {% if tool.deposit == True %}

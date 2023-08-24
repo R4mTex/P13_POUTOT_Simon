@@ -50,7 +50,7 @@
                         <div class="d-flex flex-column text-center py-1">
                             <div>
                                 <p class="mb-1 h5">{{ tools|length }}</p>
-                                {% if tools|length == 1 %}
+                                {% if tools|length <= 1 %}
                                 <p class="small text-muted mb-0">Tool</p>
                                 {% else %}
                                 <p class="small text-muted mb-0">Tools</p>

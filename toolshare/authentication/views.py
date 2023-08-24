@@ -27,6 +27,12 @@ class Research(LoginRequiredMixin, View):
     def get(self, request, userID):
         tools = blogModels.Blog.objects.all()
 
+        favorites = blogModels.Favorite.objects.all()
+        for favorite in range(len(favorites)):
+            for tool in range(len(tools)):
+                if tools[tool].id == favorites[favorite].blog.id and request.user.username == favorites[favorite].user.username:
+                    tools[tool].match = True
+
         for tool in range(len(tools)):
             if tools[tool].availabalityStart <= timezone.now() <= tools[tool].availabalityEnd:
                 tools[tool].availabality = True
@@ -86,6 +92,79 @@ class Research(LoginRequiredMixin, View):
                 messages.warning(request, "Tool already saved !")
 
             tools = blogModels.Blog.objects.all()
+
+            favorites = blogModels.Favorite.objects.all()
+            for favorite in range(len(favorites)):
+                for tool in range(len(tools)):
+                    if tools[tool].id == favorites[favorite].blog.id and request.user.username == favorites[favorite].user.username:
+                        tools[tool].match = True
+
+            for tool in range(len(tools)):
+                if tools[tool].availabalityStart <= timezone.now() <= tools[tool].availabalityEnd:
+                    tools[tool].availabality = True
+                else:
+                    tools[tool].availabality = False
+
+            reverseToolsList = []
+            for tool in reversed(range(len(tools))):
+                reverseToolsList.append(tools[tool])
+            
+            context = {
+                'tools': reverseToolsList,
+            }
+            return render(request, self.template_name, context=context)
+        elif "removeTool" in request.POST:
+            favoriteId = int(request.POST.get("removeTool"))
+
+            userFavorites = blogModels.Favorite.objects.filter(user=userID)
+
+            for favorite in range(len(userFavorites)):
+                if userFavorites[favorite].blog.id == favoriteId:
+                    blogModels.Favorite.objects.filter(id=userFavorites[favorite].id).delete()
+            
+            tools = blogModels.Blog.objects.all()
+
+            favorites = blogModels.Favorite.objects.all()
+            for favorite in range(len(favorites)):
+                for tool in range(len(tools)):
+                    if tools[tool].id == favorites[favorite].blog.id and request.user.username == favorites[favorite].user.username:
+                        tools[tool].match = True
+
+            for tool in range(len(tools)):
+                if tools[tool].availabalityStart <= timezone.now() <= tools[tool].availabalityEnd:
+                    tools[tool].availabality = True
+                else:
+                    tools[tool].availabality = False
+
+            reverseToolsList = []
+            for tool in reversed(range(len(tools))):
+                reverseToolsList.append(tools[tool])
+            
+            context = {
+                'tools': reverseToolsList,
+            }
+            return render(request, self.template_name, context=context)
+        elif "supprTool" in request.POST:
+            toolID = int(request.POST.get("supprTool"))
+
+            user = authModels.User.objects.get(id=userID)
+            personalTools = blogModels.Blog.objects.filter(author=user.id)
+
+            for tool in range(len(personalTools)):
+                if personalTools[tool].id == toolID:
+                    if personalTools[tool].image == "userPersonalToolPicture/defaultPersonalToolPicture.png":
+                        blogModels.Blog.objects.filter(id=personalTools[tool].id).delete()
+                    else:
+                        blogModels.Blog.objects.filter(id=personalTools[tool].id)[0].image.delete()
+                        blogModels.Blog.objects.filter(id=personalTools[tool].id).delete()
+
+            tools = blogModels.Blog.objects.all()
+
+            favorites = blogModels.Favorite.objects.all()
+            for favorite in range(len(favorites)):
+                for tool in range(len(tools)):
+                    if tools[tool].id == favorites[favorite].blog.id and request.user.username == favorites[favorite].user.username:
+                        tools[tool].match = True
 
             for tool in range(len(tools)):
                 if tools[tool].availabalityStart <= timezone.now() <= tools[tool].availabalityEnd:

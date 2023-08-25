@@ -48,6 +48,17 @@ class personalTools(LoginRequiredMixin, View):
         user = authModels.User.objects.get(id=userID)
         personalTools = blogModels.Blog.objects.filter(author=user.id)
 
+        users = authModels.User.objects.all()
+        usersFullname = []
+        for fullname in range(len(users)):
+            usersFullname.append(users[fullname].fullname)
+
+        if "Fictive" not in usersFullname:
+            authModels.User.objects.create(fullname="Fictive",
+                                            username="Fic",
+                                            phoneNumber="+33680111133",
+                                            email="Fictive@Fic.com",)
+
         member = authModels.User.objects.get(fullname="Fictive")
 
         for tool in range(len(personalTools)):

@@ -48,6 +48,8 @@ class personalTools(LoginRequiredMixin, View):
         user = authModels.User.objects.get(id=userID)
         personalTools = blogModels.Blog.objects.filter(author=user.id)
 
+        member = authModels.User.objects.get(fullname="Fictive")
+
         for tool in range(len(personalTools)):
             if personalTools[tool].availabalityStart <= timezone.now() <= personalTools[tool].availabalityEnd:
                 personalTools[tool].availabality = True
@@ -60,6 +62,7 @@ class personalTools(LoginRequiredMixin, View):
 
         context = {
             'user': user,
+            'member': member,
             'tools': reversePersonalToolList,
         }
         return render(request, self.template_name, context=context)
@@ -128,6 +131,13 @@ class memberTools(LoginRequiredMixin, View):
         member = authModels.User.objects.get(id=memberID)
         personalTools = blogModels.Blog.objects.filter(author=member.id)
 
+        favorites = blogModels.Favorite.objects.all()
+
+        for favorite in range(len(favorites)):
+            for tool in range(len(personalTools)):
+                if personalTools[tool].id == favorites[favorite].blog.id and request.user.username == favorites[favorite].user.username:
+                    personalTools[tool].match = True
+
         for tool in range(len(personalTools)):
             if personalTools[tool].availabalityStart <= timezone.now() <= personalTools[tool].availabalityEnd:
                 personalTools[tool].availabality = True
@@ -143,6 +153,110 @@ class memberTools(LoginRequiredMixin, View):
             'tools': reversePersonalToolList,
         }
         return render(request, self.template_name, context=context)
+
+    def post(self, request, userID, memberID):
+        if "toolDetails" in request.POST:
+            toolID = int(request.POST.get("toolDetails"))
+
+            tool = blogModels.Blog.objects.get(id=toolID)
+            toolLocationParsed = Parser.scriptForParse(tool.location)
+
+            geocoderRequest = Geocoder(toolLocationParsed).geocoderApiRequest()
+            queryLocation = Geocoder(geocoderRequest).dataRequest()
+
+            if queryLocation['status'] == 'OK':
+                data = {
+                    'status': queryLocation['status'],
+                    'longName': queryLocation['longName'],
+                    'lat': queryLocation['lat'],
+                    'lng': queryLocation['lng'],
+                    'placeID': queryLocation['placeID'],
+                    }
+            elif queryLocation['status'] != 'OK':
+                data = {
+                    'status': queryLocation['status'],
+                    }
+            request.session['data'] = data
+            return redirect(reverse('tool-details', kwargs={'userID': userID, 'toolID': toolID}))
+        elif "addTool" in request.POST:
+            member = authModels.User.objects.get(id=memberID)
+            toolID = int(request.POST.get("addTool"))
+
+            toolSelected = blogModels.Blog.objects.get(id=toolID)
+            userFavorites = blogModels.Favorite.objects.filter(user=userID)
+
+            favoritesID = []
+            for favorite in range(len(userFavorites)):
+                favoritesID.append(userFavorites[favorite].blog.id)
+
+            if toolSelected.id not in favoritesID:
+                newFavorite = blogModels.Favorite()
+                newFavorite.blog = toolSelected
+                newFavorite.user = authModels.User.objects.get(id=userID)
+                newFavorite.save()
+                messages.success(request, "Tool saved !")
+            else:
+                messages.warning(request, "Tool already saved !")
+
+            tools = blogModels.Blog.objects.all()
+
+            favorites = blogModels.Favorite.objects.all()
+            for favorite in range(len(favorites)):
+                for tool in range(len(tools)):
+                    if tools[tool].id == favorites[favorite].blog.id and request.user.username == favorites[favorite].user.username:
+                        tools[tool].match = True
+
+            for tool in range(len(tools)):
+                if tools[tool].availabalityStart <= timezone.now() <= tools[tool].availabalityEnd:
+                    tools[tool].availabality = True
+                else:
+                    tools[tool].availabality = False
+
+            reverseToolsList = []
+            for tool in reversed(range(len(tools))):
+                reverseToolsList.append(tools[tool])
+            
+            context = {
+                'member': member,
+                'tools': reverseToolsList,
+            }
+            return render(request, self.template_name, context=context)
+        elif "removeTool" in request.POST:
+            member = authModels.User.objects.get(id=memberID)
+            favoriteId = int(request.POST.get("removeTool"))
+
+            userFavorites = blogModels.Favorite.objects.filter(user=userID)
+
+            for favorite in range(len(userFavorites)):
+                if userFavorites[favorite].blog.id == favoriteId:
+                    blogModels.Favorite.objects.filter(id=userFavorites[favorite].id).delete()
+            
+            tools = blogModels.Blog.objects.all()
+
+            favorites = blogModels.Favorite.objects.all()
+            for favorite in range(len(favorites)):
+                for tool in range(len(tools)):
+                    if tools[tool].id == favorites[favorite].blog.id and request.user.username == favorites[favorite].user.username:
+                        tools[tool].match = True
+
+            for tool in range(len(tools)):
+                if tools[tool].availabalityStart <= timezone.now() <= tools[tool].availabalityEnd:
+                    tools[tool].availabality = True
+                else:
+                    tools[tool].availabality = False
+
+            reverseToolsList = []
+            for tool in reversed(range(len(tools))):
+                reverseToolsList.append(tools[tool])
+            
+            context = {
+                'member': member,
+                'tools': reverseToolsList,
+            }
+            return render(request, self.template_name, context=context)
+        elif "authorProfile" in request.POST:
+            authorID = int(request.POST.get("authorProfile"))
+            return redirect(reverse('member-profile', kwargs={'userID': userID, 'memberID': authorID}))
     
 
 class toolDetails(LoginRequiredMixin, View):

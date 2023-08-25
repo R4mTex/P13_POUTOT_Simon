@@ -26,8 +26,8 @@ class Research(LoginRequiredMixin, View):
 
     def get(self, request, userID):
         tools = blogModels.Blog.objects.all()
-
         favorites = blogModels.Favorite.objects.all()
+
         for favorite in range(len(favorites)):
             for tool in range(len(tools)):
                 if tools[tool].id == favorites[favorite].blog.id and request.user.username == favorites[favorite].user.username:
@@ -154,9 +154,11 @@ class Research(LoginRequiredMixin, View):
                 if personalTools[tool].id == toolID:
                     if personalTools[tool].image == "userPersonalToolPicture/defaultPersonalToolPicture.png":
                         blogModels.Blog.objects.filter(id=personalTools[tool].id).delete()
+                        messages.success(request, "Tool deleted !")
                     else:
                         blogModels.Blog.objects.filter(id=personalTools[tool].id)[0].image.delete()
                         blogModels.Blog.objects.filter(id=personalTools[tool].id).delete()
+                        messages.success(request, "Tool deleted !")
 
             tools = blogModels.Blog.objects.all()
 

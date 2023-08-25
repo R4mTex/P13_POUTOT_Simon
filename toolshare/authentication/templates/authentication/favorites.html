@@ -84,6 +84,8 @@
                                 <option value="3">Finishing work</option>
                                 <option value="4">Motoculture maintenance</option>
                                 <option value="5">Green space maintenance</option>
+                                <option value="6">Equipment</option>
+                                <option value="7">Other</option>
                             </select>
                         </td>
                     </tr>
@@ -189,6 +191,27 @@
         {% if tools|length != 0 %}
         <!-- Section -->
         <section class="col-10 py-5">
+            <div class="text-center">
+                {% for message in messages %}
+                {% if 'success' in message.tags %}
+                <div class="d-inline-flex alert alert-success alert-dismissible fade show mt-1 ms-1 p-2 pe-3" role="alert">
+                    <strong>{{ message }}</strong>
+                    <button type="button" class="close" data-dismiss="alert" aria-label="Close"
+                        style="position: relative; left: 6px; font-size: smaller;">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                {% else %}
+                <div class="d-inline-flex alert alert-warning alert-dismissible fade show mt-1 ms-1 p-2 pe-3" role="alert">
+                    <strong>{{ message }}</strong>
+                    <button type="button" class="close" data-dismiss="alert" aria-label="Close"
+                        style="position: relative; left: 5px; font-size: smaller;">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                {% endif %}
+                {% endfor %}
+            </div>
             <div class="container px-4 px-lg-5 mt-5">
                 <div class="row ps-4 ps-md-0 gx-4 gx-lg-5 row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-xl-4">
                 {% if tools|length >= 4 %}
@@ -498,5 +521,7 @@
         {% endif %}
     </div>
 </div>
+
+<script src="/static/js/alert.js"></script>
 
 {% endblock content %}

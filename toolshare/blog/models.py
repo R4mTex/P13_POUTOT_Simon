@@ -18,6 +18,7 @@ class Blog(models.Model):
         ("Finishing work", "Finishing work"),
         ("Motoculture maintenance", "Motoculture maintenance"),
         ("Green space maintenance", "Green space maintenance"),
+        ("Equipment", "Equipment"),
         ("Other", "Other"),
     ]
     category = models.CharField(max_length=128, choices=CATEGORY_CHOICES)

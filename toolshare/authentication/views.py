@@ -183,8 +183,11 @@ class Research(LoginRequiredMixin, View):
             }
             return render(request, self.template_name, context=context)
         elif "authorProfile" in request.POST:
-            authorID = int(request.POST.get("authorProfile"))
-            return redirect(reverse('member-profile', kwargs={'userID': userID, 'memberID': authorID}))
+            if int(request.POST.get("authorProfile")) == userID:
+                return redirect(reverse('profile', kwargs={'userID': userID}))
+            else:
+                memberID = int(request.POST.get("authorProfile"))
+                return redirect(reverse('member-profile', kwargs={'userID': userID, 'memberID': memberID}))
         
 
 class memberProfile(LoginRequiredMixin, View):
@@ -201,10 +204,15 @@ class memberProfile(LoginRequiredMixin, View):
 
         reversePersonalToolList4 = reversePersonalToolList[0:4]
 
+        pathInfoUser = ""
+        pathInfoMember = "/user/"+str(userID)+"/member/"+str(memberID)+"/member-profile/"
+
         context = {
             'user': user,
             'member': member,
             'tools': reversePersonalToolList4,
+            'pathInfoUser': pathInfoUser,
+            'pathInfoMember': pathInfoMember,
         }
         return render(request, self.template_name, context=context)
     
@@ -232,6 +240,8 @@ class memberProfile(LoginRequiredMixin, View):
                     }
             request.session['data'] = data
             return redirect(reverse('tool-details', kwargs={'userID': userID, 'toolID': toolID}))
+        elif "showPersonalTools" in request.POST:
+            return redirect(reverse('member-tools', kwargs={'userID': userID, 'memberID': memberID}))
         
 
 class Favorites(LoginRequiredMixin, View):
@@ -321,18 +331,8 @@ class Profile(LoginRequiredMixin, View):
         user = authModels.User.objects.get(id=userID)
         personalTools = blogModels.Blog.objects.filter(author=user.id)
 
-        users = authModels.User.objects.all()
-        usersFullname = []
-        for fullname in range(len(users)):
-            usersFullname.append(users[fullname].fullname)
-
-        if "Fictive" not in usersFullname:
-            authModels.User.objects.create(fullname="Fictive",
-                                            username="Fic",
-                                            phoneNumber="+33680111133",
-                                            email="Fictive@Fic.com",)
-
-        member = authModels.User.objects.get(fullname="Fictive")
+        pathInfoUser = "/user/"+str(userID)+"/profile/"
+        pathInfoMember = ""
 
         reversePersonalToolList = []
         for tool in reversed(range(len(personalTools))):
@@ -342,8 +342,9 @@ class Profile(LoginRequiredMixin, View):
 
         context = {
             'user': user,
-            'member': member,
             'tools': reversePersonalToolList4,
+            'pathInfoUser': pathInfoUser,
+            'pathInfoMember': pathInfoMember,
         }
         return render(request, self.template_name, context=context)
     
@@ -371,6 +372,9 @@ class Profile(LoginRequiredMixin, View):
                     }
             request.session['data'] = data
             return redirect(reverse('tool-details', kwargs={'userID': userID, 'toolID': toolID}))
+        elif "showPersonalTools" in request.POST:
+            return redirect(reverse('personal-tools', kwargs={'userID': userID}))
+
 
 class editProfile(LoginRequiredMixin, View):
     template_name = 'authentication/editProfile.html'

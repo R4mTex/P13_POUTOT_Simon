@@ -48,18 +48,8 @@ class personalTools(LoginRequiredMixin, View):
         user = authModels.User.objects.get(id=userID)
         personalTools = blogModels.Blog.objects.filter(author=user.id)
 
-        users = authModels.User.objects.all()
-        usersFullname = []
-        for fullname in range(len(users)):
-            usersFullname.append(users[fullname].fullname)
-
-        if "Fictive" not in usersFullname:
-            authModels.User.objects.create(fullname="Fictive",
-                                            username="Fic",
-                                            phoneNumber="+33680111133",
-                                            email="Fictive@Fic.com",)
-
-        member = authModels.User.objects.get(fullname="Fictive")
+        pathPersonalToolsUser = "/user/"+str(userID)+"/personal-tools/"
+        pathPersonalToolsMember = ""
 
         for tool in range(len(personalTools)):
             if personalTools[tool].availabalityStart <= timezone.now() <= personalTools[tool].availabalityEnd:
@@ -73,8 +63,9 @@ class personalTools(LoginRequiredMixin, View):
 
         context = {
             'user': user,
-            'member': member,
             'tools': reversePersonalToolList,
+            'pathPersonalToolsUser': pathPersonalToolsUser,
+            'pathPersonalToolsMember': pathPersonalToolsMember,
         }
         return render(request, self.template_name, context=context)
     
@@ -149,6 +140,9 @@ class memberTools(LoginRequiredMixin, View):
                 if personalTools[tool].id == favorites[favorite].blog.id and request.user.username == favorites[favorite].user.username:
                     personalTools[tool].match = True
 
+        pathPersonalToolsUser = ""
+        pathPersonalToolsMember = "/user/"+str(userID)+"/member/"+str(memberID)+"/member-tools/"
+
         for tool in range(len(personalTools)):
             if personalTools[tool].availabalityStart <= timezone.now() <= personalTools[tool].availabalityEnd:
                 personalTools[tool].availabality = True
@@ -162,6 +156,8 @@ class memberTools(LoginRequiredMixin, View):
         context = {
             'member': member,
             'tools': reversePersonalToolList,
+            'pathPersonalToolsUser': pathPersonalToolsUser,
+            'pathPersonalToolsMember': pathPersonalToolsMember,
         }
         return render(request, self.template_name, context=context)
 

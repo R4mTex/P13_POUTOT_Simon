@@ -1,4 +1,4 @@
-{% extends 'blog/base.html' %}
+{% extends 'authentication/base.html' %}
 
 {% block content %}
 
@@ -200,8 +200,16 @@
                         <span aria-hidden="true">&times;</span>
                     </button>
                 </div>
-                {% else %}
+                {% elif 'info' in message.tags %}
                 <div class="d-inline-flex alert alert-warning alert-dismissible fade show mt-1 ms-1 p-2 pe-3" role="alert">
+                    <strong>{{ message }}</strong>
+                    <button type="button" class="close" data-dismiss="alert" aria-label="Close"
+                        style="position: relative; left: 5px; font-size: smaller;">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                {% elif 'warning' in message.tags %}
+                <div class="d-inline-flex alert alert-danger alert-dismissible fade show mt-1 ms-1 p-2 pe-3" role="alert">
                     <strong>{{ message }}</strong>
                     <button type="button" class="close" data-dismiss="alert" aria-label="Close"
                         style="position: relative; left: 5px; font-size: smaller;">
@@ -260,7 +268,7 @@
                                                 class="bi bi-gear ms-2"></i>
                                         </button>
                                         {% if tool.author.username != request.user.username and tool.match == False %}
-                                        <button class="btn btn-outline-danger mt-2" type="submit" name="addTool" value="{{ tool.id }}">Add to bag<i
+                                        <button class="btn btn-outline-danger mt-2" type="submit" name="addTool" value="{{ tool.id }}" onclick="addRequest()">Add to bag<i
                                                 class="bi bi-heart ms-2"></i>
                                         </button>
                                         {% elif tool.author.username != request.user.username and tool.match == True %}
@@ -562,5 +570,6 @@
 </div>
 
 <script src="/static/js/alert.js"></script>
+<!--<script src="/static/js/researchPost.js"></script>-->
 
 {% endblock content %}

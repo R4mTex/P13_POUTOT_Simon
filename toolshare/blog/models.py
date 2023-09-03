@@ -30,7 +30,8 @@ class Blog(models.Model):
     deposit = models.BooleanField(default=False)
     author = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
     date_created = models.DateTimeField(auto_now_add=True)
-    starred = models.BooleanField(default=False)
+    rating = models.FloatField(default=0.0)
+    popularity = models.IntegerField(default=0)
     match = models.BooleanField(default=False)
 
 

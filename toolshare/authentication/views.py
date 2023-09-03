@@ -19,7 +19,7 @@ class Home(LoginRequiredMixin, View):
     template_name = 'authentication/home.html'
 
     def get(self, request):
-        return render(request, self.template_name)
+        return render(request, self.template_name)         
 
 class Research(LoginRequiredMixin, View):
     template_name = 'authentication/research.html'
@@ -49,7 +49,75 @@ class Research(LoginRequiredMixin, View):
         return render(request, self.template_name, context=context)
     
     def post(self, request, userID):
-        if "toolDetails" in request.POST:
+        if "allItems" in request.POST:
+            allItems = blogModels.Blog.objects.all()
+            print(allItems)
+            context = {
+                'tools': allItems,
+            }
+            return render(request, self.template_name, context=context)
+        elif "allTools" in request.POST:
+            allTools = blogModels.Blog.objects.exclude(category="Equipment")
+            print(allTools)
+            context = {
+                'tools': allTools,
+            }
+            return render(request, self.template_name, context=context)
+        elif "allEquipments" in request.POST:
+            allEquipments = blogModels.Blog.objects.filter(category="Equipment")
+            print(allEquipments)
+            context = {
+                'tools': allEquipments,
+            }
+            return render(request, self.template_name, context=context)
+        elif "mostPopular" in request.POST:
+            tools = blogModels.Blog.objects.all()
+            favorites = blogModels.Favorite.objects.all()
+
+            popularityScore = []
+            for tool1 in range(len(tools)):
+                popularityScore.append(tools[tool1].popularity)
+
+            popularityScore.sort(reverse=True)
+
+            mostPopularTools = []
+            for popularity in range(len(popularityScore)):
+                for tool2 in range(len(blogModels.Blog.objects.filter(popularity=popularityScore[popularity]))):
+                    mostPopularTools.append(blogModels.Blog.objects.filter(popularity=popularityScore[popularity])[tool2])
+
+            for favorite in range(len(favorites)):
+                for tool3 in range(len(mostPopularTools)):
+                    if mostPopularTools[tool3].id == favorites[favorite].blog.id and request.user.username == favorites[favorite].user.username:
+                        mostPopularTools[tool3].match = True
+
+            for tool4 in range(len(mostPopularTools)):
+                if mostPopularTools[tool4].availabalityStart <= timezone.now() <= mostPopularTools[tool4].availabalityEnd:
+                    mostPopularTools[tool4].availabality = True
+                else:
+                    mostPopularTools[tool4].availabality = False
+
+            context = {
+                'tools': mostPopularTools,
+            }
+            return render(request, self.template_name, context=context)
+        elif "bestRated" in request.POST:
+            tools = blogModels.Blog.objects.all()
+
+            toolsDateCreated = []
+            for tool in range(len(tools)):
+                toolsDateCreated.append(tools[tool].date_created)
+
+            toolsDateCreated.sort(reverse = True)
+            
+            tools = []
+            for tool in range(len(toolsDateCreated)):
+                tools.append(blogModels.Blog.objects.get(date_created=toolsDateCreated[tool]))
+
+            context = {
+                'tools': tools,
+            }
+            return render(request, self.template_name, context=context)
+        elif "toolDetails" in request.POST:
             toolID = int(request.POST.get("toolDetails"))
 
             tool = blogModels.Blog.objects.get(id=toolID)
@@ -76,6 +144,9 @@ class Research(LoginRequiredMixin, View):
             toolID = int(request.POST.get("addTool"))
 
             toolSelected = blogModels.Blog.objects.get(id=toolID)
+            toolSelected.popularity += 1
+            toolSelected.save()
+
             userFavorites = blogModels.Favorite.objects.filter(user=userID)
 
             favoritesID = []
@@ -87,9 +158,7 @@ class Research(LoginRequiredMixin, View):
                 newFavorite.blog = toolSelected
                 newFavorite.user = authModels.User.objects.get(id=userID)
                 newFavorite.save()
-                messages.success(request, "Tool saved !")
-            else:
-                messages.warning(request, "Tool already saved !")
+                messages.success(request, "Added to your Favorites")
 
             tools = blogModels.Blog.objects.all()
 
@@ -116,11 +185,16 @@ class Research(LoginRequiredMixin, View):
         elif "removeTool" in request.POST:
             favoriteId = int(request.POST.get("removeTool"))
 
+            toolSelected = blogModels.Blog.objects.get(id=favoriteId)
+            toolSelected.popularity -= 1
+            toolSelected.save()
+
             userFavorites = blogModels.Favorite.objects.filter(user=userID)
 
             for favorite in range(len(userFavorites)):
                 if userFavorites[favorite].blog.id == favoriteId:
                     blogModels.Favorite.objects.filter(id=userFavorites[favorite].id).delete()
+                    messages.info(request, "Removed to your Favorites")
             
             tools = blogModels.Blog.objects.all()
 
@@ -154,11 +228,11 @@ class Research(LoginRequiredMixin, View):
                 if personalTools[tool].id == toolID:
                     if personalTools[tool].image == "userPersonalToolPicture/defaultPersonalToolPicture.png":
                         blogModels.Blog.objects.filter(id=personalTools[tool].id).delete()
-                        messages.success(request, "Tool deleted !")
+                        messages.warning(request, "Deleted to your Personal Tools")
                     else:
                         blogModels.Blog.objects.filter(id=personalTools[tool].id)[0].image.delete()
                         blogModels.Blog.objects.filter(id=personalTools[tool].id).delete()
-                        messages.success(request, "Tool deleted !")
+                        messages.warning(request, "Deleted to your Personal Tools")
 
             tools = blogModels.Blog.objects.all()
 

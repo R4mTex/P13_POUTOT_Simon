@@ -25,15 +25,19 @@ from django.conf.urls.static import static
 
 urlpatterns = [
     path('admin/', admin.site.urls),
+    ### Home / About / Contact / Publisher ###
     path('', authView.Home.as_view(template_name='authentication/home.html'), name='home'),
-    # Research #
+    path('about/', authView.About.as_view(template_name='authentication/about.html'), name='about'),
+    path('contact/', authView.Contact.as_view(template_name='authentication/contact.html'), name='contact'),
+    path('publisher/', authView.Publisher.as_view(template_name='authentication/publisher.html'), name='publisher'),
+    ### Research ###
     path('user/<int:userID>/research/', authView.Research.as_view(template_name='authentication/research.html'), name='research'),
     path('user/<int:userID>/research/all-items/', authView.Research.as_view(template_name='authentication/research.html'), name='research-all-items'),
     path('user/<int:userID>/research/all-tools/', authView.Research.as_view(template_name='authentication/research.html'), name='research-all-tools'),
     path('user/<int:userID>/research/all-equipments/', authView.Research.as_view(template_name='authentication/research.html'), name='research-all-equipments'),
     path('user/<int:userID>/research/most-popular/', authView.Research.as_view(template_name='authentication/research.html'), name='research-most-popular'),
     path('user/<int:userID>/research/best-rated/', authView.Research.as_view(template_name='authentication/research.html'), name='research-best-rated'),
-    # /Research #
+    ### /Research ###
     path('user/<int:userID>/favorites/', authView.Favorites.as_view(template_name='authentication/favorites.html'), name='favorites'),
     path('user/<int:userID>/profile/', authView.Profile.as_view(template_name='authentication/profile.html'), name='profile'),
     path('user/<int:userID>/member/<int:memberID>/member-profile/', authView.memberProfile.as_view(template_name='authentication/profile.html'), name='member-profile'),

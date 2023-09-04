@@ -1,0 +1,52 @@
+{% extends 'authentication/base.html' %}
+
+
+{% block content %}
+
+<style>
+    section {
+        /* fallback for old browsers */
+        background: #E0DABC;
+
+        /* Chrome 10-25, Safari 5.1-6 */
+        background: linear-gradient(69.5deg, rgb(1, 179, 201) 2.3%, rgb(40, 48, 68) 97.6%);
+
+        /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
+        background: linear-gradient(69.5deg, rgb(1, 179, 201) 2.3%, rgb(40, 48, 68) 97.6%);
+    }
+
+</style>
+<!-- Header -->
+<header class="bg-dark py-5">
+    <div class="container px-4 px-lg-5 my-5">
+        <div class="text-center text-white">
+            <h1 class="display-4 fw-bolder">About Me</h1>
+        </div>
+    </div>
+</header>
+<!-- about -->
+<section class="section pt-5">
+    <div class="container">
+        <div class="row">
+            <div class="col-md-8 text-white-50">
+                <p>Hello, after a few years studying computer science, I've come to realize my final project: "ToolShare".</p>
+                <p>The constraints were to create something community-oriented that would be useful around my home.</p>
+                <p>Living in the countryside, I've already been able to take part in a few projects requiring specific tools.
+                As I don't have a DIY workshop, and professional tool hire is expensive, we asked around the house if any
+                friends/neighbors could lend us their equipment.
+                Unfortunately, we didn't know in advance whether the person in question had the tool or whether it was available, which
+                sometimes worked to our disadvantage and blocked the job for a few days.</p>
+            </div>
+            <div class="col-md-4 text-center drag-lg-top">
+                <div class="shadow-down mb-4">
+                    <img src="/static/images/about/author.jpg" alt="author"
+                        class="img-fluid w-100 rounded">
+                </div>
+                <h4 class="pb-5">Poutot Simon</h4>
+            </div>
+        </div>
+    </div>
+</section>
+<!-- /about -->
+
+{% endblock %}

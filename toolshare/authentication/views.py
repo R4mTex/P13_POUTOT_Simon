@@ -19,7 +19,25 @@ class Home(LoginRequiredMixin, View):
     template_name = 'authentication/home.html'
 
     def get(self, request):
-        return render(request, self.template_name)         
+        return render(request, self.template_name)
+
+class About(LoginRequiredMixin, View):
+    template_name = 'authentication/about.html'
+
+    def get(self, request):
+        return render(request, self.template_name)
+
+class Contact(LoginRequiredMixin, View):
+    template_name = 'authentication/contact.html'
+
+    def get(self, request):
+        return render(request, self.template_name)
+
+class Publisher(LoginRequiredMixin, View):
+    template_name = 'authentication/publisher.html'
+
+    def get(self, request):
+        return render(request, self.template_name)
 
 class Research(LoginRequiredMixin, View):
     template_name = 'authentication/research.html'

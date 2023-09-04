@@ -43,9 +43,9 @@
                 aria-label="Toggle navigation"><span class="navbar-toggler-icon"></span></button>
             <div class="collapse navbar-collapse" id="navbarSupportedContent">
                 <ul class="navbar-nav me-auto mb-2 mb-lg-0 ms-lg-4">
-                    <li class="nav-item"><a class="nav-link active" aria-current="page" href="#!">Home</a>
+                    <li class="nav-item"><a class="nav-link active" aria-current="page" href="{% url 'home' %}">Home</a>
                     </li>
-                    <li class="nav-item"><a class="nav-link" href="#!">About</a></li>
+                    <li class="nav-item"><a class="nav-link" href="{% url 'about' %}">About</a></li>
                     <li class="nav-item dropdown">
                         <a class="nav-link dropdown-toggle" id="navbarDropdown" href="#" role="button"
                             data-bs-toggle="dropdown" aria-expanded="false">Workshop</a>
@@ -167,7 +167,21 @@
     <!-- Footer-->
     <footer class="py-5 bg-dark">
         <div class="container">
-            <p class="m-0 text-center text-white">Copyright &copy; POUTOT Simon 2023</p>
+            <div class="row">
+                <div class="col-12">
+                    <div class="d-flex justify-content-betwenn">
+                        <div class="col-3 d-flex justify-content-start">
+                            <p class="m-0"><a class="text-white" href="{% url 'contact' %}" style="text-decoration: none; opacity: 0.8;">Contact</a></p>
+                        </div>
+                        <div class="col-6 d-flex justify-content-center">
+                            <p class="m-0 text-white">Copyright &copy; POUTOT Simon 2023</p>
+                        </div>
+                        <div class="col-3 d-flex justify-content-end">
+                            <p class="m-0"><a class="text-white" href="{% url 'publisher' %}" style="text-decoration: none; opacity: 0.8;">Publisher</a></p>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
     </footer>
     <!-- Bootstrap core JS-->

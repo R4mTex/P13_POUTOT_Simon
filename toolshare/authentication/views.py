@@ -51,23 +51,71 @@ class Research(LoginRequiredMixin, View):
     def post(self, request, userID):
         if "allItems" in request.POST:
             allItems = blogModels.Blog.objects.all()
-            print(allItems)
+            favorites = blogModels.Favorite.objects.all()
+
+            for favorite in range(len(favorites)):
+                for tool in range(len(allItems)):
+                    if allItems[tool].id == favorites[favorite].blog.id and request.user.username == favorites[favorite].user.username:
+                        allItems[tool].match = True
+
+            for tool in range(len(allItems)):
+                if allItems[tool].availabalityStart <= timezone.now() <= allItems[tool].availabalityEnd:
+                    allItems[tool].availabality = True
+                else:
+                    allItems[tool].availabality = False
+
+            reverseToolsList = []
+            for tool in reversed(range(len(allItems))):
+                reverseToolsList.append(allItems[tool])
+            
             context = {
-                'tools': allItems,
+                'tools': reverseToolsList,
             }
             return render(request, self.template_name, context=context)
         elif "allTools" in request.POST:
             allTools = blogModels.Blog.objects.exclude(category="Equipment")
-            print(allTools)
+            favorites = blogModels.Favorite.objects.all()
+
+            for favorite in range(len(favorites)):
+                for tool in range(len(allTools)):
+                    if allTools[tool].id == favorites[favorite].blog.id and request.user.username == favorites[favorite].user.username:
+                        allTools[tool].match = True
+
+            for tool in range(len(allTools)):
+                if allTools[tool].availabalityStart <= timezone.now() <= allTools[tool].availabalityEnd:
+                    allTools[tool].availabality = True
+                else:
+                    allTools[tool].availabality = False
+
+            reverseToolsList = []
+            for tool in reversed(range(len(allTools))):
+                reverseToolsList.append(allTools[tool])
+            
             context = {
-                'tools': allTools,
+                'tools': reverseToolsList,
             }
             return render(request, self.template_name, context=context)
         elif "allEquipments" in request.POST:
             allEquipments = blogModels.Blog.objects.filter(category="Equipment")
-            print(allEquipments)
+            favorites = blogModels.Favorite.objects.all()
+
+            for favorite in range(len(favorites)):
+                for tool in range(len(allEquipments)):
+                    if allEquipments[tool].id == favorites[favorite].blog.id and request.user.username == favorites[favorite].user.username:
+                        allEquipments[tool].match = True
+
+            for tool in range(len(allEquipments)):
+                if allEquipments[tool].availabalityStart <= timezone.now() <= allEquipments[tool].availabalityEnd:
+                    allEquipments[tool].availabality = True
+                else:
+                    allEquipments[tool].availabality = False
+
+            reverseToolsList = []
+            for tool in reversed(range(len(allEquipments))):
+                reverseToolsList.append(allEquipments[tool])
+            
             context = {
-                'tools': allEquipments,
+                'tools': reverseToolsList,
             }
             return render(request, self.template_name, context=context)
         elif "mostPopular" in request.POST:
@@ -75,26 +123,26 @@ class Research(LoginRequiredMixin, View):
             favorites = blogModels.Favorite.objects.all()
 
             popularityScore = []
-            for tool1 in range(len(tools)):
-                popularityScore.append(tools[tool1].popularity)
+            for tool in range(len(tools)):
+                popularityScore.append(tools[tool].popularity)
 
             popularityScore.sort(reverse=True)
 
             mostPopularTools = []
             for popularity in range(len(popularityScore)):
-                for tool2 in range(len(blogModels.Blog.objects.filter(popularity=popularityScore[popularity]))):
-                    mostPopularTools.append(blogModels.Blog.objects.filter(popularity=popularityScore[popularity])[tool2])
+                for tool in range(len(blogModels.Blog.objects.filter(popularity=popularityScore[popularity]))):
+                    mostPopularTools.append(blogModels.Blog.objects.filter(popularity=popularityScore[popularity])[tool])
 
             for favorite in range(len(favorites)):
-                for tool3 in range(len(mostPopularTools)):
-                    if mostPopularTools[tool3].id == favorites[favorite].blog.id and request.user.username == favorites[favorite].user.username:
-                        mostPopularTools[tool3].match = True
+                for tool in range(len(mostPopularTools)):
+                    if mostPopularTools[tool].id == favorites[favorite].blog.id and request.user.username == favorites[favorite].user.username:
+                        mostPopularTools[tool].match = True
 
-            for tool4 in range(len(mostPopularTools)):
-                if mostPopularTools[tool4].availabalityStart <= timezone.now() <= mostPopularTools[tool4].availabalityEnd:
-                    mostPopularTools[tool4].availabality = True
+            for tool in range(len(mostPopularTools)):
+                if mostPopularTools[tool].availabalityStart <= timezone.now() <= mostPopularTools[tool].availabalityEnd:
+                    mostPopularTools[tool].availabality = True
                 else:
-                    mostPopularTools[tool4].availabality = False
+                    mostPopularTools[tool].availabality = False
 
             context = {
                 'tools': mostPopularTools,
@@ -102,19 +150,36 @@ class Research(LoginRequiredMixin, View):
             return render(request, self.template_name, context=context)
         elif "bestRated" in request.POST:
             tools = blogModels.Blog.objects.all()
-
-            toolsDateCreated = []
-            for tool in range(len(tools)):
-                toolsDateCreated.append(tools[tool].date_created)
-
-            toolsDateCreated.sort(reverse = True)
             
-            tools = []
-            for tool in range(len(toolsDateCreated)):
-                tools.append(blogModels.Blog.objects.get(date_created=toolsDateCreated[tool]))
+            scoreRate = []
+            for tool in range(len(tools)):
+                scoreRate.append(tools[tool].rating)
+
+            scoreRate.sort(reverse=True)
+
+            toolBestRated = []
+            for score in range(len(scoreRate)):
+                toolBestRated.append(blogModels.Blog.objects.filter(rating=scoreRate[score]))
+            
+            bestTools = []
+            for value in range(len(toolBestRated)):
+                bestTools.append(toolBestRated[value][0])
+
+            favorites = blogModels.Favorite.objects.all()
+
+            for favorite in range(len(favorites)):
+                for tool in range(len(bestTools)):
+                    if bestTools[tool].id == favorites[favorite].blog.id and request.user.username == favorites[favorite].user.username:
+                        bestTools[tool].match = True
+
+            for tool in range(len(bestTools)):
+                if bestTools[tool].availabalityStart <= timezone.now() <= bestTools[tool].availabalityEnd:
+                    bestTools[tool].availabality = True
+                else:
+                    bestTools[tool].availabality = False
 
             context = {
-                'tools': tools,
+                'tools': bestTools,
             }
             return render(request, self.template_name, context=context)
         elif "toolDetails" in request.POST:
@@ -177,7 +242,7 @@ class Research(LoginRequiredMixin, View):
             reverseToolsList = []
             for tool in reversed(range(len(tools))):
                 reverseToolsList.append(tools[tool])
-            
+
             context = {
                 'tools': reverseToolsList,
             }

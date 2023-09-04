@@ -120,18 +120,33 @@ class Research(LoginRequiredMixin, View):
             return render(request, self.template_name, context=context)
         elif "mostPopular" in request.POST:
             tools = blogModels.Blog.objects.all()
-            favorites = blogModels.Favorite.objects.all()
+
+            reverseToolsList = []
+            for tool in reversed(range(len(tools))):
+                reverseToolsList.append(tools[tool])
 
             popularityScore = []
-            for tool in range(len(tools)):
-                popularityScore.append(tools[tool].popularity)
+            for tool in range(len(reverseToolsList)):
+                structure = {
+                    'id': reverseToolsList[tool].id,
+                    'popularity': reverseToolsList[tool].popularity,
+                }
+                popularityScore.append(structure)
 
-            popularityScore.sort(reverse=True)
+            def get_popularity(popularityScore):
+                return popularityScore.get('popularity')
+
+            popularityScore.sort(key=get_popularity, reverse=True)
+
+            popularTools = []
+            for popularity in range(len(popularityScore)):
+                popularTools.append(blogModels.Blog.objects.filter(id=popularityScore[popularity]['id']))
 
             mostPopularTools = []
-            for popularity in range(len(popularityScore)):
-                for tool in range(len(blogModels.Blog.objects.filter(popularity=popularityScore[popularity]))):
-                    mostPopularTools.append(blogModels.Blog.objects.filter(popularity=popularityScore[popularity])[tool])
+            for tools in range(len(popularTools)):
+                mostPopularTools.append(popularTools[tools][0])
+
+            favorites = blogModels.Favorite.objects.all()
 
             for favorite in range(len(favorites)):
                 for tool in range(len(mostPopularTools)):

@@ -13,7 +13,10 @@ from django.urls import reverse
 from django.contrib import messages
 from blog.scripts.parser import Parser
 from blog.scripts.geocoderApi import Geocoder
-from django.core.mail import send_mail
+from django.core.mail import EmailMessage
+import reportlab
+from reportlab.pdfgen import canvas
+import os, sys
 
 # Create your views here.
 class Home(LoginRequiredMixin, View):
@@ -35,6 +38,12 @@ class Contact(LoginRequiredMixin, View):
     def get(self, request, userID):
         form = self.form_class()
 
+        pdfLoanRequest = canvas.Canvas('Borrow-Request.pdf')
+        pdfLoanRequest.drawString(0, 830, "Hello world.")
+        pdfLoanRequest.showPage()
+        pdfLoanRequest.save()
+        #os.startfile('Loan-Request.pdf', 'open')
+
         context = {
             'form': form,
         }
@@ -50,10 +59,11 @@ class Contact(LoginRequiredMixin, View):
         if form.is_valid():
             subject = form.cleaned_data['subject']
             message = "The user named " + name + " has sent you a message : \n" + form.cleaned_data['message'] + ".\nYou can reach him at this address : " + emailFrom
-
             recipientList = [settings.EMAIL_HOST_USER,]
 
-            send_mail(subject, message, emailFrom, recipientList)
+            email = EmailMessage(subject, message, emailFrom, recipientList)
+            # email.attach_file('Loan-Request.pdf')
+            email.send()
             return redirect(reverse('contact-success', kwargs={'userID': userID}))
         else:
             form = self.form_class()

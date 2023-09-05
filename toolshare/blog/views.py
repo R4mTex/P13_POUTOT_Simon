@@ -323,3 +323,12 @@ class toolDetails(LoginRequiredMixin, View):
                     else:
                         blogModels.Blog.objects.filter(id=personalTools[tool].id)[0].image.delete()
                         blogModels.Blog.objects.filter(id=personalTools[tool].id).delete()
+        elif "borrowRequest" in request.POST:
+            return redirect(reverse('borrow-request', kwargs={'userID': userID, 'toolID': toolID}))
+
+
+class borrowRequest(LoginRequiredMixin, View):
+    template_name = 'authentication/borrowRequest.html'
+
+    def get(self, request, userID, toolID):
+        return render(request, self.template_name)

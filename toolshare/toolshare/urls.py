@@ -26,7 +26,7 @@ from django.conf.urls.static import static
 urlpatterns = [
     path('admin/', admin.site.urls),
     ### Home / About / Contact / Publisher ###
-    path('', authView.Home.as_view(template_name='authentication/home.html'), name='home'),
+    path(' ', authView.Home.as_view(template_name='authentication/home.html'), name='home'),
     path('user/<int:userID>/about/', authView.About.as_view(template_name='authentication/about.html'), name='about'),
     path('user/<int:userID>/contact/', authView.Contact.as_view(template_name='authentication/contact.html'), name='contact'),
     path('user/<int:userID>/contact/success/', authView.Contact.as_view(template_name='authentication/contactSuccess.html'), name='contact-success'),
@@ -48,6 +48,7 @@ urlpatterns = [
     path('user/<int:userID>/member/<int:memberID>/member-tools/', blogView.memberTools.as_view(template_name='blog/personalTools.html'), name='member-tools'),
     path('registration/', authView.Registration.as_view(template_name='authentication/registration.html'), name='registration'),
     path('user/<int:userID>/tool/<int:toolID>/details/', blogView.toolDetails.as_view(template_name='blog/toolDetails.html'), name='tool-details'),
+    path('user/<int:userID>/tool/<int:toolID>/details/borrow-request/', blogView.borrowRequest.as_view(template_name='blog/borrowRequest.html'), name='borrow-request'),
 
 
     # Login / Logout / Change Password Urls

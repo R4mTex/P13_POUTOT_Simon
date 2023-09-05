@@ -27,9 +27,10 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     ### Home / About / Contact / Publisher ###
     path('', authView.Home.as_view(template_name='authentication/home.html'), name='home'),
-    path('about/', authView.About.as_view(template_name='authentication/about.html'), name='about'),
-    path('contact/', authView.Contact.as_view(template_name='authentication/contact.html'), name='contact'),
-    path('publisher/', authView.Publisher.as_view(template_name='authentication/publisher.html'), name='publisher'),
+    path('user/<int:userID>/about/', authView.About.as_view(template_name='authentication/about.html'), name='about'),
+    path('user/<int:userID>/contact/', authView.Contact.as_view(template_name='authentication/contact.html'), name='contact'),
+    path('user/<int:userID>/contact/success/', authView.Contact.as_view(template_name='authentication/contactSuccess.html'), name='contact-success'),
+    path('user/<int:userID>/publisher/', authView.Publisher.as_view(template_name='authentication/publisher.html'), name='publisher'),
     ### Research ###
     path('user/<int:userID>/research/', authView.Research.as_view(template_name='authentication/research.html'), name='research'),
     path('user/<int:userID>/research/all-items/', authView.Research.as_view(template_name='authentication/research.html'), name='research-all-items'),

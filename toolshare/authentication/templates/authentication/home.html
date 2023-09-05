@@ -6,7 +6,7 @@
 <style>
     header {
         height: 1000px;
-        background: linear-gradient(to bottom, rgba(92, 77, 66, 0.6) 0%, rgba(92, 77, 66, 0.6) 100%), url(static/images/bg-home-page.jpg);
+        background: linear-gradient(to bottom, rgba(92, 77, 66, 0.6) 0%, rgba(92, 77, 66, 0.6) 100%), url(/static/images/bg-home-page.jpg);
         background-size: cover;
         background-position: center;
         background-repeat: no-repeat;
@@ -21,9 +21,9 @@
                 <hr class="divider" />
             </div>
             <div class="col-lg-8 align-self-baseline">
-                <p class="text-white fs-5 mb-5">Starting to share can help DIYers build their jobsites without having to buy the tools they need only for one use! Post
-                the tools you want to share and borrow the ones you need!</p>
-                <a class="btn btn-secondary btn-xl" href="{% url 'about' %}" style="opacity: 0.8;">Find Out More</a>
+                <p class="text-white fs-5 mb-5">Starting to share can help DIYers build their jobsites without having to buy the tools they need only for one use ! Post
+                the tools you want to share and borrow the ones you need !</p>
+                <a class="btn btn-secondary btn-xl" href="{% url 'about' user.id %}" style="opacity: 0.8;">Find Out More</a>
             </div>
         </div>
     </div>

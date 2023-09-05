@@ -1,4 +1,5 @@
 from django.contrib.auth.forms import UserCreationForm, UserChangeForm
+from django.core.validators import EmailValidator
 from django.contrib.auth import get_user_model
 from django import forms
 from authentication.models import User
@@ -22,3 +23,7 @@ class UpdateUserProfile(UserChangeForm):
     class Meta:
         model = User
         fields = ('fullname', 'username', 'email', 'phoneNumber', 'postalAddress', 'bio',)
+
+class ContactForm(forms.Form):
+    subject = forms.CharField(max_length=100)
+    message = forms.CharField(widget=forms.Textarea)

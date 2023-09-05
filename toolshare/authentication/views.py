@@ -13,6 +13,7 @@ from django.urls import reverse
 from django.contrib import messages
 from blog.scripts.parser import Parser
 from blog.scripts.geocoderApi import Geocoder
+from django.core.mail import send_mail
 
 # Create your views here.
 class Home(LoginRequiredMixin, View):
@@ -24,19 +25,48 @@ class Home(LoginRequiredMixin, View):
 class About(LoginRequiredMixin, View):
     template_name = 'authentication/about.html'
 
-    def get(self, request):
+    def get(self, request, userID):
         return render(request, self.template_name)
 
 class Contact(LoginRequiredMixin, View):
     template_name = 'authentication/contact.html'
+    form_class = forms.ContactForm
 
-    def get(self, request):
-        return render(request, self.template_name)
+    def get(self, request, userID):
+        form = self.form_class()
+
+        context = {
+            'form': form,
+        }
+        return render(request, self.template_name, context=context)
+    
+    def post(self, request, userID):
+        user = authModels.User.objects.get(id=userID)
+        form = self.form_class(request.POST)
+
+        name = user.fullname
+        emailFrom = user.email
+
+        if form.is_valid():
+            subject = form.cleaned_data['subject']
+            message = "The user named " + name + " has sent you a message : \n" + form.cleaned_data['message'] + ".\nYou can reach him at this address : " + emailFrom
+
+            recipientList = [settings.EMAIL_HOST_USER,]
+
+            send_mail(subject, message, emailFrom, recipientList)
+            return redirect(reverse('contact-success', kwargs={'userID': userID}))
+        else:
+            form = self.form_class()
+        
+            context = {
+                'form': form,
+            }
+            return render(request, self.template_name, context=context)
 
 class Publisher(LoginRequiredMixin, View):
     template_name = 'authentication/publisher.html'
 
-    def get(self, request):
+    def get(self, request, userID):
         return render(request, self.template_name)
 
 class Research(LoginRequiredMixin, View):

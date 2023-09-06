@@ -24,5 +24,5 @@ class UpdateUserProfile(UserChangeForm):
         fields = ('fullname', 'username', 'email', 'phoneNumber', 'postalAddress', 'bio',)
 
 class ContactForm(forms.Form):
-    subject = forms.CharField(max_length=100)
+    subject = forms.CharField(max_length=127)
     message = forms.CharField(widget=forms.Textarea)

@@ -3,12 +3,15 @@ from django.views.generic import View
 from django.shortcuts import redirect, render
 from django.urls import reverse
 from . import forms
+from jsignature.utils import draw_signature
 from authentication import models as authModels
 from blog import models as blogModels
 from django.utils import timezone
 from blog.scripts.parser import Parser
 from blog.scripts.geocoderApi import Geocoder
 from django.contrib import messages
+from django.conf import settings
+from django.core.mail import EmailMessage
 
 
 class editTool(LoginRequiredMixin, View):
@@ -205,7 +208,8 @@ class memberTools(LoginRequiredMixin, View):
             else:
                 messages.warning(request, "Tool already saved !")
 
-            tools = blogModels.Blog.objects.all()
+            tools = blogModels.Blog.objects.filter(author=member)
+            print(tools)
 
             favorites = blogModels.Favorite.objects.all()
             for favorite in range(len(favorites)):
@@ -238,7 +242,7 @@ class memberTools(LoginRequiredMixin, View):
                 if userFavorites[favorite].blog.id == favoriteId:
                     blogModels.Favorite.objects.filter(id=userFavorites[favorite].id).delete()
             
-            tools = blogModels.Blog.objects.all()
+            tools = blogModels.Blog.objects.filter(author=member)
 
             favorites = blogModels.Favorite.objects.all()
             for favorite in range(len(favorites)):
@@ -329,6 +333,65 @@ class toolDetails(LoginRequiredMixin, View):
 
 class borrowRequest(LoginRequiredMixin, View):
     template_name = 'authentication/borrowRequest.html'
+    form_class = forms.BorrowContractApplicant
 
     def get(self, request, userID, toolID):
-        return render(request, self.template_name)
+        user = authModels.User.objects.get(id=userID)
+        form = self.form_class()
+        currentDate = timezone.now().date()
+
+        context = {
+            'user': user,
+            'currentDate': currentDate,
+            'form': form,
+        }
+        return render(request, self.template_name, context=context)
+    
+    def post(self, request, userID, toolID):
+        form = self.form_class(request.POST)
+        user = authModels.User.objects.get(id=userID)
+        if form.is_valid():
+            if form.cleaned_data.get('fullname') != user.fullname:
+                context = {
+                    'form': form,
+                }
+                return render(request, self.template_name, context=context)
+            elif Parser.scriptForParse(form.cleaned_data.get('approval')) != ['lu', 'approuve']:
+                print(Parser.scriptForParse(form.cleaned_data.get('approval')))
+                context = {
+                    'form': form,
+                }
+                return render(request, self.template_name, context=context)
+            elif form.cleaned_data.get('date') != timezone.now().date():
+                context = {
+                    'form': form,
+                }
+                return render(request, self.template_name, context=context)
+            elif form.cleaned_data.get('postalAddress') != user.postalAddress:
+                context = {
+                    'form': form,
+                }
+                return render(request, self.template_name, context=context)
+            else:
+                contract = {
+                    'fullname': form.cleaned_data.get('fullname'),
+                    'approval': form.cleaned_data.get('approval'),
+                    'date': form.cleaned_data.get('date'),
+                    'postalAddress': form.cleaned_data.get('postalAddress'),
+                    'signature': form.cleaned_data.get('signature'),
+                }
+                signature = form.cleaned_data.get('signature')
+                signature_file_path = draw_signature(signature, as_file=True)
+
+                subject = "Borrow Request"
+                emailFrom = settings.EMAIL_HOST_USER
+                message = "The user named "
+                # member.email
+                recipientList = [settings.EMAIL_HOST_USER,]
+
+                email = EmailMessage(subject, message, emailFrom, recipientList)
+                email.send()
+        context = {
+            'form': form,
+        }
+        return render(request, self.template_name, context=context)

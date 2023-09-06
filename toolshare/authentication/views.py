@@ -2,7 +2,6 @@ from django.conf import settings
 from django.shortcuts import render, redirect
 from django.contrib.auth import login
 from django.contrib.auth.mixins import LoginRequiredMixin
-from django.contrib.auth.decorators import login_required
 from django.views.generic import View
 from authentication import forms
 from authentication import models as authModels
@@ -14,9 +13,8 @@ from django.contrib import messages
 from blog.scripts.parser import Parser
 from blog.scripts.geocoderApi import Geocoder
 from django.core.mail import EmailMessage
-import reportlab
 from reportlab.pdfgen import canvas
-import os, sys
+
 
 # Create your views here.
 class Home(LoginRequiredMixin, View):

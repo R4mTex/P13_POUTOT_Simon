@@ -23,7 +23,7 @@ class editTool(LoginRequiredMixin, View):
 
         context = {
             'blog_form': blog_form,
-            'user': user
+            'user': user,
         }
         return render(request, 'blog/editTool.html', context=context)
     

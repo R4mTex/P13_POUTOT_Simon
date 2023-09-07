@@ -1,12 +1,13 @@
 from django.conf import settings
 from django.db import models
 from django.utils import timezone
+from datetime import date, timedelta
 from django.core.validators import MinValueValidator
 
 
 # Create your models here.
 def oneDayHence():
-    return timezone.now() + timezone.timedelta(days=1)
+    return date.today() + timedelta(days=1)
 
 
 class Blog(models.Model):
@@ -24,8 +25,8 @@ class Blog(models.Model):
     category = models.CharField(max_length=128, choices=CATEGORY_CHOICES)
     location = models.CharField(max_length=128,)
     description = models.TextField(max_length=2048)
-    availabalityStart = models.DateTimeField(default=timezone.now, validators=[MinValueValidator(limit_value=timezone.now)])
-    availabalityEnd = models.DateTimeField(default=oneDayHence, validators=[MinValueValidator(limit_value=oneDayHence)])
+    availabalityStart = models.DateField(default=date.today, validators=[MinValueValidator(limit_value=date.today)])
+    availabalityEnd = models.DateField(default=oneDayHence, validators=[MinValueValidator(limit_value=oneDayHence)])
     availabality = models.BooleanField(default=True)
     deposit = models.BooleanField(default=False)
     author = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)

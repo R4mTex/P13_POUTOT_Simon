@@ -63,14 +63,14 @@
                         <div class="col-md-6 mb-4">
                             <div class="form-outline">
                                 <label class="form-label fw-bold" for="id_availabalityStart">Availabality Start</label>
-                                {% render_field blog_form.availabalityStart class+="form-control form-control-lg" type="datetime-local" %}
+                                {% render_field blog_form.availabalityStart class+="form-control form-control-lg" type="date" %}
                             </div>
                         </div>
                         <div class="col-md-6 mb-4">
                             <div class="form-outline">
                                 <label class="form-label fw-bold" for="id_availabalityEnd">Availabality End<br>
                                 (min 24h from today)</label>
-                                {% render_field blog_form.availabalityEnd class+="form-control form-control-lg" type="datetime-local" %}
+                                {% render_field blog_form.availabalityEnd class+="form-control form-control-lg" type="date" %}
                             </div>
                         </div>
                         <div class="col-md-6 mb-4">

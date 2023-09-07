@@ -6,13 +6,15 @@ from . import forms
 from jsignature.utils import draw_signature
 from authentication import models as authModels
 from blog import models as blogModels
-from django.utils import timezone
 from blog.scripts.parser import Parser
 from blog.scripts.geocoderApi import Geocoder
 from django.contrib import messages
 from django.conf import settings
-from django.core.mail import EmailMessage
-
+from django.core.mail import EmailMessage, EmailMultiAlternatives
+from datetime import date
+from django.template.loader import render_to_string
+from PIL import Image
+from PIL.ExifTags import TAGS
 
 class editTool(LoginRequiredMixin, View):
     template_name = 'blog/editTool.html'
@@ -55,7 +57,7 @@ class personalTools(LoginRequiredMixin, View):
         pathPersonalToolsMember = ""
 
         for tool in range(len(personalTools)):
-            if personalTools[tool].availabalityStart <= timezone.now() <= personalTools[tool].availabalityEnd:
+            if personalTools[tool].availabalityStart <= date.today() <= personalTools[tool].availabalityEnd:
                 personalTools[tool].availabality = True
             else:
                 personalTools[tool].availabality = False
@@ -90,7 +92,7 @@ class personalTools(LoginRequiredMixin, View):
             personalTools = blogModels.Blog.objects.filter(author=user.id)
 
             for tool in range(len(personalTools)):
-                if personalTools[tool].availabalityStart <= timezone.now() <= personalTools[tool].availabalityEnd:
+                if personalTools[tool].availabalityStart <= date.today() <= personalTools[tool].availabalityEnd:
                     personalTools[tool].availabality = True
                 else:
                     personalTools[tool].availabality = False
@@ -147,7 +149,7 @@ class memberTools(LoginRequiredMixin, View):
         pathPersonalToolsMember = "/user/"+str(userID)+"/member/"+str(memberID)+"/member-tools/"
 
         for tool in range(len(personalTools)):
-            if personalTools[tool].availabalityStart <= timezone.now() <= personalTools[tool].availabalityEnd:
+            if personalTools[tool].availabalityStart <= date.today() <= personalTools[tool].availabalityEnd:
                 personalTools[tool].availabality = True
             else:
                 personalTools[tool].availabality = False
@@ -218,7 +220,7 @@ class memberTools(LoginRequiredMixin, View):
                         tools[tool].match = True
 
             for tool in range(len(tools)):
-                if tools[tool].availabalityStart <= timezone.now() <= tools[tool].availabalityEnd:
+                if tools[tool].availabalityStart <= date.today() <= tools[tool].availabalityEnd:
                     tools[tool].availabality = True
                 else:
                     tools[tool].availabality = False
@@ -251,7 +253,7 @@ class memberTools(LoginRequiredMixin, View):
                         tools[tool].match = True
 
             for tool in range(len(tools)):
-                if tools[tool].availabalityStart <= timezone.now() <= tools[tool].availabalityEnd:
+                if tools[tool].availabalityStart <= date.today() <= tools[tool].availabalityEnd:
                     tools[tool].availabality = True
                 else:
                     tools[tool].availabality = False
@@ -328,69 +330,134 @@ class toolDetails(LoginRequiredMixin, View):
                         blogModels.Blog.objects.filter(id=personalTools[tool].id)[0].image.delete()
                         blogModels.Blog.objects.filter(id=personalTools[tool].id).delete()
         elif "borrowRequest" in request.POST:
-            return redirect(reverse('borrow-request', kwargs={'userID': userID, 'toolID': toolID}))
+            return redirect(reverse('borrow-request-form', kwargs={'userID': userID, 'toolID': toolID}))
 
 
-class borrowRequest(LoginRequiredMixin, View):
-    template_name = 'authentication/borrowRequest.html'
-    form_class = forms.BorrowContractApplicant
+class borrowRequestForm(LoginRequiredMixin, View):
+    template_name = 'authentication/borrowRequestForm.html'
+    form_class = forms.ContractForm
 
     def get(self, request, userID, toolID):
         user = authModels.User.objects.get(id=userID)
+        tool = blogModels.Blog.objects.get(id=toolID)
+        member = blogModels.Blog.objects.get(id=toolID).author
         form = self.form_class()
-        currentDate = timezone.now().date()
 
         context = {
             'user': user,
-            'currentDate': currentDate,
+            'tool': tool,
+            'member': member,
             'form': form,
         }
         return render(request, self.template_name, context=context)
     
     def post(self, request, userID, toolID):
+        applicantName = request.POST.get('applicantName')
+        applicantApproval = request.POST.get('applicantApproval')
+        applicantPostalAddress = request.POST.get('applicantPostalAddress')
+        applicantSignature = request.POST.get('applicantSignature')
+        requestDate = request.POST.get('requestDate')
         form = self.form_class(request.POST)
+        """
+        form = self.form_class(applicant=authModels.User.objects.get(id=userID),
+                               supplier="",
+                               applicantName=applicantName,
+                               supplierName="",
+                               contractedBlog=blogModels.Blog.objects.get(id=toolID),
+                               applicantApproval=applicantApproval,
+                               supplierApproval="",
+                               applicantPostalAddress=applicantPostalAddress,
+                               supplierPostalAddress="",
+                               applicantSignature=applicantSignature,
+                               supplierSignature="",
+                               applicantSignatureImage="",
+                               supplierSignatureImage="",
+                               requestDate=requestDate,
+                               approvalDate="",
+                               )
+        """
+        print(form)
         user = authModels.User.objects.get(id=userID)
+        member = blogModels.Blog.objects.get(id=toolID).author
+
         if form.is_valid():
-            if form.cleaned_data.get('fullname') != user.fullname:
+            if form.cleaned_data.get('applicantName') != user.fullname:
+                print("Here 1")
                 context = {
                     'form': form,
                 }
                 return render(request, self.template_name, context=context)
-            elif Parser.scriptForParse(form.cleaned_data.get('approval')) != ['lu', 'approuve']:
-                print(Parser.scriptForParse(form.cleaned_data.get('approval')))
+            elif Parser.scriptForParse(form.cleaned_data.get('applicantApproval')) != ['lu', 'approuve']:
+                print("Here 2")
                 context = {
                     'form': form,
                 }
                 return render(request, self.template_name, context=context)
-            elif form.cleaned_data.get('date') != timezone.now().date():
+            elif form.cleaned_data.get('requestDate') != date.today():
+                print("Here 3")
                 context = {
                     'form': form,
                 }
                 return render(request, self.template_name, context=context)
-            elif form.cleaned_data.get('postalAddress') != user.postalAddress:
+            elif form.cleaned_data.get('applicantPostalAddress') != user.postalAddress:
+                print("Here 4")
                 context = {
                     'form': form,
                 }
                 return render(request, self.template_name, context=context)
             else:
+                #blog = blog_form.save(commit=False)
+                print("Here 5")
+                applicantSignature = form.cleaned_data.get('applicantSignature')
+                applicantSignatureFilePath = draw_signature(applicantSignature, as_file=True)
+
+                newContract = form.save(commit=False)
+                newContract.applicant = user
+                newContract.applicantName = form.cleaned_data.get('applicantName')
+                newContract.supplier = member
+                newContract.contractedBlog = blogModels.Blog.objects.get(id=toolID)
+                applicantSignatureImage = applicantSignatureFilePath
+                newContract.applicantSignature = Image.open(applicantSignatureImage)
+                print(newContract.applicantSignature)
+                newContract.supplierSignature = ""
+                newContract.dateCreated = ""
+                newContract.save()
+                print(blogModels.Contract.objects.all())
+
                 contract = {
                     'fullname': form.cleaned_data.get('fullname'),
                     'approval': form.cleaned_data.get('approval'),
                     'date': form.cleaned_data.get('date'),
                     'postalAddress': form.cleaned_data.get('postalAddress'),
-                    'signature': form.cleaned_data.get('signature'),
+                    'signature': signature_file_path,
                 }
-                signature = form.cleaned_data.get('signature')
-                signature_file_path = draw_signature(signature, as_file=True)
 
                 subject = "Borrow Request"
                 emailFrom = settings.EMAIL_HOST_USER
-                message = "The user named "
-                # member.email
-                recipientList = [settings.EMAIL_HOST_USER,]
+                message = """Hello, a user has requested a borrow !\n
+                             Click here to access the form : """
+                htmlContent = render_to_string('blog/consentToBorrowLink.html',)
+                recipientList = [member.email,]
 
-                email = EmailMessage(subject, message, emailFrom, recipientList)
+                email = EmailMultiAlternatives(subject, message, emailFrom, recipientList)
+                email.attach_alternative(htmlContent, "text/html")
+
+                #email = EmailMessage(subject, message, emailFrom, recipientList)
                 email.send()
+        else:
+            print("Here 6")
+            context = {
+                'form': form,
+            }
+            return render(request, self.template_name, context=context)
+
+class consentToBorrowForm(LoginRequiredMixin, View):
+    template_name = 'authentication/consentToBorrowForm.html'
+    form_class = forms.ContractForm
+
+    def get(self, request):
+        form = self.form_class()
+
         context = {
             'form': form,
         }

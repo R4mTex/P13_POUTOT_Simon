@@ -1,6 +1,5 @@
 from django.conf import settings
 from django.db import models
-from django.utils import timezone
 from datetime import date, timedelta
 from django.core.validators import MinValueValidator
 
@@ -45,4 +44,19 @@ class Favorite(models.Model):
 
     def __str__(self):
         return f'{self.user}'
+    
+class Contract(models.Model):
+    applicant = models.ForeignKey(settings.AUTH_USER_MODEL, related_name='applicant', on_delete=models.CASCADE)
+    supplier = models.ForeignKey(settings.AUTH_USER_MODEL, related_name='supplier', on_delete=models.CASCADE, blank=True)
+    applicantName = models.CharField(max_length=128,)
+    supplierName = models.CharField(max_length=128, blank=True)
+    contractedBlog = models.ForeignKey(Blog, related_name='contracted_tool', on_delete=models.CASCADE)
+    applicantApproval = models.CharField(max_length=63)
+    supplierApproval = models.CharField(max_length=63, blank=True)
+    applicantPostalAddress = models.CharField(max_length=127)
+    supplierPostalAddress = models.CharField(max_length=127, blank=True)
+    applicantSignatureImage = models.ImageField(blank=True)
+    supplierSignatureImage = models.ImageField(blank=True)
+    requestDate = models.DateField(default=date.today,)
+    approvalDate = models.DateField(blank=True)
 

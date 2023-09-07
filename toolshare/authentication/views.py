@@ -7,13 +7,13 @@ from authentication import forms
 from authentication import models as authModels
 from blog import models as blogModels
 from django.contrib.auth.forms import PasswordChangeForm
-from django.utils import timezone
 from django.urls import reverse
 from django.contrib import messages
 from blog.scripts.parser import Parser
 from blog.scripts.geocoderApi import Geocoder
 from django.core.mail import EmailMessage
 from reportlab.pdfgen import canvas
+from datetime import date
 
 
 # Create your views here.
@@ -90,7 +90,7 @@ class Research(LoginRequiredMixin, View):
                     tools[tool].match = True
 
         for tool in range(len(tools)):
-            if tools[tool].availabalityStart <= timezone.now() <= tools[tool].availabalityEnd:
+            if tools[tool].availabalityStart <= date.today() <= tools[tool].availabalityEnd:
                 tools[tool].availabality = True
             else:
                 tools[tool].availabality = False
@@ -115,7 +115,7 @@ class Research(LoginRequiredMixin, View):
                         allItems[tool].match = True
 
             for tool in range(len(allItems)):
-                if allItems[tool].availabalityStart <= timezone.now() <= allItems[tool].availabalityEnd:
+                if allItems[tool].availabalityStart <= date.today() <= allItems[tool].availabalityEnd:
                     allItems[tool].availabality = True
                 else:
                     allItems[tool].availabality = False
@@ -138,7 +138,7 @@ class Research(LoginRequiredMixin, View):
                         allTools[tool].match = True
 
             for tool in range(len(allTools)):
-                if allTools[tool].availabalityStart <= timezone.now() <= allTools[tool].availabalityEnd:
+                if allTools[tool].availabalityStart <= date.today() <= allTools[tool].availabalityEnd:
                     allTools[tool].availabality = True
                 else:
                     allTools[tool].availabality = False
@@ -161,7 +161,7 @@ class Research(LoginRequiredMixin, View):
                         allEquipments[tool].match = True
 
             for tool in range(len(allEquipments)):
-                if allEquipments[tool].availabalityStart <= timezone.now() <= allEquipments[tool].availabalityEnd:
+                if allEquipments[tool].availabalityStart <= date.today() <= allEquipments[tool].availabalityEnd:
                     allEquipments[tool].availabality = True
                 else:
                     allEquipments[tool].availabality = False
@@ -210,7 +210,7 @@ class Research(LoginRequiredMixin, View):
                         mostPopularTools[tool].match = True
 
             for tool in range(len(mostPopularTools)):
-                if mostPopularTools[tool].availabalityStart <= timezone.now() <= mostPopularTools[tool].availabalityEnd:
+                if mostPopularTools[tool].availabalityStart <= date.today() <= mostPopularTools[tool].availabalityEnd:
                     mostPopularTools[tool].availabality = True
                 else:
                     mostPopularTools[tool].availabality = False
@@ -244,7 +244,7 @@ class Research(LoginRequiredMixin, View):
                         bestTools[tool].match = True
 
             for tool in range(len(bestTools)):
-                if bestTools[tool].availabalityStart <= timezone.now() <= bestTools[tool].availabalityEnd:
+                if bestTools[tool].availabalityStart <= date.today() <= bestTools[tool].availabalityEnd:
                     bestTools[tool].availabality = True
                 else:
                     bestTools[tool].availabality = False
@@ -305,7 +305,7 @@ class Research(LoginRequiredMixin, View):
                         tools[tool].match = True
 
             for tool in range(len(tools)):
-                if tools[tool].availabalityStart <= timezone.now() <= tools[tool].availabalityEnd:
+                if tools[tool].availabalityStart <= date.today() <= tools[tool].availabalityEnd:
                     tools[tool].availabality = True
                 else:
                     tools[tool].availabality = False
@@ -341,7 +341,7 @@ class Research(LoginRequiredMixin, View):
                         tools[tool].match = True
 
             for tool in range(len(tools)):
-                if tools[tool].availabalityStart <= timezone.now() <= tools[tool].availabalityEnd:
+                if tools[tool].availabalityStart <= date.today() <= tools[tool].availabalityEnd:
                     tools[tool].availabality = True
                 else:
                     tools[tool].availabality = False
@@ -379,7 +379,7 @@ class Research(LoginRequiredMixin, View):
                         tools[tool].match = True
 
             for tool in range(len(tools)):
-                if tools[tool].availabalityStart <= timezone.now() <= tools[tool].availabalityEnd:
+                if tools[tool].availabalityStart <= date.today() <= tools[tool].availabalityEnd:
                     tools[tool].availabality = True
                 else:
                     tools[tool].availabality = False
@@ -465,7 +465,7 @@ class Favorites(LoginRequiredMixin, View):
             favorites.append(userFavorites[favorite].blog)
 
         for tool in range(len(favorites)):
-            if favorites[tool].availabalityStart <= timezone.now() <= favorites[tool].availabalityEnd:
+            if favorites[tool].availabalityStart <= date.today() <= favorites[tool].availabalityEnd:
                 favorites[tool].availabality = True
             else:
                 favorites[tool].availabality = False
@@ -519,7 +519,7 @@ class Favorites(LoginRequiredMixin, View):
                 favorites.append(userFavorites[favorite].blog)
 
             for tool in range(len(favorites)):
-                if favorites[tool].availabalityStart <= timezone.now() <= favorites[tool].availabalityEnd:
+                if favorites[tool].availabalityStart <= date.today() <= favorites[tool].availabalityEnd:
                     favorites[tool].availabality = True
                 else:
                     favorites[tool].availabality = False

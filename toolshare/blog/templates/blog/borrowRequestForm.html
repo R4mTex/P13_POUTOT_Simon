@@ -1,0 +1,77 @@
+{% extends 'authentication/base.html' %}
+
+{% load widget_tweaks %}
+
+{% block content %}
+
+<style>
+    .gradient-custom {
+        background: linear-gradient(112.1deg, rgb(32, 38, 57) 11.4%, rgb(63, 76, 119) 70.2%);
+    }
+    .jSignature {
+        border: 1px solid rgb(51, 51, 51, 0.5) !important;
+        max-width: 100%;
+    }
+    input {
+        padding-left: 5px;
+        margin: 0 3px 0 3px;
+    }
+    [value="Reset"] {
+        margin-top: 2px;
+        border: 1px solid rgb(51, 51, 51, 0.5) !important;
+    }
+    [value="Reset"]:hover {
+        color: white;
+        background-color: gray;
+    }
+    .jsign-wrapper {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+    }
+</style>
+
+<section class="h-100 gradient-custom">
+    <div class="container py-5 w-100">
+        <div class="row flex-lg-nowrap">
+            <div class="col mb-3">
+                <div class="card shadow">
+                    <div class="card-body">
+                        <div class="e-profile">
+                            <h1>Contract</h1>
+                            <h5>Conditions d'utilisation</h5>
+                            <form action="" method="post">
+                                {% csrf_token %}
+                                <p class="text-end">Je soussigné : {% render_field form.applicantName name="applicantName" placeholder=user.fullname %}
+                                    avoir {% render_field form.applicantApproval name="applicantApproval" placeholder="Lu et approuvé" %} ce document
+                                    le {% render_field form.requestDate name="requestDate" type="date" %}
+                                    à {% render_field form.applicantPostalAddress name="applicantPostalAddress" placeholder=user.postalAddress %}.
+                                </p>
+                                <div class="d-flex justify-content-end">
+                                    <div class="d-flex flex-column">
+                                        <label class="form-label fw-bold mt-3" for="id_signature">Signature :</label>
+                                        {% render_field form.applicantSignature name="applicantSignature" %}
+                                        {{ form.media }}
+                                    </div>
+                                </div>
+                                {% render_field form.applicant type="hidden" name="applicant" value=user %}
+                                {% render_field form.supplier type="hidden" name="supplier" value=member %}
+                                {% render_field form.supplierName type="hidden" name="supplierName" value=member.fullname %}
+                                {% render_field form.contractedBlog type="hidden" name="contractedBlog" value=tool %}
+                                {% render_field form.supplierApproval type="hidden" name="supplierApproval" value="" %}
+                                {% render_field form.supplierPostalAddress type="hidden" name="supplierPostalAddress" value="" %}
+                                {% render_field form.supplierSignature type="hidden" name="supplierSignature" value="" %}
+                                {% render_field form.applicantSignatureImage type="hidden" name="applicantSignatureImage" value="" %}
+                                {% render_field form.supplierSignatureImage type="hidden" name="supplierSignatureImage" value="" %}
+                                {% render_field form.approvalDate type="hidden" name="approvalDate" value="" %}
+                                <p class="text-center"><button class="btn btn-outline-primary" type="submit" name="sendContract">Send</button></p>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+{% endblock %}

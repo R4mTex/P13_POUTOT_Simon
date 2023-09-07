@@ -1,8 +1,8 @@
 # blog/forms.py
 from django import forms
+from . import models
 from jsignature.forms import JSignatureField
 from jsignature.widgets import JSignatureWidget
-from . import models
 
 
 class BlogForm(forms.ModelForm):
@@ -11,9 +11,10 @@ class BlogForm(forms.ModelForm):
         fields = ['name', 'image', 'category', 'description', 'location', 'availabalityStart', 'availabalityEnd', 'deposit']
 
 
-class BorrowContractApplicant(forms.Form):
-    fullname = forms.CharField(max_length=63)
-    approval = forms.CharField(max_length=63)
-    date = forms.DateField()
-    postalAddress = forms.CharField(max_length=127)
-    signature = JSignatureField(widget=JSignatureWidget(jsignature_attrs={'width': '350px', 'height': '150px'}))
+class ContractForm(forms.ModelForm):
+    applicantSignature = JSignatureField(widget=JSignatureWidget(jsignature_attrs={'width': '350px', 'height': '150px'}))
+    supplierSignature = JSignatureField(widget=JSignatureWidget(jsignature_attrs={'width': '350px', 'height': '150px'}))
+
+    class Meta:
+        model = models.Contract
+        fields = "__all__"

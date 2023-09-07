@@ -8,22 +8,27 @@
     .gradient-custom {
         background: linear-gradient(112.1deg, rgb(32, 38, 57) 11.4%, rgb(63, 76, 119) 70.2%);
     }
+
     .jSignature {
         border: 1px solid rgb(51, 51, 51, 0.5) !important;
         max-width: 100%;
     }
+
     input {
         padding-left: 5px;
         margin: 0 3px 0 3px;
     }
+
     [value="Reset"] {
         margin-top: 2px;
         border: 1px solid rgb(51, 51, 51, 0.5) !important;
     }
+
     [value="Reset"]:hover {
         color: white;
         background-color: gray;
     }
+
     .jsign-wrapper {
         display: flex;
         flex-direction: column;
@@ -42,7 +47,8 @@
                             <h5>Conditions d'utilisation</h5>
                             <form action="" method="post">
                                 {% csrf_token %}
-                                <p class="text-end">Je soussigné : {% render_field form.fullname placeholder=user.fullname %}
+                                <p class="text-end">Je soussigné : {% render_field form.fullname
+                                    placeholder=user.fullname %}
                                     avoir {% render_field form.approval placeholder="Lu et approuvé" %}
                                     le {% render_field form.date type="date" %}
                                     à {% render_field form.postalAddress placeholder=user.postalAddress %}.
@@ -54,7 +60,8 @@
                                         {{ form.media }}
                                     </div>
                                 </div>
-                                <p class="text-center"><button class="btn btn-outline-primary" type="submit" name="sendContract">Send</button></p>
+                                <p class="text-center"><button class="btn btn-outline-primary" type="submit"
+                                        name="sendContract">Send</button></p>
                             </form>
                         </div>
                     </div>

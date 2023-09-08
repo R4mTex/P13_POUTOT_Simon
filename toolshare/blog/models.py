@@ -47,7 +47,7 @@ class Favorite(models.Model):
     
 class Contract(models.Model):
     applicant = models.ForeignKey(settings.AUTH_USER_MODEL, related_name='applicant', on_delete=models.CASCADE)
-    supplier = models.ForeignKey(settings.AUTH_USER_MODEL, related_name='supplier', on_delete=models.CASCADE, blank=True)
+    supplier = models.ForeignKey(settings.AUTH_USER_MODEL, related_name='supplier', on_delete=models.CASCADE, null=True)
     applicantName = models.CharField(max_length=128,)
     supplierName = models.CharField(max_length=128, blank=True)
     contractedBlog = models.ForeignKey(Blog, related_name='contracted_tool', on_delete=models.CASCADE)
@@ -58,5 +58,5 @@ class Contract(models.Model):
     applicantSignatureImage = models.ImageField(blank=True)
     supplierSignatureImage = models.ImageField(blank=True)
     requestDate = models.DateField(default=date.today,)
-    approvalDate = models.DateField(blank=True)
+    approvalDate = models.DateField(null=True)
 

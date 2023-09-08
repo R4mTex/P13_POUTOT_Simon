@@ -10,11 +10,11 @@ from blog.scripts.parser import Parser
 from blog.scripts.geocoderApi import Geocoder
 from django.contrib import messages
 from django.conf import settings
-from django.core.mail import EmailMessage, EmailMultiAlternatives
+from django.core.mail import EmailMultiAlternatives
 from datetime import date
 from django.template.loader import render_to_string
 from PIL import Image
-from PIL.ExifTags import TAGS
+
 
 class editTool(LoginRequiredMixin, View):
     template_name = 'blog/editTool.html'
@@ -335,7 +335,7 @@ class toolDetails(LoginRequiredMixin, View):
 
 class borrowRequestForm(LoginRequiredMixin, View):
     template_name = 'authentication/borrowRequestForm.html'
-    form_class = forms.ContractForm
+    form_class = forms.ApplicantContractForm
 
     def get(self, request, userID, toolID):
         user = authModels.User.objects.get(id=userID)
@@ -352,33 +352,9 @@ class borrowRequestForm(LoginRequiredMixin, View):
         return render(request, self.template_name, context=context)
     
     def post(self, request, userID, toolID):
-        applicantName = request.POST.get('applicantName')
-        applicantApproval = request.POST.get('applicantApproval')
-        applicantPostalAddress = request.POST.get('applicantPostalAddress')
-        applicantSignature = request.POST.get('applicantSignature')
-        requestDate = request.POST.get('requestDate')
-        form = self.form_class(request.POST)
-        """
-        form = self.form_class(applicant=authModels.User.objects.get(id=userID),
-                               supplier="",
-                               applicantName=applicantName,
-                               supplierName="",
-                               contractedBlog=blogModels.Blog.objects.get(id=toolID),
-                               applicantApproval=applicantApproval,
-                               supplierApproval="",
-                               applicantPostalAddress=applicantPostalAddress,
-                               supplierPostalAddress="",
-                               applicantSignature=applicantSignature,
-                               supplierSignature="",
-                               applicantSignatureImage="",
-                               supplierSignatureImage="",
-                               requestDate=requestDate,
-                               approvalDate="",
-                               )
-        """
-        print(form)
         user = authModels.User.objects.get(id=userID)
         member = blogModels.Blog.objects.get(id=toolID).author
+        form = self.form_class(request.POST)
 
         if form.is_valid():
             if form.cleaned_data.get('applicantName') != user.fullname:
@@ -406,7 +382,6 @@ class borrowRequestForm(LoginRequiredMixin, View):
                 }
                 return render(request, self.template_name, context=context)
             else:
-                #blog = blog_form.save(commit=False)
                 print("Here 5")
                 applicantSignature = form.cleaned_data.get('applicantSignature')
                 applicantSignatureFilePath = draw_signature(applicantSignature, as_file=True)
@@ -414,36 +389,32 @@ class borrowRequestForm(LoginRequiredMixin, View):
                 newContract = form.save(commit=False)
                 newContract.applicant = user
                 newContract.applicantName = form.cleaned_data.get('applicantName')
-                newContract.supplier = member
                 newContract.contractedBlog = blogModels.Blog.objects.get(id=toolID)
-                applicantSignatureImage = applicantSignatureFilePath
-                newContract.applicantSignature = Image.open(applicantSignatureImage)
-                print(newContract.applicantSignature)
-                newContract.supplierSignature = ""
-                newContract.dateCreated = ""
+                newContract.applicantApproval = form.cleaned_data.get('applicantApproval')
+                newContract.applicantPostalAddress = form.cleaned_data.get('applicantPostalAddress')
+                newContract.applicantSignatureImage = Image.open(applicantSignatureFilePath)
+                newContract.requestDate = form.cleaned_data.get('requestDate')
                 newContract.save()
-                print(blogModels.Contract.objects.all())
 
-                contract = {
-                    'fullname': form.cleaned_data.get('fullname'),
-                    'approval': form.cleaned_data.get('approval'),
-                    'date': form.cleaned_data.get('date'),
-                    'postalAddress': form.cleaned_data.get('postalAddress'),
-                    'signature': signature_file_path,
-                }
+                print(blogModels.Contract.objects.all())
+                for contract in range(len(blogModels.Contract.objects.all())):
+                    print("1", blogModels.Contract.objects.all()[contract].applicantSignatureImage)
 
                 subject = "Borrow Request"
                 emailFrom = settings.EMAIL_HOST_USER
-                message = """Hello, a user has requested a borrow !\n
-                             Click here to access the form : """
+                message = ""
                 htmlContent = render_to_string('blog/consentToBorrowLink.html',)
                 recipientList = [member.email,]
 
                 email = EmailMultiAlternatives(subject, message, emailFrom, recipientList)
                 email.attach_alternative(htmlContent, "text/html")
 
-                #email = EmailMessage(subject, message, emailFrom, recipientList)
                 email.send()
+
+                context = {
+                    'form': form,
+                }
+                return render(request, self.template_name, context=context)
         else:
             print("Here 6")
             context = {
@@ -453,7 +424,7 @@ class borrowRequestForm(LoginRequiredMixin, View):
 
 class consentToBorrowForm(LoginRequiredMixin, View):
     template_name = 'authentication/consentToBorrowForm.html'
-    form_class = forms.ContractForm
+    form_class = forms.SupplierContractForm
 
     def get(self, request):
         form = self.form_class()

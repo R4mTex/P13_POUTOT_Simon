@@ -26,7 +26,7 @@ from django.conf.urls.static import static
 urlpatterns = [
     path('admin/', admin.site.urls),
     ### Home / About / Contact / Publisher ###
-    path(' ', authView.Home.as_view(template_name='authentication/home.html'), name='home'),
+    path('', authView.Home.as_view(template_name='authentication/home.html'), name='home'),
     path('user/<int:userID>/about/', authView.About.as_view(template_name='authentication/about.html'), name='about'),
     path('user/<int:userID>/contact/', authView.Contact.as_view(template_name='authentication/contact.html'), name='contact'),
     path('user/<int:userID>/contact/success/', authView.Contact.as_view(template_name='authentication/contactSuccess.html'), name='contact-success'),

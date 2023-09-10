@@ -55,8 +55,8 @@ class Contract(models.Model):
     supplierApproval = models.CharField(max_length=63, blank=True)
     applicantPostalAddress = models.CharField(max_length=127)
     supplierPostalAddress = models.CharField(max_length=127, blank=True)
-    applicantSignatureImage = models.ImageField(blank=True)
-    supplierSignatureImage = models.ImageField(blank=True)
+    applicantSignatureImage = models.ImageField(upload_to='applicantSignature')
+    supplierSignatureImage = models.ImageField(upload_to='supplierSignature')
     requestDate = models.DateField(default=date.today,)
     approvalDate = models.DateField(null=True)
 

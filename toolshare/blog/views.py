@@ -401,6 +401,9 @@ class borrowRequestForm(LoginRequiredMixin, View):
                 newContract.requestDate = form.cleaned_data.get('requestDate')
 
                 newContract.save()
+
+                test = blogModels.Contract.objects.get(id=1).applicantSignatureImage
+                test2 = blogModels.Blog.objects.get(id=1).image
                 
                 """
                 print("4", blogModels.Contract.objects.all())
@@ -427,6 +430,8 @@ class borrowRequestForm(LoginRequiredMixin, View):
 
                 context = {
                     'form': form,
+                    'test': test,
+                    'test2': test2,
                 }
                 return render(request, self.template_name, context=context)
         else:

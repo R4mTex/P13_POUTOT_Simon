@@ -1,5 +1,6 @@
 import mock
 from blog.scripts.geocoderApi import Geocoder
+from toolshare.settings import GOOGLE_MAPS_API_KEY
 
 
 @mock.patch("blog.scripts.geocoderApi.requests.get")
@@ -9,9 +10,7 @@ def test_geocoder_api_request_get(mock_requests_get):
     mock_requests_get.return_value = mock.Mock(name='mock response', **{'status_code': 200, 'json.return_value': {}})
 
     assert sut.geocoderApiRequest() == {}
-    mock_requests_get.assert_called_once_with(
-        'https://maps.googleapis.com/maps/api/geocode/json?address=&key=AIzaSyD1ckgetM8cnzdgwd1XpEetOhxghe5w82M'
-        )
+    mock_requests_get.assert_called_once_with(f'https://maps.googleapis.com/maps/api/geocode/json?address=&key={GOOGLE_MAPS_API_KEY}')
 
 
 @mock.patch("blog.scripts.geocoderApi.requests.get")

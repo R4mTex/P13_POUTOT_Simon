@@ -1,8 +1,6 @@
 import pytest
 from django.urls import reverse, resolve
 from authentication import models
-from toolshare import settings
-from django.conf.urls.static import static
 
 # Create your tests here.
 @pytest.mark.django_db

@@ -36,12 +36,6 @@ class Contact(LoginRequiredMixin, View):
     def get(self, request, userID):
         form = self.form_class()
 
-        pdfLoanRequest = canvas.Canvas('Borrow-Request.pdf')
-        pdfLoanRequest.drawString(0, 830, "Hello world.")
-        pdfLoanRequest.showPage()
-        pdfLoanRequest.save()
-        #os.startfile('Loan-Request.pdf', 'open')
-
         context = {
             'form': form,
         }
@@ -60,7 +54,6 @@ class Contact(LoginRequiredMixin, View):
             recipientList = [settings.EMAIL_HOST_USER,]
 
             email = EmailMessage(subject, message, emailFrom, recipientList)
-            # email.attach_file('Loan-Request.pdf')
             email.send()
             return redirect(reverse('contact-success', kwargs={'userID': userID}))
         else:

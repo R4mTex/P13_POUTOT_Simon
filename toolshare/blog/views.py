@@ -452,3 +452,12 @@ class consentToBorrowForm(LoginRequiredMixin, View):
             'form': form,
         }
         return render(request, self.template_name, context=context)
+    
+    def post(self, request):
+         """
+        pdfLoanRequest = canvas.Canvas('Borrow-Request.pdf')
+        pdfLoanRequest.drawString(0, 830, "Hello world.")
+        pdfLoanRequest.showPage()
+        pdfLoanRequest.save()
+        #os.startfile('Loan-Request.pdf', 'open')
+        """

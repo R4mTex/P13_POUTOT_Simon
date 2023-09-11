@@ -1,9 +1,0 @@
-[run]
-omit = authentication\tests\*, blog\tests\*,
-       authentication\migrations\*, blog\migrations\*,
-       authentication\__init__.py, blog\__init__.py,
-       authentication\admin.py, blog\admin.py,
-       authentication\apps.py, blog\apps.py,
-       toolshare\__init__.py, toolshare\asgi.py, toolshare\wsgi.py,
-       toolshare\settings.py,
-       manage.py

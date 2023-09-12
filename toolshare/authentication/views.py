@@ -420,6 +420,7 @@ class memberProfile(LoginRequiredMixin, View):
         return render(request, self.template_name, context=context)
     
     def post(self, request, userID, memberID):
+        print(request.POST)
         if "toolDetails" in request.POST:
             toolID = int(request.POST.get("toolDetails"))
 

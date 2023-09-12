@@ -420,7 +420,6 @@ class memberProfile(LoginRequiredMixin, View):
         return render(request, self.template_name, context=context)
     
     def post(self, request, userID, memberID):
-        print(request.POST)
         if "toolDetails" in request.POST:
             toolID = int(request.POST.get("toolDetails"))
 
@@ -639,7 +638,6 @@ class editProfile(LoginRequiredMixin, View):
         if 'updateUserProfile' in request.POST:
             form_profile = self.form_profile(request.POST)
             if form_profile.is_valid():
-                print("yes")
                 user = authModels.User.objects.get(id=userID)
                 form_picture = self.form_picture()
                 form_profile = self.form_profile(instance=request.user)

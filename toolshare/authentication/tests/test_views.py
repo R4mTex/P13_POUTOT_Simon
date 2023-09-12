@@ -1,35 +1,11 @@
 import pytest
 
-from django.urls import reverse, resolve
-from django.shortcuts import render, redirect 
+from django.urls import reverse
 from django.test import Client
 from authentication.models import User
 from blog.models import Blog
 from pytest_django.asserts import assertTemplateUsed
-from authentication import forms
-from authentication.views import Registration, Profile
-from django.contrib.auth import views as auth_views
-from django.contrib import auth
-from django.contrib.auth.views import LogoutView
-from toolshare import settings
-from django.core.mail import EmailMessage
-from django import urls
 
-"""
-@pytest.mark.django_db  
-def test_book_infos_view():
-    client = Client()
-    Book.objects.create(author = "Jules Verne",
-                        title = "20 milles lieues sous les mers")
-    path = reverse('infos', kwargs={'pk':1})
-    response = client.get(path)
-    content = response.content.decode()
-    expected_content = "<p>Jules Verne | 20 milles lieues sous les mers</p>"
-
-    assert content == expected_content
-    assert response.status_code == 200
-    assertTemplateUsed(response, "book_infos.html")
-"""
 
 client = Client()
 
@@ -43,9 +19,7 @@ def test_home_view_get():
     client.login(username='Test User', email='', password='')
     path = reverse('home')
     response = client.get(path)
-
-    expected_value = 200
-    assert response.status_code == expected_value
+    assert response.status_code == 200
     assertTemplateUsed(response, "authentication/home.html")
 
 
@@ -82,20 +56,6 @@ def test_contact_view_post():
                              password='',
                              )
     client.login(username='Test User', email='', password='')
-    formData = {'subject': "Test", 'message': "Test"}
-    form = forms.ContactForm(data=formData)
-    user = User.objects.get(id=1)
-    name = user.fullname
-    emailFrom = user.email
-    if form.is_valid():
-        subject = form.cleaned_data['subject'] 
-        message = "The user named " + name + " has sent you a message : \n" + form.cleaned_data['message'] + ".\nYou can reach him at this address : " + emailFrom 
-        recipientList = [settings.EMAIL_HOST_USER,]
-        email = EmailMessage(subject, message, emailFrom, recipientList) 
-        assert email.send() == True
-        path = reverse('contact-success', kwargs={'userID':1})
-        response = client.post(path)
-        assert response.status_code == 200
     path = reverse('contact', kwargs={'userID':1})
     response = client.post(path)
     assert response.status_code == 200
@@ -166,7 +126,7 @@ def test_research_view_post():
     assert responseBestRated.status_code == 200
     assertTemplateUsed(responseBestRated, "authentication/research.html")
 
-    responseToolDetails= client.post(path, data={'toolDetails': ['1']})
+    responseToolDetails = client.post(path, data={'toolDetails': ['1']})
     assert responseToolDetails.status_code == 302
     assert responseToolDetails.url == '/user/1/tool/1/details/'
     
@@ -237,3 +197,131 @@ def test_memberProfile_view_post():
     responseShowPersonalTools = client.post(path, data={'showPersonalTools': ['2']})
     assert responseShowPersonalTools.status_code == 302
     assert responseShowPersonalTools.url == '/user/1/member/2/member-tools/'
+
+
+@pytest.mark.django_db  
+def test_favorites_view_get():
+    User.objects.create_user(username='Test User',
+                             email='',
+                             password='',
+                             )
+    client.login(username='Test User', email='', password='')
+    path = reverse('favorites', kwargs={'userID':1})
+    response = client.get(path)
+    assert response.status_code == 200
+    assertTemplateUsed(response, "authentication/favorites.html")
+
+
+@pytest.mark.django_db  
+def test_favorites_view_post():
+    User.objects.create_user(username='Test User',
+                             email='',
+                             password='',
+                             )
+    Blog.objects.create(name='Test Blog',
+                        category='Other',
+                        location='La Barrie 46500 GRAMAT',
+                        description='Test',
+                        availabalityStart='2023-09-12',
+                        availabalityEnd='2023-09-13',
+                        deposit='True',
+                        author=User.objects.get(id=1)
+                        )
+    client.login(username='Test User', email='', password='')
+    path = reverse('favorites', kwargs={'userID':1})
+    responseToolDetails = client.post(path, data={'toolDetails': ['1']})
+    assert responseToolDetails.status_code == 302
+    assert responseToolDetails.url == '/user/1/tool/1/details/'
+
+    responseRemoveTool = client.post(path, data={'removeTool': ['1']})
+    assert responseRemoveTool.status_code == 200
+    assertTemplateUsed(responseRemoveTool, "authentication/favorites.html")
+
+
+@pytest.mark.django_db
+def test_profile_view_get():
+    User.objects.create_user(username='Test User',
+                             email='',
+                             password='',
+                             )
+    client.login(username='Test User', email='', password='')
+    path = reverse('profile', kwargs={'userID':1})
+    response = client.get(path)
+    assert response.status_code == 200
+    assertTemplateUsed(response, "authentication/profile.html")
+
+
+@pytest.mark.django_db
+def test_profile_view_post():
+    User.objects.create_user(username='Test User',
+                             email='',
+                             password='',
+                             )
+    Blog.objects.create(name='Test Blog',
+                        category='Other',
+                        location='La Barrie 46500 GRAMAT',
+                        description='Test',
+                        availabalityStart='2023-09-12',
+                        availabalityEnd='2023-09-13',
+                        deposit='True',
+                        author=User.objects.get(id=1)
+                        )
+    client.login(username='Test User', email='', password='')
+    path = reverse('profile', kwargs={'userID':1})
+    responseToolDetails = client.post(path, data={'toolDetails': ['1']})
+    assert responseToolDetails.status_code == 302
+    assert responseToolDetails.url == '/user/1/tool/1/details/'
+
+    responsePersonalTools = client.post(path, data={'showPersonalTools': ['1']})
+    assert responsePersonalTools.status_code == 302
+    assert responsePersonalTools.url == '/user/1/personal-tools/'
+
+
+@pytest.mark.django_db
+def test_editProfile_view_get():
+    User.objects.create_user(username='Test User',
+                             email='',
+                             password='',
+                             )
+    client.login(username='Test User', email='', password='')
+    path = reverse('edit-profile', kwargs={'userID':1})
+    response = client.get(path)
+    assert response.status_code == 200
+    assertTemplateUsed(response, "authentication/editProfile.html")
+
+
+@pytest.mark.django_db  
+def test_editProfile_view_post():
+    User.objects.create_user(username='Test User',
+                             email='',
+                             password='',
+                             )
+    client.login(username='Test User', email='', password='')
+    path = reverse('edit-profile', kwargs={'userID':1})
+    responseProfilePicture = client.post(path, data={'profilePicture': ['', '']})
+    assert responseProfilePicture.status_code == 200
+    assertTemplateUsed(responseProfilePicture, "authentication/editProfile.html")
+
+    responseUpdateUserProfile = client.post(path, data={'fullname': [''], 'username': ['admin'], 'email': ['poutots@gmail.com'], 'phoneNumber': [''], 'postalAddress': [''], 'bio': [''], 'updateUserProfile': ['']})
+    assert responseUpdateUserProfile.status_code == 200
+    assertTemplateUsed(responseUpdateUserProfile, "authentication/editProfile.html")
+
+
+@pytest.mark.django_db
+def test_registration_view_get():
+    path = reverse('registration')
+    response = client.get(path)
+    assert response.status_code == 200
+    assertTemplateUsed(response, "authentication/registration.html")
+
+
+@pytest.mark.django_db  
+def test_registration_view_post():
+    path = reverse('registration')
+    responseFullName = client.post(path, data={'fullname': [''], 'username': [''], 'password1': [''], 'password2': [''], 'email': [''], 'phoneNumber': [''], 'postalAddress': [''], 'bio': ['']})
+    assert responseFullName.status_code == 200
+    assertTemplateUsed(responseFullName, "authentication/registration.html")
+
+    responseAccept = client.post(path, data={'accept': ['']})
+    assert responseAccept.status_code == 200
+    assertTemplateUsed(responseAccept, "authentication/registration.html")

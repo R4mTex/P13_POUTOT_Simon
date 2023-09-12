@@ -91,7 +91,7 @@
                             <input type="hidden" value="{{ request.session.data.lng }}" id="lng">
                             <!-- Tool actions -->
                             <div class="card-footer mt-5 border-top-0 bg-transparent">
-                                <form method="post" action="{{request.META.HTTP_REFERER}}" role="form" novalidate>
+                                <form method="post" role="form" novalidate>
                                     {% csrf_token %}
                                     <div class="text-center">
                                         {% if tool.author.username != user.username and request.user not in favoriteUsers %}

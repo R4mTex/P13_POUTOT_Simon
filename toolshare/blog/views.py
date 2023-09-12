@@ -216,7 +216,6 @@ class memberTools(LoginRequiredMixin, View):
                 messages.warning(request, "Tool already saved !")
 
             tools = blogModels.Blog.objects.filter(author=member)
-            print(tools)
 
             favorites = blogModels.Favorite.objects.all()
             for favorite in range(len(favorites)):
@@ -313,6 +312,19 @@ class toolDetails(LoginRequiredMixin, View):
                 messages.success(request, "Tool saved !")
             else:
                 messages.warning(request, "Tool already saved !")
+
+            tool = blogModels.Blog.objects.get(id=toolID)
+            favorite = blogModels.Favorite.objects.filter(blog=tool)
+
+            favoriteUsers = []
+            for users in range(len(favorite)):
+                favoriteUsers.append(favorite[users].user)
+
+            context = {
+                'tool': tool,
+                'favoriteUsers': favoriteUsers,
+            }
+            return render(request, self.template_name, context=context)
         elif "removeTool" in request.POST:
             favoriteId = int(request.POST.get("removeTool"))
 
@@ -321,6 +333,19 @@ class toolDetails(LoginRequiredMixin, View):
             for favorite in range(len(userFavorites)):
                 if userFavorites[favorite].blog.id == favoriteId:
                     blogModels.Favorite.objects.filter(id=userFavorites[favorite].id).delete()
+
+            tool = blogModels.Blog.objects.get(id=toolID)
+            favorite = blogModels.Favorite.objects.filter(blog=tool)
+
+            favoriteUsers = []
+            for users in range(len(favorite)):
+                favoriteUsers.append(favorite[users].user)
+
+            context = {
+                'tool': tool,
+                'favoriteUsers': favoriteUsers,
+            }
+            return render(request, self.template_name, context=context)
         elif "supprTool" in request.POST:
             toolID = int(request.POST.get("supprTool"))
 
@@ -334,12 +359,13 @@ class toolDetails(LoginRequiredMixin, View):
                     else:
                         blogModels.Blog.objects.filter(id=personalTools[tool].id)[0].image.delete()
                         blogModels.Blog.objects.filter(id=personalTools[tool].id).delete()
+            return redirect(reverse('research', kwargs={'userID': userID}))
         elif "borrowRequest" in request.POST:
             return redirect(reverse('borrow-request-form', kwargs={'userID': userID, 'toolID': toolID}))
 
 
 class borrowRequestForm(LoginRequiredMixin, View):
-    template_name = 'authentication/borrowRequestForm.html'
+    template_name = 'blog/borrowRequestForm.html'
     form_class = forms.ApplicantContractForm
 
     def get(self, request, userID, toolID):
@@ -354,7 +380,6 @@ class borrowRequestForm(LoginRequiredMixin, View):
         user = authModels.User.objects.get(id=userID)
         member = blogModels.Blog.objects.get(id=toolID).author
         form = self.form_class(request.POST)
-        #print("----------------------------------\n", self.form_class(request.POST))
 
         if form.is_valid():
             if form.cleaned_data.get('applicantName') != user.fullname:
@@ -385,7 +410,11 @@ class borrowRequestForm(LoginRequiredMixin, View):
                 applicantSignature = form.cleaned_data.get('applicantSignature')
                 print("1 : ", applicantSignature)
                 print("1 Type : ", type(applicantSignature))
-                applicantSignatureFilePath = draw_signature(applicantSignature, as_file=True)
+                #applicantSignatureFilePath = draw_signature(applicantSignature, as_file=True)
+                #print("2 : ", applicantSignatureFilePath)
+                #print("2 Type : ", type(applicantSignatureFilePath))
+
+                applicantSignatureFilePath = draw_signature(applicantSignature)
                 print("2 : ", applicantSignatureFilePath)
                 print("2 Type : ", type(applicantSignatureFilePath))
 
@@ -395,27 +424,22 @@ class borrowRequestForm(LoginRequiredMixin, View):
                 newContract.contractedBlog = blogModels.Blog.objects.get(id=toolID)
                 newContract.applicantApproval = form.cleaned_data.get('applicantApproval')
                 newContract.applicantPostalAddress = form.cleaned_data.get('applicantPostalAddress')
-                newContract.applicantSignatureImage = applicantSignatureFilePath.replace("C:\\Users\\spout\\AppData\\Local\\Temp\\", '')
+                newContract.applicantSignatureImage = applicantSignatureFilePath
                 print("3 : ", newContract.applicantSignatureImage)
                 print("3 Type : ", type(newContract.applicantSignatureImage))
                 newContract.requestDate = form.cleaned_data.get('requestDate')
 
                 newContract.save()
 
-                test = blogModels.Contract.objects.get(id=1).applicantSignatureImage
-                test2 = blogModels.Blog.objects.get(id=1).image
-                
-                """
-                print("4", blogModels.Contract.objects.all())
-                for contract in range(len(blogModels.Contract.objects.all())):
-                    print("4", blogModels.Contract.objects.all()[contract].applicantSignatureImage)
-                    print("4.1", blogModels.Contract.objects.all()[contract].applicantSignatureImage.name)
+                contractImage = blogModels.Contract.objects.get(id=31).applicantSignatureImage
+                blogImage = blogModels.Blog.objects.get(id=3).image
 
-                print("5", blogModels.Blog.objects.all())
-                for blog in range(len(blogModels.Blog.objects.all())):
-                    print("5", blogModels.Blog.objects.all()[blog].image)
-                    print("5.1", blogModels.Blog.objects.all()[blog].image.name)
-                """
+                print(contractImage)
+                print(blogImage)
+
+                print(type(contractImage))
+                print(type(blogImage))
+
 
                 subject = "Borrow Request"
                 emailFrom = settings.EMAIL_HOST_USER
@@ -430,8 +454,8 @@ class borrowRequestForm(LoginRequiredMixin, View):
 
                 context = {
                     'form': form,
-                    'test': test,
-                    'test2': test2,
+                    'contractImage': contractImage,
+                    'blogImage': blogImage,
                 }
                 return render(request, self.template_name, context=context)
         else:
@@ -442,7 +466,7 @@ class borrowRequestForm(LoginRequiredMixin, View):
             return render(request, self.template_name, context=context)
 
 class consentToBorrowForm(LoginRequiredMixin, View):
-    template_name = 'authentication/consentToBorrowForm.html'
+    template_name = 'blog/consentToBorrowForm.html'
     form_class = forms.SupplierContractForm
 
     def get(self, request):
@@ -455,9 +479,9 @@ class consentToBorrowForm(LoginRequiredMixin, View):
     
     def post(self, request):
          """
-        pdfLoanRequest = canvas.Canvas('Borrow-Request.pdf')
-        pdfLoanRequest.drawString(0, 830, "Hello world.")
-        pdfLoanRequest.showPage()
-        pdfLoanRequest.save()
-        #os.startfile('Loan-Request.pdf', 'open')
+        pdfBorrowContract = canvas.Canvas('Borrow-Contract.pdf')
+        pdfBorrowContract.drawString(0, 830, "Hello world.")
+        pdfBorrowContract.showPage()
+        pdfBorrowContract.save()
+        #os.startfile('Borrow-Contract.pdf', 'open')
         """

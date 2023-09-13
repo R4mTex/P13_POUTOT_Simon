@@ -11,9 +11,11 @@ class BlogForm(forms.ModelForm):
         fields = ['name', 'image', 'category', 'description', 'location', 'availabalityStart', 'availabalityEnd', 'deposit']
 
 
-class ApplicantContractForm(forms.ModelForm):
-    applicantSignature = JSignatureField(widget=JSignatureWidget(jsignature_attrs={'width': '350px', 'height': '150px'}))
+class SignatureForm(forms.Form):
+    signature = JSignatureField(widget=JSignatureWidget(jsignature_attrs={'width': '350px', 'height': '150px'}))
 
+
+class ApplicantContractForm(forms.ModelForm):
     class Meta:
         model = models.Contract
         fields = "__all__"
@@ -21,10 +23,7 @@ class ApplicantContractForm(forms.ModelForm):
 
 
 class SupplierContractForm(forms.ModelForm):
-    supplierSignature = JSignatureField(widget=JSignatureWidget(jsignature_attrs={'width': '350px', 'height': '150px'}))
-
     class Meta:
         model = models.Contract
         fields = "__all__"
         exclude = ('applicant', 'supplier', 'applicantName', 'contractedBlog', 'applicantApproval', 'applicantPostalAddress', 'applicantSignatureImage', 'supplierSignatureImage', 'requestDate')
-

@@ -1,6 +1,7 @@
 {% extends 'authentication/base.html' %}
 
 {% load widget_tweaks %}
+{% load jsignature_filters %}
 
 {% block content %}
 
@@ -32,9 +33,6 @@
 </style>
 
 
-<img src="{{ contractImage }}">
-<img src="{{ blogImage.url }}">
-
 <section class="h-100 gradient-custom">
     <div class="container py-5 w-100">
         <div class="row flex-lg-nowrap">
@@ -54,8 +52,8 @@
                                 <div class="d-flex justify-content-end">
                                     <div class="d-flex flex-column">
                                         <label class="form-label fw-bold mt-3" for="id_signature">Signature :</label>
-                                        {% render_field form.applicantSignature name="applicantSignature" %}
-                                        {{ form.media }}
+                                        {{ formSignature.media }}
+                                        {{ formSignature.signature }}
                                     </div>
                                 </div>
                                 <p class="text-center"><button class="btn btn-outline-primary" type="submit" name="sendContract">Send</button></p>

@@ -48,8 +48,10 @@ urlpatterns = [
     path('user/<int:userID>/member/<int:memberID>/member-tools/', blogView.memberTools.as_view(template_name='blog/personalTools.html'), name='member-tools'),
     path('registration/', authView.Registration.as_view(template_name='authentication/registration.html'), name='registration'),
     path('user/<int:userID>/tool/<int:toolID>/details/', blogView.toolDetails.as_view(template_name='blog/toolDetails.html'), name='tool-details'),
-    path('user/<int:userID>/tool/<int:toolID>/details/borrow-request/', blogView.borrowRequestForm.as_view(template_name='blog/borrowRequestForm.html'), name='borrow-request-form'),
-    path('consent-to-borrow/', blogView.consentToBorrowForm.as_view(template_name='blog/consentToBorrowForm.html'), name='consent-to-borrow-form'),
+    path('user/<int:userID>/tool/<int:toolID>/details/borrow-request-contract/', blogView.borrowRequestForm.as_view(template_name='blog/borrowRequestConfirmation.html'), name='borrow-request-confirmation'),
+    path('user/<int:userID>/tool/<int:toolID>/details/borrow-request-confirmation/', blogView.borrowRequestForm.as_view(template_name='blog/borrowRequestForm.html'), name='borrow-request-form'),
+    path('user/<int:userID>/contract/<int:contractID>/consent-to-borrow-contract/', blogView.consentToBorrowForm.as_view(template_name='blog/consentToBorrowForm.html'), name='consent-to-borrow-form'),
+    path('test/', blogView.test.as_view(template_name='blog/test.html'), name='test'),
 
 
     # Login / Logout / Change Password Urls

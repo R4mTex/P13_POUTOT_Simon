@@ -47,17 +47,9 @@
                             <h5>Conditions d'utilisation</h5>
                             <form action="" method="post">
                                 {% csrf_token %}
-                                <p class="text-end">Je soussigné : {% render_field form.fullname
-                                    placeholder=user.fullname %}
-                                    avoir {% render_field form.approval placeholder="Lu et approuvé" %}
-                                    le {% render_field form.date type="date" %}
-                                    à {% render_field form.postalAddress placeholder=user.postalAddress %}.
-                                </p>
                                 <div class="d-flex justify-content-end">
                                     <div class="d-flex flex-column">
                                         <label class="form-label fw-bold mt-3" for="id_signature">Signature :</label>
-                                        {{ form.signature }}
-                                        {{ form.media }}
                                     </div>
                                 </div>
                                 <p class="text-center"><button class="btn btn-outline-primary" type="submit"

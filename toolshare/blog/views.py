@@ -367,12 +367,15 @@ class toolDetails(LoginRequiredMixin, View):
 class borrowRequestForm(LoginRequiredMixin, View):
     template_name = 'blog/borrowRequestForm.html'
     form_class = forms.ApplicantContractForm
+    form_signature = forms.SignatureForm
 
     def get(self, request, userID, toolID):
         form = self.form_class()
+        formSignature = self.form_signature()
 
         context = {
             'form': form,
+            'formSignature': formSignature,
         }
         return render(request, self.template_name, context=context)
     
@@ -380,8 +383,9 @@ class borrowRequestForm(LoginRequiredMixin, View):
         user = authModels.User.objects.get(id=userID)
         member = blogModels.Blog.objects.get(id=toolID).author
         form = self.form_class(request.POST)
+        formSignature = self.form_signature(request.POST or None)
 
-        if form.is_valid():
+        if form.is_valid() and formSignature.is_valid():
             if form.cleaned_data.get('applicantName') != user.fullname:
                 print("Here 1")
                 context = {
@@ -407,44 +411,35 @@ class borrowRequestForm(LoginRequiredMixin, View):
                 }
                 return render(request, self.template_name, context=context)
             else:
-                applicantSignature = form.cleaned_data.get('applicantSignature')
-                print("1 : ", applicantSignature)
-                print("1 Type : ", type(applicantSignature))
-                #applicantSignatureFilePath = draw_signature(applicantSignature, as_file=True)
-                #print("2 : ", applicantSignatureFilePath)
-                #print("2 Type : ", type(applicantSignatureFilePath))
-
-                applicantSignatureFilePath = draw_signature(applicantSignature)
-                print("2 : ", applicantSignatureFilePath)
-                print("2 Type : ", type(applicantSignatureFilePath))
-
-                newContract = form.save(commit=False)
+                signature = formSignature.cleaned_data.get('signature')
+                if signature:
+                    newJSignatureModel = blogModels.SignatureModel()
+                    newJSignatureModel.signature = formSignature.cleaned_data.get('signature')
+                    newJSignatureModel.save()
+                
+                newContract = blogModels.Contract()
                 newContract.applicant = user
+                newContract.supplier = member
                 newContract.applicantName = form.cleaned_data.get('applicantName')
                 newContract.contractedBlog = blogModels.Blog.objects.get(id=toolID)
                 newContract.applicantApproval = form.cleaned_data.get('applicantApproval')
                 newContract.applicantPostalAddress = form.cleaned_data.get('applicantPostalAddress')
-                newContract.applicantSignatureImage = applicantSignatureFilePath
-                print("3 : ", newContract.applicantSignatureImage)
-                print("3 Type : ", type(newContract.applicantSignatureImage))
+                newContract.applicantSignatureImage = blogModels.SignatureModel.objects.get(signature=formSignature.cleaned_data.get('signature'))
                 newContract.requestDate = form.cleaned_data.get('requestDate')
-
                 newContract.save()
+                
+                contracts = blogModels.Contract.objects.all()
 
-                contractImage = blogModels.Contract.objects.get(id=31).applicantSignatureImage
-                blogImage = blogModels.Blog.objects.get(id=3).image
+                contractsID = []
+                for contract in range(len(contracts)):
+                    contractsID.append(contracts[contract].id)
 
-                print(contractImage)
-                print(blogImage)
-
-                print(type(contractImage))
-                print(type(blogImage))
-
+                contractID = contractsID[-1]
 
                 subject = "Borrow Request"
                 emailFrom = settings.EMAIL_HOST_USER
                 message = ""
-                htmlContent = render_to_string('blog/consentToBorrowLink.html',)
+                htmlContent = render_to_string('blog/consentToBorrowLink.html', {'userID': member.id, 'contractID': contractID})
                 recipientList = [member.email,]
 
                 email = EmailMultiAlternatives(subject, message, emailFrom, recipientList)
@@ -452,25 +447,31 @@ class borrowRequestForm(LoginRequiredMixin, View):
 
                 email.send()
 
-                context = {
-                    'form': form,
-                    'contractImage': contractImage,
-                    'blogImage': blogImage,
-                }
-                return render(request, self.template_name, context=context)
+                return redirect(reverse('borrow-request-confirmation', kwargs={'userID': userID, 'toolID': toolID}))
         else:
             print("Here 6")
             context = {
                 'form': form,
             }
             return render(request, self.template_name, context=context)
+        
+
+class borrowRequestConfirmation(LoginRequiredMixin, View):
+    template_name = 'blog/borrowRequestConfirmation.html'
+
+    def get(self, request):
+        return render(request, self.template_name)
+
 
 class consentToBorrowForm(LoginRequiredMixin, View):
     template_name = 'blog/consentToBorrowForm.html'
     form_class = forms.SupplierContractForm
 
-    def get(self, request):
+    def get(self, request, userID, contractID):
         form = self.form_class()
+        contract = blogModels.Contract.objects.get(id=contractID)
+        print(contract)
+        #applicantSide = 
 
         context = {
             'form': form,
@@ -485,3 +486,41 @@ class consentToBorrowForm(LoginRequiredMixin, View):
         pdfBorrowContract.save()
         #os.startfile('Borrow-Contract.pdf', 'open')
         """
+
+class test(LoginRequiredMixin, View):
+    template_name = 'blog/test.html'
+    form_class = forms.SignatureForm
+
+    def get(self, request):
+        form = self.form_class()
+
+        context = {
+            'form': form,
+        }
+        return render(request, self.template_name, context=context)
+    
+    def post(self, request):
+        form = self.form_class(request.POST or None)
+        if form.is_valid():
+            signature = form.cleaned_data.get('signature')
+            print(signature)
+            if signature:
+                newJSignatureModel = blogModels.SignatureModel()
+                newJSignatureModel.signature = form.cleaned_data.get('signature')
+                newJSignatureModel.save()
+
+                form = self.form_class()
+                signatures = blogModels.SignatureModel.objects.get(id=1)
+                print(signatures.signature)
+
+                context = {
+                    'form': form,
+                    'signatures': signatures,
+                }
+                return render(request, self.template_name, context=context)
+        form = self.form_class()
+
+        context = {
+            'form': form,
+        }
+        return render(request, self.template_name, context=context)

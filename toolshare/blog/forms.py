@@ -19,11 +19,11 @@ class ApplicantContractForm(forms.ModelForm):
     class Meta:
         model = models.Contract
         fields = "__all__"
-        exclude = ('applicant', 'supplier', 'supplierName', 'contractedBlog', 'supplierApproval', 'supplierPostalAddress', 'applicantSignatureImage', 'supplierSignatureImage', 'approvalDate')
+        exclude = ('applicant', 'supplier', 'supplierName', 'contractedBlog', 'supplierApproval', 'supplierPostalAddress', 'applicantSignature', 'supplierSignature', 'approvalDate')
 
 
 class SupplierContractForm(forms.ModelForm):
     class Meta:
         model = models.Contract
         fields = "__all__"
-        exclude = ('applicant', 'supplier', 'applicantName', 'contractedBlog', 'applicantApproval', 'applicantPostalAddress', 'applicantSignatureImage', 'supplierSignatureImage', 'requestDate')
+        exclude = ('applicant', 'supplier', 'applicantName', 'contractedBlog', 'applicantApproval', 'applicantPostalAddress', 'applicantSignature', 'supplierSignature', 'requestDate')

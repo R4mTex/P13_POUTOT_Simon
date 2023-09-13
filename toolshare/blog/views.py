@@ -424,7 +424,7 @@ class borrowRequestForm(LoginRequiredMixin, View):
                 newContract.contractedBlog = blogModels.Blog.objects.get(id=toolID)
                 newContract.applicantApproval = form.cleaned_data.get('applicantApproval')
                 newContract.applicantPostalAddress = form.cleaned_data.get('applicantPostalAddress')
-                newContract.applicantSignatureImage = blogModels.SignatureModel.objects.get(signature=formSignature.cleaned_data.get('signature'))
+                newContract.applicantSignature = blogModels.SignatureModel.objects.get(signature=formSignature.cleaned_data.get('signature'))
                 newContract.requestDate = form.cleaned_data.get('requestDate')
                 newContract.save()
                 
@@ -479,7 +479,6 @@ class consentToBorrowForm(LoginRequiredMixin, View):
             'applicantSignature': contract.applicantSignature.signature,
             'requestDate': contract.requestDate,
         }
-
         context = {
             'form': form,
             'formSignature': formSignature,
@@ -487,14 +486,117 @@ class consentToBorrowForm(LoginRequiredMixin, View):
         }
         return render(request, self.template_name, context=context)
     
-    def post(self, request):
-         """
-        pdfBorrowContract = canvas.Canvas('Borrow-Contract.pdf')
-        pdfBorrowContract.drawString(0, 830, "Hello world.")
-        pdfBorrowContract.showPage()
-        pdfBorrowContract.save()
-        #os.startfile('Borrow-Contract.pdf', 'open')
-        """
+    def post(self, request, userID, contractID):
+        user = authModels.User.objects.get(id=userID)
+        contract = blogModels.Contract.objects.get(id=contractID)
+        form = self.form_class(request.POST)
+        formSignature = self.form_signature(request.POST or None)
+
+        if form.is_valid() and formSignature.is_valid():
+            if form.cleaned_data.get('supplierName') != user.fullname:
+                print("Here 1")
+                applicantInfo = {
+                    'applicantName': contract.applicantName,
+                    'applicantApproval': contract.applicantApproval,
+                    'applicantSignature': contract.applicantSignature.signature,
+                    'requestDate': contract.requestDate,
+                }
+                context = {
+                    'form': form,
+                    'formSignature': formSignature,
+                    'applicantInfo': applicantInfo,
+                }
+                return render(request, self.template_name, context=context)
+            elif Parser.scriptForParse(form.cleaned_data.get('supplierApproval')) != ['lu', 'approuve']:
+                print("Here 2")
+                applicantInfo = {
+                    'applicantName': contract.applicantName,
+                    'applicantApproval': contract.applicantApproval,
+                    'applicantSignature': contract.applicantSignature.signature,
+                    'requestDate': contract.requestDate,
+                }
+                context = {
+                    'form': form,
+                    'formSignature': formSignature,
+                    'applicantInfo': applicantInfo,
+                }
+                return render(request, self.template_name, context=context)
+            elif form.cleaned_data.get('requestDate') != date.today():
+                print("Here 3")
+                applicantInfo = {
+                    'applicantName': contract.applicantName,
+                    'applicantApproval': contract.applicantApproval,
+                    'applicantSignature': contract.applicantSignature.signature,
+                    'requestDate': contract.requestDate,
+                }
+                context = {
+                    'form': form,
+                    'formSignature': formSignature,
+                    'applicantInfo': applicantInfo,
+                }
+                return render(request, self.template_name, context=context)
+            elif form.cleaned_data.get('supplierPostalAddress') != user.postalAddress:
+                print("Here 4")
+                applicantInfo = {
+                    'applicantName': contract.applicantName,
+                    'applicantApproval': contract.applicantApproval,
+                    'applicantSignature': contract.applicantSignature.signature,
+                    'requestDate': contract.requestDate,
+                }
+                context = {
+                    'form': form,
+                    'formSignature': formSignature,
+                    'applicantInfo': applicantInfo,
+                }
+                return render(request, self.template_name, context=context)
+            else:
+                print("Here 5")
+                signature = formSignature.cleaned_data.get('signature')
+                if signature:
+                    newJSignatureModel = blogModels.SignatureModel()
+                    newJSignatureModel.signature = formSignature.cleaned_data.get('signature')
+                    newJSignatureModel.save()
+                
+                contract = blogModels.Contract.objects.get(id=contractID)
+                contract.suppliertName = form.cleaned_data.get('supplierName')
+                contract.supplierApproval = form.cleaned_data.get('supplierApproval')
+                contract.supplierPostalAddress = form.cleaned_data.get('supplierPostalAddress')
+                contract.supplierSignature = blogModels.SignatureModel.objects.get(signature=formSignature.cleaned_data.get('signature'))
+                contract.approvalDate = form.cleaned_data.get('approvalDate')
+                contract.save()
+                print(blogModels.Contract.objects.get(id=contractID))
+                """
+                pdfBorrowContract = canvas.Canvas('Borrow-Contract.pdf')
+                pdfBorrowContract.drawString(0, 830, "Hello world.")
+                pdfBorrowContract.showPage()
+                pdfBorrowContract.save()
+                #os.startfile('Borrow-Contract.pdf', 'open')
+                """
+                applicantInfo = {
+                    'applicantName': contract.applicantName,
+                    'applicantApproval': contract.applicantApproval,
+                    'applicantSignature': contract.applicantSignature.signature,
+                    'requestDate': contract.requestDate,
+                }
+                context = {
+                    'form': form,
+                    'formSignature': formSignature,
+                    'applicantInfo': applicantInfo,
+                }
+                return render(request, self.template_name, context=context)
+        print("Here 6")
+        applicantInfo = {
+            'applicantName': contract.applicantName,
+            'applicantApproval': contract.applicantApproval,
+            'applicantSignature': contract.applicantSignature.signature,
+            'requestDate': contract.requestDate,
+        }
+        context = {
+            'form': form,
+            'formSignature': formSignature,
+            'applicantInfo': applicantInfo,
+        }
+        return render(request, self.template_name, context=context)
 
 class test(LoginRequiredMixin, View):
     template_name = 'blog/test.html'

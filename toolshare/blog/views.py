@@ -466,15 +466,24 @@ class borrowRequestConfirmation(LoginRequiredMixin, View):
 class consentToBorrowForm(LoginRequiredMixin, View):
     template_name = 'blog/consentToBorrowForm.html'
     form_class = forms.SupplierContractForm
+    form_signature = forms.SignatureForm
 
     def get(self, request, userID, contractID):
         form = self.form_class()
+        formSignature = self.form_signature()
+
         contract = blogModels.Contract.objects.get(id=contractID)
-        print(contract)
-        #applicantSide = 
+        applicantInfo = {
+            'applicantName': contract.applicantName,
+            'applicantApproval': contract.applicantApproval,
+            'applicantSignature': contract.applicantSignature.signature,
+            'requestDate': contract.requestDate,
+        }
 
         context = {
             'form': form,
+            'formSignature': formSignature,
+            'applicantInfo': applicantInfo,
         }
         return render(request, self.template_name, context=context)
     

@@ -1,6 +1,7 @@
 {% extends 'authentication/base.html' %}
 
 {% load widget_tweaks %}
+{% load jsignature_filters %}
 
 {% block content %}
 
@@ -36,6 +37,7 @@
     }
 </style>
 
+
 <section class="h-100 gradient-custom">
     <div class="container py-5 w-100">
         <div class="row flex-lg-nowrap">
@@ -45,11 +47,23 @@
                         <div class="e-profile">
                             <h1>Contract</h1>
                             <h5>Conditions d'utilisation</h5>
+                            <p class="text-start text-muted">Je soussigné : <span class="fw-bold">{{ applicantInfo.applicantName }}</span>
+                                avoir <span class="fw-bold">{{ applicantInfo.applicantApproval }}</span> les conditions d'utilisation
+                                le <span class="fw-bold">{{ applicantInfo.requestDate }}</span>.
+                            </p>
+                            <img src="{{ applicantInfo.applicantSignature|signature_base64 }}" alt="applicantSignature" style="border: 1px solid black; opacity: 0.5;"/>
                             <form action="" method="post">
                                 {% csrf_token %}
+                                <p class="text-end">Je soussigné : {% render_field form.supplierName name="supplierName" placeholder=user.fullname %}
+                                    avoir {% render_field form.supplierApproval name="supplierApproval" placeholder="Lu et approuvé" %} ce document
+                                    le {% render_field form.approvalDate name="approvalDate" type="date" %}
+                                    à {% render_field form.supplierPostalAddress name="supplierPostalAddress" placeholder=user.postalAddress %}.
+                                </p>
                                 <div class="d-flex justify-content-end">
                                     <div class="d-flex flex-column">
                                         <label class="form-label fw-bold mt-3" for="id_signature">Signature :</label>
+                                        {{ formSignature.media }}
+                                        {{ formSignature.signature }}
                                     </div>
                                 </div>
                                 <p class="text-center"><button class="btn btn-outline-primary" type="submit"

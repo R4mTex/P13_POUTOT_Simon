@@ -12,4 +12,4 @@ class BlogAdmin(admin.ModelAdmin):
 
 @admin.register(Contract)
 class BlogAdmin(admin.ModelAdmin):
-    list_display = ('id', 'applicant', 'applicantSignatureImage', 'supplier', 'supplierSignatureImage')
+    list_display = ('id', 'applicant', 'applicantSignature', 'supplier', 'supplierSignature', 'requestDate', 'approvalDate')

@@ -34,10 +34,11 @@ class Blog(models.Model):
     rating = models.FloatField(default=0.0)
     popularity = models.IntegerField(default=0)
     match = models.BooleanField(default=False)
+    onContract = models.BooleanField(default=False)
 
 
 class Favorite(models.Model):
-    user = models.ForeignKey(settings.AUTH_USER_MODEL, related_name='user', on_delete=models.CASCADE)
+    user = models.ForeignKey(settings.AUTH_USER_MODEL, related_name='user_favorite', on_delete=models.CASCADE)
     blog = models.ForeignKey(Blog, related_name='favorites', on_delete=models.CASCADE)
 
     class Meta:
@@ -48,6 +49,7 @@ class Favorite(models.Model):
     
 
 class SignatureModel(models.Model):
+    user = models.ForeignKey(settings.AUTH_USER_MODEL, related_name='user_signature', on_delete=models.CASCADE)
     signature = JSignatureField()
 
     

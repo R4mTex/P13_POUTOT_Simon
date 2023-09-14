@@ -1,5 +1,5 @@
 from django.conf import settings
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, HttpResponse
 from django.contrib.auth import login
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.views.generic import View
@@ -12,8 +12,8 @@ from django.contrib import messages
 from blog.scripts.parser import Parser
 from blog.scripts.geocoderApi import Geocoder
 from django.core.mail import EmailMessage
-from reportlab.pdfgen import canvas
 from datetime import date
+from .pdf import html2pdf
 
 
 # Create your views here.
@@ -22,6 +22,13 @@ class Home(LoginRequiredMixin, View):
 
     def get(self, request):
         return render(request, self.template_name)
+    
+class pdf(LoginRequiredMixin, View):
+    template_name = 'authentication/pdf.html'
+
+    def get(self, request):
+        pdf = html2pdf("authentication/pdf.html")
+        return HttpResponse(pdf, content_type="application/pdf")
 
 class About(LoginRequiredMixin, View):
     template_name = 'authentication/about.html'
@@ -75,6 +82,8 @@ class Research(LoginRequiredMixin, View):
 
     def get(self, request, userID):
         tools = blogModels.Blog.objects.all()
+        for tool in range(len(tools)):
+            print(tools[tool].onContract)
         favorites = blogModels.Favorite.objects.all()
 
         for favorite in range(len(favorites)):
@@ -498,6 +507,9 @@ class Favorites(LoginRequiredMixin, View):
             return redirect(reverse('tool-details', kwargs={'userID': userID, 'toolID': toolID}))
         elif "removeTool" in request.POST:
             favoriteId = int(request.POST.get("removeTool"))
+            toolSelected = blogModels.Blog.objects.get(id=favoriteId)
+            toolSelected.popularity -= 1
+            toolSelected.save()
 
             userFavorites = blogModels.Favorite.objects.filter(user=userID)
 

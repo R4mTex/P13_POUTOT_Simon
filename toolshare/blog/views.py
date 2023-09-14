@@ -3,7 +3,6 @@ from django.views.generic import View
 from django.shortcuts import redirect, render
 from django.urls import reverse
 from . import forms
-from jsignature.utils import draw_signature
 from authentication import models as authModels
 from blog import models as blogModels
 from blog.scripts.parser import Parser
@@ -13,10 +12,8 @@ from django.conf import settings
 from django.core.mail import EmailMultiAlternatives
 from datetime import date
 from django.template.loader import render_to_string
-from PIL import Image, ImageTk
-from io import BytesIO
-from django.core.files import File
-
+from reportlab.pdfgen import canvas
+import os
 
 class editTool(LoginRequiredMixin, View):
     template_name = 'blog/editTool.html'
@@ -37,9 +34,6 @@ class editTool(LoginRequiredMixin, View):
 
         if blog_form.is_valid():
             blog = blog_form.save(commit=False)
-            print(blog.image.path)
-            print(type(blog.image.path))
-            print(blog.image)
             blog.author = request.user
             blog.save()
             return redirect(reverse('profile', kwargs={'userID': userID}))
@@ -200,6 +194,8 @@ class memberTools(LoginRequiredMixin, View):
             toolID = int(request.POST.get("addTool"))
 
             toolSelected = blogModels.Blog.objects.get(id=toolID)
+            toolSelected.popularity += 1
+            toolSelected.save()
             userFavorites = blogModels.Favorite.objects.filter(user=userID)
 
             favoritesID = []
@@ -241,6 +237,9 @@ class memberTools(LoginRequiredMixin, View):
         elif "removeTool" in request.POST:
             member = authModels.User.objects.get(id=memberID)
             favoriteId = int(request.POST.get("removeTool"))
+            toolSelected = blogModels.Blog.objects.get(id=favoriteId)
+            toolSelected.popularity -= 1
+            toolSelected.save()
 
             userFavorites = blogModels.Favorite.objects.filter(user=userID)
 
@@ -298,6 +297,8 @@ class toolDetails(LoginRequiredMixin, View):
             toolID = int(request.POST.get("addTool"))
 
             toolSelected = blogModels.Blog.objects.get(id=toolID)
+            toolSelected.popularity += 1
+            toolSelected.save()
             userFavorites = blogModels.Favorite.objects.filter(user=userID)
 
             favoritesID = []
@@ -327,6 +328,9 @@ class toolDetails(LoginRequiredMixin, View):
             return render(request, self.template_name, context=context)
         elif "removeTool" in request.POST:
             favoriteId = int(request.POST.get("removeTool"))
+            toolSelected = blogModels.Blog.objects.get(id=favoriteId)
+            toolSelected.popularity -= 1
+            toolSelected.save()
 
             userFavorites = blogModels.Favorite.objects.filter(user=userID)
 
@@ -414,6 +418,7 @@ class borrowRequestForm(LoginRequiredMixin, View):
                 signature = formSignature.cleaned_data.get('signature')
                 if signature:
                     newJSignatureModel = blogModels.SignatureModel()
+                    newJSignatureModel.user = user
                     newJSignatureModel.signature = formSignature.cleaned_data.get('signature')
                     newJSignatureModel.save()
                 
@@ -521,7 +526,7 @@ class consentToBorrowForm(LoginRequiredMixin, View):
                     'applicantInfo': applicantInfo,
                 }
                 return render(request, self.template_name, context=context)
-            elif form.cleaned_data.get('requestDate') != date.today():
+            elif form.cleaned_data.get('approvalDate') != date.today():
                 print("Here 3")
                 applicantInfo = {
                     'applicantName': contract.applicantName,
@@ -554,6 +559,7 @@ class consentToBorrowForm(LoginRequiredMixin, View):
                 signature = formSignature.cleaned_data.get('signature')
                 if signature:
                     newJSignatureModel = blogModels.SignatureModel()
+                    newJSignatureModel.user = user
                     newJSignatureModel.signature = formSignature.cleaned_data.get('signature')
                     newJSignatureModel.save()
                 
@@ -564,14 +570,17 @@ class consentToBorrowForm(LoginRequiredMixin, View):
                 contract.supplierSignature = blogModels.SignatureModel.objects.get(signature=formSignature.cleaned_data.get('signature'))
                 contract.approvalDate = form.cleaned_data.get('approvalDate')
                 contract.save()
-                print(blogModels.Contract.objects.get(id=contractID))
-                """
+
+                toolContracted = blogModels.Blog.objects.get(id=blogModels.Contract.objects.get(id=contractID).contractedBlog.id)
+                toolContracted.onContract = True
+                toolContracted.save()
+
                 pdfBorrowContract = canvas.Canvas('Borrow-Contract.pdf')
-                pdfBorrowContract.drawString(0, 830, "Hello world.")
+                pdfBorrowContract.drawString(0, 830, f"{form.cleaned_data.get('approvalDate')}")
                 pdfBorrowContract.showPage()
                 pdfBorrowContract.save()
                 #os.startfile('Borrow-Contract.pdf', 'open')
-                """
+
                 applicantInfo = {
                     'applicantName': contract.applicantName,
                     'applicantApproval': contract.applicantApproval,

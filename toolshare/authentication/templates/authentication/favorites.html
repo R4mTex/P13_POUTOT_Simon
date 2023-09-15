@@ -201,8 +201,16 @@
                         <span aria-hidden="true">&times;</span>
                     </button>
                 </div>
-                {% else %}
+                {% elif 'info' in message.tags %}
                 <div class="d-inline-flex alert alert-warning alert-dismissible fade show mt-1 ms-1 p-2 pe-3" role="alert">
+                    <strong>{{ message }}</strong>
+                    <button type="button" class="close" data-dismiss="alert" aria-label="Close"
+                        style="position: relative; left: 5px; font-size: smaller;">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                {% elif 'warning' in message.tags %}
+                <div class="d-inline-flex alert alert-danger alert-dismissible fade show mt-1 ms-1 p-2 pe-3" role="alert">
                     <strong>{{ message }}</strong>
                     <button type="button" class="close" data-dismiss="alert" aria-label="Close"
                         style="position: relative; left: 5px; font-size: smaller;">
@@ -263,7 +271,7 @@
                                         <button class="btn btn-outline-warning" type="submit" name="toolDetails" value="{{ tool.id }}">View
                                             details<i class="bi bi-gear ms-2"></i>
                                         </button>
-                                        <button class="btn btn-danger mt-2" type="submit" name="removeTool" value="{{ tool.id }}">Remove from bag<i
+                                        <button class="btn btn-danger mt-2" type="submit" name="removeTool" value="{{ tool.id }}">Remove from your Bag<i
                                                 class="bi bi-x-octagon ms-2"></i>
                                         </button>
                                     </div>
@@ -339,7 +347,7 @@
                                         <button class="btn btn-outline-warning" type="submit" name="toolDetails" value="{{ tool.id }}">View
                                             details<i class="bi bi-gear ms-2"></i>
                                         </button>
-                                        <button class="btn btn-danger mt-2" type="submit" name="removeTool" value="{{ tool.id }}">Remove from bag<i
+                                        <button class="btn btn-danger mt-2" type="submit" name="removeTool" value="{{ tool.id }}">Remove from your Bag<i
                                                 class="bi bi-x-octagon ms-2"></i>
                                         </button>
                                     </div>
@@ -415,7 +423,7 @@
                                         <button class="btn btn-outline-warning" type="submit" name="toolDetails" value="{{ tool.id }}">View
                                             details<i class="bi bi-gear ms-2"></i>
                                         </button>
-                                        <button class="btn btn-danger mt-2" type="submit" name="removeTool" value="{{ tool.id }}">Remove from bag<i
+                                        <button class="btn btn-danger mt-2" type="submit" name="removeTool" value="{{ tool.id }}">Remove from your Bag<i
                                                 class="bi bi-x-octagon ms-2"></i>
                                         </button>
                                     </div>
@@ -491,7 +499,7 @@
                                         <button class="btn btn-outline-warning" type="submit" name="toolDetails" value="{{ tool.id }}">View
                                             details<i class="bi bi-gear ms-2"></i>
                                         </button>
-                                        <button class="btn btn-danger mt-2" type="submit" name="removeTool" value="{{ tool.id }}">Remove from bag<i
+                                        <button class="btn btn-danger mt-2" type="submit" name="removeTool" value="{{ tool.id }}">Remove from your Bag<i
                                                 class="bi bi-x-octagon ms-2"></i>
                                         </button>
                                     </div>

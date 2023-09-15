@@ -84,9 +84,11 @@ class personalTools(LoginRequiredMixin, View):
                 if personalTools[tool].id == toolID:
                     if personalTools[tool].image == "userPersonalToolPicture/defaultPersonalToolPicture.png":
                         blogModels.Blog.objects.filter(id=personalTools[tool].id).delete()
+                        messages.warning(request, "Removed from your Personal Tools")
                     else:
                         blogModels.Blog.objects.filter(id=personalTools[tool].id)[0].image.delete()
                         blogModels.Blog.objects.filter(id=personalTools[tool].id).delete()
+                        messages.warning(request, "Removed from your Personal Tools")
 
             personalTools = blogModels.Blog.objects.filter(author=user.id)
 
@@ -207,9 +209,7 @@ class memberTools(LoginRequiredMixin, View):
                 newFavorite.blog = toolSelected
                 newFavorite.user = authModels.User.objects.get(id=userID)
                 newFavorite.save()
-                messages.success(request, "Tool saved !")
-            else:
-                messages.warning(request, "Tool already saved !")
+                messages.success(request, "Added to your Bag")
 
             tools = blogModels.Blog.objects.filter(author=member)
 
@@ -237,6 +237,7 @@ class memberTools(LoginRequiredMixin, View):
         elif "removeTool" in request.POST:
             member = authModels.User.objects.get(id=memberID)
             favoriteId = int(request.POST.get("removeTool"))
+
             toolSelected = blogModels.Blog.objects.get(id=favoriteId)
             toolSelected.popularity -= 1
             toolSelected.save()
@@ -246,6 +247,7 @@ class memberTools(LoginRequiredMixin, View):
             for favorite in range(len(userFavorites)):
                 if userFavorites[favorite].blog.id == favoriteId:
                     blogModels.Favorite.objects.filter(id=userFavorites[favorite].id).delete()
+                    messages.info(request, "Removed from your Bag")
             
             tools = blogModels.Blog.objects.filter(author=member)
 
@@ -310,9 +312,7 @@ class toolDetails(LoginRequiredMixin, View):
                 newFavorite.blog = toolSelected
                 newFavorite.user = authModels.User.objects.get(id=userID)
                 newFavorite.save()
-                messages.success(request, "Tool saved !")
-            else:
-                messages.warning(request, "Tool already saved !")
+                messages.success(request, "Added to your Bag")
 
             tool = blogModels.Blog.objects.get(id=toolID)
             favorite = blogModels.Favorite.objects.filter(blog=tool)
@@ -328,6 +328,7 @@ class toolDetails(LoginRequiredMixin, View):
             return render(request, self.template_name, context=context)
         elif "removeTool" in request.POST:
             favoriteId = int(request.POST.get("removeTool"))
+
             toolSelected = blogModels.Blog.objects.get(id=favoriteId)
             toolSelected.popularity -= 1
             toolSelected.save()
@@ -337,6 +338,7 @@ class toolDetails(LoginRequiredMixin, View):
             for favorite in range(len(userFavorites)):
                 if userFavorites[favorite].blog.id == favoriteId:
                     blogModels.Favorite.objects.filter(id=userFavorites[favorite].id).delete()
+                    messages.info(request, "Removed from your Bag")
 
             tool = blogModels.Blog.objects.get(id=toolID)
             favorite = blogModels.Favorite.objects.filter(blog=tool)
@@ -360,9 +362,11 @@ class toolDetails(LoginRequiredMixin, View):
                 if personalTools[tool].id == toolID:
                     if personalTools[tool].image == "userPersonalToolPicture/defaultPersonalToolPicture.png":
                         blogModels.Blog.objects.filter(id=personalTools[tool].id).delete()
+                        messages.warning(request, "Removed from your Personal Tools")
                     else:
                         blogModels.Blog.objects.filter(id=personalTools[tool].id)[0].image.delete()
                         blogModels.Blog.objects.filter(id=personalTools[tool].id).delete()
+                        messages.warning(request, "Removed from your Personal Tools")
             return redirect(reverse('research', kwargs={'userID': userID}))
         elif "borrowRequest" in request.POST:
             return redirect(reverse('borrow-request-form', kwargs={'userID': userID, 'toolID': toolID}))
@@ -604,43 +608,5 @@ class consentToBorrowForm(LoginRequiredMixin, View):
             'form': form,
             'formSignature': formSignature,
             'applicantInfo': applicantInfo,
-        }
-        return render(request, self.template_name, context=context)
-
-class test(LoginRequiredMixin, View):
-    template_name = 'blog/test.html'
-    form_class = forms.SignatureForm
-
-    def get(self, request):
-        form = self.form_class()
-
-        context = {
-            'form': form,
-        }
-        return render(request, self.template_name, context=context)
-    
-    def post(self, request):
-        form = self.form_class(request.POST or None)
-        if form.is_valid():
-            signature = form.cleaned_data.get('signature')
-            print(signature)
-            if signature:
-                newJSignatureModel = blogModels.SignatureModel()
-                newJSignatureModel.signature = form.cleaned_data.get('signature')
-                newJSignatureModel.save()
-
-                form = self.form_class()
-                signatures = blogModels.SignatureModel.objects.get(id=1)
-                print(signatures.signature)
-
-                context = {
-                    'form': form,
-                    'signatures': signatures,
-                }
-                return render(request, self.template_name, context=context)
-        form = self.form_class()
-
-        context = {
-            'form': form,
         }
         return render(request, self.template_name, context=context)

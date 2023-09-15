@@ -296,7 +296,7 @@ class Research(LoginRequiredMixin, View):
                 newFavorite.blog = toolSelected
                 newFavorite.user = authModels.User.objects.get(id=userID)
                 newFavorite.save()
-                messages.success(request, "Added to your Favorites")
+                messages.success(request, "Added to your Bag")
 
             tools = blogModels.Blog.objects.all()
 
@@ -332,7 +332,7 @@ class Research(LoginRequiredMixin, View):
             for favorite in range(len(userFavorites)):
                 if userFavorites[favorite].blog.id == favoriteId:
                     blogModels.Favorite.objects.filter(id=userFavorites[favorite].id).delete()
-                    messages.info(request, "Removed to your Favorites")
+                    messages.info(request, "Removed from your Bag")
             
             tools = blogModels.Blog.objects.all()
 
@@ -366,11 +366,11 @@ class Research(LoginRequiredMixin, View):
                 if personalTools[tool].id == toolID:
                     if personalTools[tool].image == "userPersonalToolPicture/defaultPersonalToolPicture.png":
                         blogModels.Blog.objects.filter(id=personalTools[tool].id).delete()
-                        messages.warning(request, "Deleted to your Personal Tools")
+                        messages.warning(request, "Removed from your Personal Tools")
                     else:
                         blogModels.Blog.objects.filter(id=personalTools[tool].id)[0].image.delete()
                         blogModels.Blog.objects.filter(id=personalTools[tool].id).delete()
-                        messages.warning(request, "Deleted to your Personal Tools")
+                        messages.warning(request, "Removed from your Personal Tools")
 
             tools = blogModels.Blog.objects.all()
 
@@ -507,6 +507,7 @@ class Favorites(LoginRequiredMixin, View):
             return redirect(reverse('tool-details', kwargs={'userID': userID, 'toolID': toolID}))
         elif "removeTool" in request.POST:
             favoriteId = int(request.POST.get("removeTool"))
+
             toolSelected = blogModels.Blog.objects.get(id=favoriteId)
             toolSelected.popularity -= 1
             toolSelected.save()
@@ -516,6 +517,7 @@ class Favorites(LoginRequiredMixin, View):
             for favorite in range(len(userFavorites)):
                 if userFavorites[favorite].blog.id == favoriteId:
                     blogModels.Favorite.objects.filter(id=userFavorites[favorite].id).delete()
+                    messages.info(request, "Removed from your Bag")
             
             userFavorites = blogModels.Favorite.objects.filter(user=userID)
 
@@ -545,6 +547,11 @@ class Profile(LoginRequiredMixin, View):
     def get(self, request, userID):
         user = authModels.User.objects.get(id=userID)
         personalTools = blogModels.Blog.objects.filter(author=user.id)
+        userApplicantContracts = blogModels.Contract.objects.filter(applicant=user)
+        userSupplierContracts = blogModels.Contract.objects.filter(supplier=user)
+        print(userApplicantContracts)
+        print(userApplicantContracts)
+        print(userApplicantContracts[0].applicant.username)
 
         pathInfoUser = "/user/"+str(userID)+"/profile/"
         pathInfoMember = ""
@@ -558,6 +565,8 @@ class Profile(LoginRequiredMixin, View):
         context = {
             'user': user,
             'tools': reversePersonalToolList4,
+            'userApplicantContracts': userApplicantContracts,
+            'userApplicantContracts': userApplicantContracts,
             'pathInfoUser': pathInfoUser,
             'pathInfoMember': pathInfoMember,
         }

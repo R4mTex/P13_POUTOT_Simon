@@ -271,16 +271,16 @@
                                                 class="bi bi-gear ms-2"></i>
                                         </button>
                                         {% if tool.author.username != request.user.username and tool.match == False %}
-                                        <button class="btn btn-outline-danger mt-2" type="submit" name="addTool" value="{{ tool.id }}" onclick="addRequest()">Add to bag<i
+                                        <button class="btn btn-outline-danger mt-2" type="submit" name="addTool" value="{{ tool.id }}" onclick="addRequest()">Add to your Bag<i
                                                 class="bi bi-heart ms-2"></i>
                                         </button>
                                         {% elif tool.author.username != request.user.username and tool.match == True %}
-                                        <button class="btn btn-danger mt-2" type="submit" name="removeTool" value="{{ tool.id }}">Remove from bag<i
+                                        <button class="btn btn-danger mt-2" type="submit" name="removeTool" value="{{ tool.id }}">Remove from your Bag<i
                                                 class="bi bi-x-octagon ms-2"></i>
                                         </button>
                                         {% elif tool.author.username == request.user.username %}
-                                        <button class="btn btn-danger mt-2" type="submit" name="supprTool" value="{{ tool.id }}">Remove from personal
-                                            tools<i class="bi bi-x-octagon ms-2"></i>
+                                        <button class="btn btn-danger mt-2" type="submit" name="supprTool" value="{{ tool.id }}">Remove from your Personal
+                                            Tools<i class="bi bi-x-octagon ms-2"></i>
                                         </button>
                                         {% endif %}
                                     </div>
@@ -357,16 +357,16 @@
                                                 class="bi bi-gear ms-2"></i>
                                         </button>
                                         {% if tool.author.username != request.user.username and tool.match == False %}
-                                        <button class="btn btn-outline-danger mt-2" type="submit" name="addTool" value="{{ tool.id }}">Add to bag<i
+                                        <button class="btn btn-outline-danger mt-2" type="submit" name="addTool" value="{{ tool.id }}">Add to your Bag<i
                                                 class="bi bi-heart ms-2"></i>
                                         </button>
                                         {% elif tool.author.username != request.user.username and tool.match == True %}
-                                        <button class="btn btn-danger mt-2" type="submit" name="removeTool" value="{{ tool.id }}">Remove from bag<i
+                                        <button class="btn btn-danger mt-2" type="submit" name="removeTool" value="{{ tool.id }}">Remove from your Bag<i
                                                 class="bi bi-x-octagon ms-2"></i>
                                         </button>
                                         {% elif tool.author.username == request.user.username %}
-                                        <button class="btn btn-danger mt-2" type="submit" name="supprTool" value="{{ tool.id }}">Remove from personal
-                                            tools<i class="bi bi-x-octagon ms-2"></i>
+                                        <button class="btn btn-danger mt-2" type="submit" name="supprTool" value="{{ tool.id }}">Remove from your Personal
+                                            Tools<i class="bi bi-x-octagon ms-2"></i>
                                         </button>
                                         {% endif %}
                                     </div>
@@ -443,16 +443,16 @@
                                                 class="bi bi-gear ms-2"></i>
                                         </button>
                                         {% if tool.author.username != request.user.username and tool.match == False %}
-                                        <button class="btn btn-outline-danger mt-2" type="submit" name="addTool" value="{{ tool.id }}">Add to bag<i
+                                        <button class="btn btn-outline-danger mt-2" type="submit" name="addTool" value="{{ tool.id }}">Add to your Bag<i
                                                 class="bi bi-heart ms-2"></i>
                                         </button>
                                         {% elif tool.author.username != request.user.username and tool.match == True %}
-                                        <button class="btn btn-danger mt-2" type="submit" name="removeTool" value="{{ tool.id }}">Remove from bag<i
+                                        <button class="btn btn-danger mt-2" type="submit" name="removeTool" value="{{ tool.id }}">Remove from your Bag<i
                                                 class="bi bi-x-octagon ms-2"></i>
                                         </button>
                                         {% elif tool.author.username == request.user.username %}
-                                        <button class="btn btn-danger mt-2" type="submit" name="supprTool" value="{{ tool.id }}">Remove from personal
-                                            tools<i class="bi bi-x-octagon ms-2"></i>
+                                        <button class="btn btn-danger mt-2" type="submit" name="supprTool" value="{{ tool.id }}">Remove from your Personal
+                                            Tools<i class="bi bi-x-octagon ms-2"></i>
                                         </button>
                                         {% endif %}
                                     </div>
@@ -529,16 +529,16 @@
                                                 class="bi bi-gear ms-2"></i>
                                         </button>
                                         {% if tool.author.username != request.user.username and tool.match == False %}
-                                        <button class="btn btn-outline-danger mt-2" type="submit" name="addTool" value="{{ tool.id }}">Add to bag<i
+                                        <button class="btn btn-outline-danger mt-2" type="submit" name="addTool" value="{{ tool.id }}">Add to your Bag<i
                                                 class="bi bi-heart ms-2"></i>
                                         </button>
                                         {% elif tool.author.username != request.user.username and tool.match == True %}
-                                        <button class="btn btn-danger mt-2" type="submit" name="removeTool" value="{{ tool.id }}">Remove from bag<i
+                                        <button class="btn btn-danger mt-2" type="submit" name="removeTool" value="{{ tool.id }}">Remove from your Bag<i
                                                 class="bi bi-x-octagon ms-2"></i>
                                         </button>
                                         {% elif tool.author.username == request.user.username %}
-                                        <button class="btn btn-danger mt-2" type="submit" name="supprTool" value="{{ tool.id }}">Remove from personal
-                                            tools<i class="bi bi-x-octagon ms-2"></i>
+                                        <button class="btn btn-danger mt-2" type="submit" name="supprTool" value="{{ tool.id }}">Remove from your Personal
+                                            Tools<i class="bi bi-x-octagon ms-2"></i>
                                         </button>
                                         {% endif %}
                                     </div>

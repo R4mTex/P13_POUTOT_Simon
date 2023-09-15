@@ -549,9 +549,25 @@ class Profile(LoginRequiredMixin, View):
         personalTools = blogModels.Blog.objects.filter(author=user.id)
         userApplicantContracts = blogModels.Contract.objects.filter(applicant=user)
         userSupplierContracts = blogModels.Contract.objects.filter(supplier=user)
-        print(userApplicantContracts)
-        print(userApplicantContracts)
-        print(userApplicantContracts[0].applicant.username)
+
+        userApplicantContractStructure = []
+        for contract in range(len(userApplicantContracts)):
+            structure = {
+                'applicant': user.username,
+                'tool': userApplicantContracts[contract].contractedBlog,
+                'supplier': userApplicantContracts[contract].supplier
+            }
+            userApplicantContractStructure.append(structure)
+
+        userSupplierContractStructure = []
+        for contract in range(len(userSupplierContracts)):
+            structure = {
+                'applicant': userSupplierContracts[contract].applicant,
+                'tool': userSupplierContracts[contract].contractedBlog,
+                'supplier': user.username,
+            }
+            userSupplierContractStructure.append(structure)
+
 
         pathInfoUser = "/user/"+str(userID)+"/profile/"
         pathInfoMember = ""
@@ -564,9 +580,10 @@ class Profile(LoginRequiredMixin, View):
 
         context = {
             'user': user,
+            'member'
             'tools': reversePersonalToolList4,
-            'userApplicantContracts': userApplicantContracts,
-            'userApplicantContracts': userApplicantContracts,
+            'userApplicantContract': userApplicantContractStructure,
+            'userSupplierContract': userSupplierContractStructure,
             'pathInfoUser': pathInfoUser,
             'pathInfoMember': pathInfoMember,
         }

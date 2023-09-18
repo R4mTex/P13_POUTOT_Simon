@@ -44,11 +44,17 @@
                             <h5>Conditions d'utilisation</h5>
                             <form action="" method="post">
                                 {% csrf_token %}
-                                <p class="text-end">Je soussigné : {% render_field form.applicantName name="applicantName" placeholder=user.fullname %}
-                                    avoir {% render_field form.applicantApproval name="applicantApproval" placeholder="Lu et approuvé" %} ce document
-                                    le {% render_field form.requestDate name="requestDate" type="date" %}
-                                    à {% render_field form.applicantPostalAddress name="applicantPostalAddress" placeholder=user.postalAddress %}.
-                                </p>
+                                <div class="d-flex flex-column align-items-end">
+                                    {% if form.errors %}
+                                    {{ form.errors }}
+                                    {% endif %}
+                                    <p>Bonjour, j'aimerais emprunter l'outil "<a href="{% url 'tool-details' user.id tool.id %}" target="_blank" style="color: black;">{{ tool.name }}</a>" du {% render_field form.startOfUse name="startOfUse" type="date" %} au {% render_field form.endOfUse name="endOfUse" type="date" %}.</p>
+                                    <p>Je soussigné : {% render_field form.applicantName name="applicantName" placeholder=user.fullname %}
+                                        avoir {% render_field form.applicantApproval name="applicantApproval" placeholder="Lu et approuvé" %} ce document
+                                        le {% render_field form.requestDate name="requestDate" type="date" %}
+                                        à {% render_field form.applicantPostalAddress name="applicantPostalAddress" placeholder=user.postalAddress %}.
+                                    </p>
+                                </div>
                                 <div class="d-flex justify-content-end">
                                     <div class="d-flex flex-column">
                                         <label class="form-label fw-bold mt-3" for="id_signature">Signature :</label>

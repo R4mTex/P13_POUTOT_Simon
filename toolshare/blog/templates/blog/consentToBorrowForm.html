@@ -47,13 +47,18 @@
                         <div class="e-profile">
                             <h1>Contract</h1>
                             <h5>Conditions d'utilisation</h5>
-                            <p class="text-start text-muted">Je soussigné : <span class="fw-bold">{{ applicantInfo.applicantName }}</span>
+                            <p class="text-muted">Bonjour, l'utilisateur "<span class="fw-bold"><a href="{% url 'member-profile' user.id applicantInfo.applicant.id  %}" target="_blank" style="color: #6c757d;">{{ applicantInfo.applicant }}</a></span>" souhaite emprunter votre outil "<span class="fw-bold"><a href="{% url 'tool-details' user.id tool.id %}" target="_blank"
+                                    style="color: #6c757d;">{{ tool.name }}</a></span>" du <span class="fw-bold">{{ applicantInfo.startOfUse }}</span> au <span class="fw-bold">{{ applicantInfo.endOfUse }}</span>.</p>
+                            <p class="text-muted">Son consentement :<br>Je soussigné : <span class="fw-bold">{{ applicantInfo.applicantName }}</span>
                                 avoir <span class="fw-bold">{{ applicantInfo.applicantApproval }}</span> les conditions d'utilisation
                                 le <span class="fw-bold">{{ applicantInfo.requestDate }}</span>.
                             </p>
                             <img src="{{ applicantInfo.applicantSignature|signature_base64 }}" alt="applicantSignature" style="border: 1px solid black; opacity: 0.5;"/>
                             <form action="" method="post">
                                 {% csrf_token %}
+                                {% if form.errors %}
+                                {{ form.errors }}
+                                {% endif %}
                                 <p class="text-end">Je soussigné : {% render_field form.supplierName name="supplierName" placeholder=user.fullname %}
                                     avoir {% render_field form.supplierApproval name="supplierApproval" placeholder="Lu et approuvé" %} ce document
                                     le {% render_field form.approvalDate name="approvalDate" type="date" %}
@@ -68,7 +73,7 @@
                                 </div>
                                 <p class="text-center"><button class="btn btn-outline-primary" type="submit"
                                         name="sendContract">Send</button></p>
-                                <a href="{% url 'pdf' %}">Test</a>
+                                <a href="{% url 'pdf' %}" target="_blank">Test</a>
                             </form>
                         </div>
                     </div>

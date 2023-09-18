@@ -380,9 +380,11 @@ class borrowRequestForm(LoginRequiredMixin, View):
     def get(self, request, userID, toolID):
         form = self.form_class()
         formSignature = self.form_signature()
+        tool = blogModels.Blog.objects.get(id=toolID)
 
         context = {
             'form': form,
+            'tool': tool,
             'formSignature': formSignature,
         }
         return render(request, self.template_name, context=context)
@@ -390,32 +392,65 @@ class borrowRequestForm(LoginRequiredMixin, View):
     def post(self, request, userID, toolID):
         user = authModels.User.objects.get(id=userID)
         member = blogModels.Blog.objects.get(id=toolID).author
+        tool = blogModels.Blog.objects.get(id=toolID)
         form = self.form_class(request.POST)
         formSignature = self.form_signature(request.POST or None)
 
         if form.is_valid() and formSignature.is_valid():
-            if form.cleaned_data.get('applicantName') != user.fullname:
+            applicantLocation = Parser.scriptForParse(form.cleaned_data.get('applicantPostalAddress'))
+            statusApplicantLocation = Geocoder(applicantLocation).geocoderApiRequest()
+            if form.cleaned_data.get('startOfUse') > tool.availabalityEnd:
+                print("Here")
+                context = {
+                    'form': form,
+                    'user': user,
+                    'tool': tool,
+                    'formSignature': formSignature,
+                }
+                return render(request, self.template_name, context=context)
+            elif form.cleaned_data.get('endOfUse') > tool.availabalityEnd:
                 print("Here 1")
                 context = {
                     'form': form,
+                    'user': user,
+                    'tool': tool,
+                    'formSignature': formSignature,
+                }
+                return render(request, self.template_name, context=context)
+            elif form.cleaned_data.get('applicantName') != user.fullname:
+                print("Here 1.1")
+                context = {
+                    'form': form,
+                    'user': user,
+                    'tool': tool,
+                    'formSignature': formSignature,
                 }
                 return render(request, self.template_name, context=context)
             elif Parser.scriptForParse(form.cleaned_data.get('applicantApproval')) != ['lu', 'approuve']:
                 print("Here 2")
                 context = {
                     'form': form,
+                    'user': user,
+                    'tool': tool,
+                    'formSignature': formSignature,
                 }
                 return render(request, self.template_name, context=context)
             elif form.cleaned_data.get('requestDate') != date.today():
                 print("Here 3")
                 context = {
                     'form': form,
+                    'user': user,
+                    'tool': tool,
+                    'formSignature': formSignature,
                 }
                 return render(request, self.template_name, context=context)
-            elif form.cleaned_data.get('applicantPostalAddress') != user.postalAddress:
+            elif statusApplicantLocation['status'] != "OK":
                 print("Here 4")
                 context = {
                     'form': form,
+                    'user': user,
+                    'tool': tool,
+                    'formSignature': formSignature,
                 }
                 return render(request, self.template_name, context=context)
             else:
@@ -435,6 +470,8 @@ class borrowRequestForm(LoginRequiredMixin, View):
                 newContract.applicantPostalAddress = form.cleaned_data.get('applicantPostalAddress')
                 newContract.applicantSignature = blogModels.SignatureModel.objects.get(signature=formSignature.cleaned_data.get('signature'))
                 newContract.requestDate = form.cleaned_data.get('requestDate')
+                newContract.startOfUse = form.cleaned_data.get('startOfUse')
+                newContract.endOfUse = form.cleaned_data.get('endOfUse')
                 newContract.save()
                 
                 contracts = blogModels.Contract.objects.all()
@@ -461,6 +498,9 @@ class borrowRequestForm(LoginRequiredMixin, View):
             print("Here 6")
             context = {
                 'form': form,
+                'user': user,
+                'tool': tool,
+                'formSignature': formSignature,
             }
             return render(request, self.template_name, context=context)
         
@@ -480,16 +520,21 @@ class consentToBorrowForm(LoginRequiredMixin, View):
     def get(self, request, userID, contractID):
         form = self.form_class()
         formSignature = self.form_signature()
+        tool = blogModels.Contract.objects.get(id=contractID).contractedBlog
 
         contract = blogModels.Contract.objects.get(id=contractID)
         applicantInfo = {
+            'applicant': contract.applicant,
             'applicantName': contract.applicantName,
             'applicantApproval': contract.applicantApproval,
             'applicantSignature': contract.applicantSignature.signature,
             'requestDate': contract.requestDate,
+            'startOfUse': contract.startOfUse,
+            'endOfUse': contract.endOfUse,
         }
         context = {
             'form': form,
+            'tool': tool,
             'formSignature': formSignature,
             'applicantInfo': applicantInfo,
         }
@@ -498,20 +543,27 @@ class consentToBorrowForm(LoginRequiredMixin, View):
     def post(self, request, userID, contractID):
         user = authModels.User.objects.get(id=userID)
         contract = blogModels.Contract.objects.get(id=contractID)
+        tool = blogModels.Contract.objects.get(id=contractID).contractedBlog
         form = self.form_class(request.POST)
         formSignature = self.form_signature(request.POST or None)
 
         if form.is_valid() and formSignature.is_valid():
+            supplierLocation = Parser.scriptForParse(form.cleaned_data.get('supplierPostalAddress'))
+            statusSupplierLocation = Geocoder(supplierLocation).geocoderApiRequest()
             if form.cleaned_data.get('supplierName') != user.fullname:
                 print("Here 1")
                 applicantInfo = {
+                    'applicant': contract.applicant,
                     'applicantName': contract.applicantName,
                     'applicantApproval': contract.applicantApproval,
                     'applicantSignature': contract.applicantSignature.signature,
                     'requestDate': contract.requestDate,
+                    'startOfUse': contract.startOfUse,
+                    'endOfUse': contract.endOfUse,
                 }
                 context = {
                     'form': form,
+                    'tool': tool,
                     'formSignature': formSignature,
                     'applicantInfo': applicantInfo,
                 }
@@ -519,13 +571,17 @@ class consentToBorrowForm(LoginRequiredMixin, View):
             elif Parser.scriptForParse(form.cleaned_data.get('supplierApproval')) != ['lu', 'approuve']:
                 print("Here 2")
                 applicantInfo = {
+                    'applicant': contract.applicant,
                     'applicantName': contract.applicantName,
                     'applicantApproval': contract.applicantApproval,
                     'applicantSignature': contract.applicantSignature.signature,
                     'requestDate': contract.requestDate,
+                    'startOfUse': contract.startOfUse,
+                    'endOfUse': contract.endOfUse,
                 }
                 context = {
                     'form': form,
+                    'tool': tool,
                     'formSignature': formSignature,
                     'applicantInfo': applicantInfo,
                 }
@@ -533,27 +589,35 @@ class consentToBorrowForm(LoginRequiredMixin, View):
             elif form.cleaned_data.get('approvalDate') != date.today():
                 print("Here 3")
                 applicantInfo = {
+                    'applicant': contract.applicant,
                     'applicantName': contract.applicantName,
                     'applicantApproval': contract.applicantApproval,
                     'applicantSignature': contract.applicantSignature.signature,
                     'requestDate': contract.requestDate,
+                    'startOfUse': contract.startOfUse,
+                    'endOfUse': contract.endOfUse,
                 }
                 context = {
                     'form': form,
+                    'tool': tool,
                     'formSignature': formSignature,
                     'applicantInfo': applicantInfo,
                 }
                 return render(request, self.template_name, context=context)
-            elif form.cleaned_data.get('supplierPostalAddress') != user.postalAddress:
+            elif statusSupplierLocation != "OK":
                 print("Here 4")
                 applicantInfo = {
+                    'applicant': contract.applicant,
                     'applicantName': contract.applicantName,
                     'applicantApproval': contract.applicantApproval,
                     'applicantSignature': contract.applicantSignature.signature,
                     'requestDate': contract.requestDate,
+                    'startOfUse': contract.startOfUse,
+                    'endOfUse': contract.endOfUse,
                 }
                 context = {
                     'form': form,
+                    'tool': tool,
                     'formSignature': formSignature,
                     'applicantInfo': applicantInfo,
                 }
@@ -586,26 +650,34 @@ class consentToBorrowForm(LoginRequiredMixin, View):
                 #os.startfile('Borrow-Contract.pdf', 'open')
 
                 applicantInfo = {
+                    'applicant': contract.applicant,
                     'applicantName': contract.applicantName,
                     'applicantApproval': contract.applicantApproval,
                     'applicantSignature': contract.applicantSignature.signature,
                     'requestDate': contract.requestDate,
+                    'startOfUse': contract.startOfUse,
+                    'endOfUse': contract.endOfUse,
                 }
                 context = {
                     'form': form,
+                    'tool': tool,
                     'formSignature': formSignature,
                     'applicantInfo': applicantInfo,
                 }
                 return render(request, self.template_name, context=context)
         print("Here 6")
         applicantInfo = {
+            'applicant': contract.applicant,
             'applicantName': contract.applicantName,
             'applicantApproval': contract.applicantApproval,
             'applicantSignature': contract.applicantSignature.signature,
             'requestDate': contract.requestDate,
+            'startOfUse': contract.startOfUse,
+            'endOfUse': contract.endOfUse,
         }
         context = {
             'form': form,
+            'tool': tool,
             'formSignature': formSignature,
             'applicantInfo': applicantInfo,
         }

@@ -26,4 +26,4 @@ class SupplierContractForm(forms.ModelForm):
     class Meta:
         model = models.Contract
         fields = "__all__"
-        exclude = ('applicant', 'supplier', 'applicantName', 'contractedBlog', 'applicantApproval', 'applicantPostalAddress', 'applicantSignature', 'supplierSignature', 'requestDate')
+        exclude = ('applicant', 'supplier', 'applicantName', 'contractedBlog', 'applicantApproval', 'applicantPostalAddress', 'applicantSignature', 'supplierSignature', 'requestDate', 'startOfUse', 'endOfUse')

@@ -24,10 +24,10 @@ class Home(LoginRequiredMixin, View):
         return render(request, self.template_name)
     
 class pdf(LoginRequiredMixin, View):
-    template_name = 'authentication/pdf.html'
+    template_name = 'blog/consentToBorrowConfirmation.html'
 
     def get(self, request):
-        pdf = html2pdf("authentication/pdf.html")
+        pdf = html2pdf("blog/consentToBorrowConfirmation.html")
         return HttpResponse(pdf, content_type="application/pdf")
 
 class About(LoginRequiredMixin, View):
@@ -82,8 +82,6 @@ class Research(LoginRequiredMixin, View):
 
     def get(self, request, userID):
         tools = blogModels.Blog.objects.all()
-        for tool in range(len(tools)):
-            print(tools[tool].onContract)
         favorites = blogModels.Favorite.objects.all()
 
         for favorite in range(len(favorites)):
@@ -409,6 +407,26 @@ class memberProfile(LoginRequiredMixin, View):
         user = authModels.User.objects.get(id=userID)
         member = authModels.User.objects.get(id=memberID)
         personalTools = blogModels.Blog.objects.filter(author=member.id)
+        userApplicantContracts = blogModels.Contract.objects.filter(applicant=member)
+        userSupplierContracts = blogModels.Contract.objects.filter(supplier=member)
+
+        userApplicantContractStructure = []
+        for contract in range(len(userApplicantContracts)):
+            structure = {
+                'applicant': member.username,
+                'tool': userApplicantContracts[contract].contractedBlog,
+                'supplier': userApplicantContracts[contract].supplier
+            }
+            userApplicantContractStructure.append(structure)
+
+        userSupplierContractStructure = []
+        for contract in range(len(userSupplierContracts)):
+            structure = {
+                'applicant': userSupplierContracts[contract].applicant,
+                'tool': userSupplierContracts[contract].contractedBlog,
+                'supplier': member.username,
+            }
+            userSupplierContractStructure.append(structure)
 
         reversePersonalToolList = []
         for tool in reversed(range(len(personalTools))):
@@ -423,6 +441,8 @@ class memberProfile(LoginRequiredMixin, View):
             'user': user,
             'member': member,
             'tools': reversePersonalToolList4,
+            'userApplicantContract': userApplicantContractStructure,
+            'userSupplierContract': userSupplierContractStructure,
             'pathInfoUser': pathInfoUser,
             'pathInfoMember': pathInfoMember,
         }
@@ -580,7 +600,6 @@ class Profile(LoginRequiredMixin, View):
 
         context = {
             'user': user,
-            'member'
             'tools': reversePersonalToolList4,
             'userApplicantContract': userApplicantContractStructure,
             'userSupplierContract': userSupplierContractStructure,

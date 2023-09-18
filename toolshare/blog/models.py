@@ -1,7 +1,7 @@
 from django.conf import settings
 from django.db import models
 from datetime import date, timedelta
-from django.core.validators import MinValueValidator
+from django.core.validators import MinValueValidator, MaxValueValidator
 from jsignature.fields import JSignatureField
 
 
@@ -67,3 +67,5 @@ class Contract(models.Model):
     supplierSignature =  models.ForeignKey(SignatureModel, related_name='supplier_signature', on_delete=models.CASCADE, null=True)
     requestDate = models.DateField(default=date.today,)
     approvalDate = models.DateField(default=date.today, null=True)
+    startOfUse = models.DateField(default=date.today, validators=[MinValueValidator(limit_value=date.today)])
+    endOfUse = models.DateField(validators=[MinValueValidator(limit_value=date.today)])

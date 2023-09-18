@@ -1,5 +1,5 @@
 from django.conf import settings
-from django.shortcuts import render, redirect, HttpResponse
+from django.shortcuts import render, redirect
 from django.contrib.auth import login
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.views.generic import View
@@ -13,7 +13,6 @@ from blog.scripts.parser import Parser
 from blog.scripts.geocoderApi import Geocoder
 from django.core.mail import EmailMessage
 from datetime import date
-from .pdf import html2pdf
 
 
 # Create your views here.
@@ -22,13 +21,6 @@ class Home(LoginRequiredMixin, View):
 
     def get(self, request):
         return render(request, self.template_name)
-    
-class pdf(LoginRequiredMixin, View):
-    template_name = 'blog/consentToBorrowConfirmation.html'
-
-    def get(self, request):
-        pdf = html2pdf("blog/consentToBorrowConfirmation.html")
-        return HttpResponse(pdf, content_type="application/pdf")
 
 class About(LoginRequiredMixin, View):
     template_name = 'authentication/about.html'

@@ -27,7 +27,7 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     ### Home / About / Contact / Publisher ###
     path('', authView.Home.as_view(template_name='authentication/home.html'), name='home'),
-    path('pdf', authView.pdf.as_view(template_name='authentication/pdf.html'), name='pdf'),
+    path('contract/<int:contractID>/pdf/', blogView.pdf.as_view(template_name='blog/borrowContract.html'), name='pdf'),
     path('user/<int:userID>/about/', authView.About.as_view(template_name='authentication/about.html'), name='about'),
     path('user/<int:userID>/contact/', authView.Contact.as_view(template_name='authentication/contact.html'), name='contact'),
     path('user/<int:userID>/contact/success/', authView.Contact.as_view(template_name='authentication/contactSuccess.html'), name='contact-success'),

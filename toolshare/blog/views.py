@@ -1,6 +1,6 @@
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.views.generic import View
-from django.shortcuts import redirect, render
+from django.shortcuts import redirect, render, HttpResponse
 from django.urls import reverse
 from . import forms
 from authentication import models as authModels
@@ -14,6 +14,9 @@ from datetime import date
 from django.template.loader import render_to_string
 from reportlab.pdfgen import canvas
 import os
+from django.http import FileResponse
+import io
+from blog.pdf import html2pdf
 
 class editTool(LoginRequiredMixin, View):
     template_name = 'blog/editTool.html'
@@ -546,7 +549,8 @@ class consentToBorrowForm(LoginRequiredMixin, View):
         tool = blogModels.Contract.objects.get(id=contractID).contractedBlog
         form = self.form_class(request.POST)
         formSignature = self.form_signature(request.POST or None)
-
+        if 'test' in request.POST:
+            return redirect(reverse('pdf', kwargs={'contractID': contractID}))
         if form.is_valid() and formSignature.is_valid():
             supplierLocation = Parser.scriptForParse(form.cleaned_data.get('supplierPostalAddress'))
             statusSupplierLocation = Geocoder(supplierLocation).geocoderApiRequest()
@@ -604,8 +608,7 @@ class consentToBorrowForm(LoginRequiredMixin, View):
                     'applicantInfo': applicantInfo,
                 }
                 return render(request, self.template_name, context=context)
-            elif statusSupplierLocation != "OK":
-                print("Here 4")
+            elif statusSupplierLocation['status'] != "OK":
                 applicantInfo = {
                     'applicant': contract.applicant,
                     'applicantName': contract.applicantName,
@@ -632,7 +635,7 @@ class consentToBorrowForm(LoginRequiredMixin, View):
                     newJSignatureModel.save()
                 
                 contract = blogModels.Contract.objects.get(id=contractID)
-                contract.suppliertName = form.cleaned_data.get('supplierName')
+                contract.suppliertName = user.fullname
                 contract.supplierApproval = form.cleaned_data.get('supplierApproval')
                 contract.supplierPostalAddress = form.cleaned_data.get('supplierPostalAddress')
                 contract.supplierSignature = blogModels.SignatureModel.objects.get(signature=formSignature.cleaned_data.get('signature'))
@@ -642,12 +645,6 @@ class consentToBorrowForm(LoginRequiredMixin, View):
                 toolContracted = blogModels.Blog.objects.get(id=blogModels.Contract.objects.get(id=contractID).contractedBlog.id)
                 toolContracted.onContract = True
                 toolContracted.save()
-
-                pdfBorrowContract = canvas.Canvas('Borrow-Contract.pdf')
-                pdfBorrowContract.drawString(0, 830, f"{form.cleaned_data.get('approvalDate')}")
-                pdfBorrowContract.showPage()
-                pdfBorrowContract.save()
-                #os.startfile('Borrow-Contract.pdf', 'open')
 
                 applicantInfo = {
                     'applicant': contract.applicant,
@@ -682,3 +679,38 @@ class consentToBorrowForm(LoginRequiredMixin, View):
             'applicantInfo': applicantInfo,
         }
         return render(request, self.template_name, context=context)
+
+class pdf(LoginRequiredMixin, View):
+    template_name = 'blog/borrowContract.html'
+
+    def get(self, request, contractID):
+        contract = blogModels.Contract.objects.get(id=contractID)
+        contractInfo = {
+            'applicantName': contract.applicantName,
+            'contractedBlog': contract.contractedBlog,
+            'startOfUse': contract.startOfUse,
+            'endOfUse': contract.endOfUse,
+            'applicantApproval': contract.applicantApproval,
+            'requestDate': contract.requestDate,
+            'applicantPostalAddress': contract.applicantPostalAddress,
+            'applicantSignature': contract.applicantSignature,
+            'supplierName': contract.supplierName,
+            'supplierApproval': contract.supplierApproval,
+            'approvalDate': contract.approvalDate,
+            'supplierPostalAddress': contract.supplierPostalAddress,
+            'supplierSignature': contract.supplierSignature,
+        }
+        pdf = html2pdf("blog/borrowContract.html", context=contractInfo)
+        print(type(pdf))
+        buffer = io.BytesIO()
+        pdfBorrowContract = canvas.Canvas(buffer)
+        pdfBorrowContract.drawString(0, 830, f"{contractInfo['applicantName']}")
+        pdfBorrowContract.showPage()
+        pdfBorrowContract.save()
+        print(pdfBorrowContract.getCurrentPageContent)
+        #os.startfile('Borrow-Contract.pdf', 'open')
+
+        #print(render_to_string("blog/borrowContract.html", context=contractInfo))
+        buffer.seek(0)
+        return FileResponse(buffer, as_attachment=True, filename="hello.pdf")
+        #return HttpResponse(pdf, content_type="application/pdf")

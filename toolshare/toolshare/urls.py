@@ -27,7 +27,6 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     ### Home / About / Contact / Publisher ###
     path('', authView.Home.as_view(template_name='authentication/home.html'), name='home'),
-    path('contract/<int:contractID>/pdf/', blogView.pdf.as_view(template_name='blog/borrowContract.html'), name='pdf'),
     path('user/<int:userID>/about/', authView.About.as_view(template_name='authentication/about.html'), name='about'),
     path('user/<int:userID>/contact/', authView.Contact.as_view(template_name='authentication/contact.html'), name='contact'),
     path('user/<int:userID>/contact/success/', authView.Contact.as_view(template_name='authentication/contactSuccess.html'), name='contact-success'),
@@ -49,10 +48,10 @@ urlpatterns = [
     path('user/<int:userID>/member/<int:memberID>/member-tools/', blogView.memberTools.as_view(template_name='blog/personalTools.html'), name='member-tools'),
     path('registration/', authView.Registration.as_view(template_name='authentication/registration.html'), name='registration'),
     path('user/<int:userID>/tool/<int:toolID>/details/', blogView.toolDetails.as_view(template_name='blog/toolDetails.html'), name='tool-details'),
-    path('user/<int:userID>/tool/<int:toolID>/details/borrow-request-contract/', blogView.borrowRequestForm.as_view(template_name='blog/borrowRequestConfirmation.html'), name='borrow-request-confirmation'),
-    path('user/<int:userID>/tool/<int:toolID>/details/borrow-request-confirmation/', blogView.borrowRequestForm.as_view(template_name='blog/borrowRequestForm.html'), name='borrow-request-form'),
+    path('user/<int:userID>/tool/<int:toolID>/details/borrow-request-contract/', blogView.borrowRequestForm.as_view(template_name='blog/borrowRequestForm.html'), name='borrow-request-form'),
+    path('user/<int:userID>/tool/<int:toolID>/details/borrow-request-confirmation/', blogView.borrowRequestConfirmation.as_view(template_name='blog/borrowRequestConfirmation.html'), name='borrow-request-confirmation'),
     path('user/<int:userID>/contract/<int:contractID>/consent-to-borrow-contract/', blogView.consentToBorrowForm.as_view(template_name='blog/consentToBorrowForm.html'), name='consent-to-borrow-form'),
-
+    path('user/<int:userID>/contract/<int:contractID>/consent-to-borrow-confirmation/', blogView.consentToBorrowConfirmation.as_view(template_name='blog/consentToBorrowConfirmation.html'), name='consent-to-borrow-confirmation'),
 
     # Login / Logout / Change Password Urls
     path('login/', auth_views.LoginView.as_view(template_name='registration/login.html',

@@ -1,6 +1,6 @@
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.views.generic import View
-from django.shortcuts import redirect, render, HttpResponse
+from django.shortcuts import redirect, render
 from django.urls import reverse
 from . import forms
 from authentication import models as authModels
@@ -9,14 +9,11 @@ from blog.scripts.parser import Parser
 from blog.scripts.geocoderApi import Geocoder
 from django.contrib import messages
 from django.conf import settings
-from django.core.mail import EmailMultiAlternatives
+from django.core.mail import EmailMessage, EmailMultiAlternatives
 from datetime import date
 from django.template.loader import render_to_string
 from reportlab.pdfgen import canvas
-import os
-from django.http import FileResponse
-import io
-from blog.pdf import html2pdf
+import base64
 
 class editTool(LoginRequiredMixin, View):
     template_name = 'blog/editTool.html'
@@ -511,7 +508,7 @@ class borrowRequestForm(LoginRequiredMixin, View):
 class borrowRequestConfirmation(LoginRequiredMixin, View):
     template_name = 'blog/borrowRequestConfirmation.html'
 
-    def get(self, request):
+    def get(self, request, userID, toolID):
         return render(request, self.template_name)
 
 
@@ -646,22 +643,42 @@ class consentToBorrowForm(LoginRequiredMixin, View):
                 toolContracted.onContract = True
                 toolContracted.save()
 
-                applicantInfo = {
-                    'applicant': contract.applicant,
+                contract = blogModels.Contract.objects.get(id=contractID)
+                contractInfo = {
                     'applicantName': contract.applicantName,
-                    'applicantApproval': contract.applicantApproval,
-                    'applicantSignature': contract.applicantSignature.signature,
-                    'requestDate': contract.requestDate,
+                    'contractedBlog': contract.contractedBlog,
                     'startOfUse': contract.startOfUse,
                     'endOfUse': contract.endOfUse,
+                    'applicantApproval': contract.applicantApproval,
+                    'requestDate': contract.requestDate,
+                    'applicantPostalAddress': contract.applicantPostalAddress,
+                    'applicantSignature': contract.applicantSignature,
+                    'supplierName': contract.supplierName,
+                    'supplierApproval': contract.supplierApproval,
+                    'approvalDate': contract.approvalDate,
+                    'supplierPostalAddress': contract.supplierPostalAddress,
+                    'supplierSignature': contract.supplierSignature,
                 }
-                context = {
-                    'form': form,
-                    'tool': tool,
-                    'formSignature': formSignature,
-                    'applicantInfo': applicantInfo,
-                }
-                return render(request, self.template_name, context=context)
+
+                new_key = base64.b64encode(bytes(str(contractInfo['applicantSignature'].signature), encoding='ascii'))
+                print(new_key)
+                
+                pdfBorrowContract = canvas.Canvas("Borrow-Contract.pdf")
+                pdfBorrowContract.drawString(0, 830, new_key)
+                pdfBorrowContract.showPage()
+                pdfBorrowContract.save()
+
+                subject = "Borrow Contract"
+                emailFrom = settings.EMAIL_HOST_USER
+                message = "Attached is the borrow contract signed by both parties."
+                recipientList = [contract.applicant.email, contract.supplier.email]
+
+                email = EmailMessage(subject, message, emailFrom, recipientList)
+                email.attach_file("Borrow-Contract.pdf")
+
+                email.send()
+
+                return redirect(reverse('consent-to-borrow-confirmation', kwargs={'userID': userID, 'contractID': contractID}))
         print("Here 6")
         applicantInfo = {
             'applicant': contract.applicant,
@@ -680,37 +697,9 @@ class consentToBorrowForm(LoginRequiredMixin, View):
         }
         return render(request, self.template_name, context=context)
 
-class pdf(LoginRequiredMixin, View):
-    template_name = 'blog/borrowContract.html'
 
-    def get(self, request, contractID):
-        contract = blogModels.Contract.objects.get(id=contractID)
-        contractInfo = {
-            'applicantName': contract.applicantName,
-            'contractedBlog': contract.contractedBlog,
-            'startOfUse': contract.startOfUse,
-            'endOfUse': contract.endOfUse,
-            'applicantApproval': contract.applicantApproval,
-            'requestDate': contract.requestDate,
-            'applicantPostalAddress': contract.applicantPostalAddress,
-            'applicantSignature': contract.applicantSignature,
-            'supplierName': contract.supplierName,
-            'supplierApproval': contract.supplierApproval,
-            'approvalDate': contract.approvalDate,
-            'supplierPostalAddress': contract.supplierPostalAddress,
-            'supplierSignature': contract.supplierSignature,
-        }
-        pdf = html2pdf("blog/borrowContract.html", context=contractInfo)
-        print(type(pdf))
-        buffer = io.BytesIO()
-        pdfBorrowContract = canvas.Canvas(buffer)
-        pdfBorrowContract.drawString(0, 830, f"{contractInfo['applicantName']}")
-        pdfBorrowContract.showPage()
-        pdfBorrowContract.save()
-        print(pdfBorrowContract.getCurrentPageContent)
-        #os.startfile('Borrow-Contract.pdf', 'open')
+class consentToBorrowConfirmation(LoginRequiredMixin, View):
+    template_name = 'blog/consentToBorrowConfirmation.html'
 
-        #print(render_to_string("blog/borrowContract.html", context=contractInfo))
-        buffer.seek(0)
-        return FileResponse(buffer, as_attachment=True, filename="hello.pdf")
-        #return HttpResponse(pdf, content_type="application/pdf")
+    def get(self, request, userID, contractID):
+        return render(request, self.template_name)

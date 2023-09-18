@@ -1,1 +1,37 @@
-<p>Test</p>
+{% extends 'authentication/base.html' %}
+
+{% load widget_tweaks %}
+{% load jsignature_filters %}
+
+{% block content %}
+
+<style>
+    .gradient-custom {
+        background: linear-gradient(112.1deg, rgb(32, 38, 57) 11.4%, rgb(63, 76, 119) 70.2%);
+    }
+
+    body {
+        height: 1000px;
+    }
+</style>
+
+
+<section class="h-100 gradient-custom">
+    <div class="container h-100 d-flex align-items-center justify-content-center">
+        <div class="row flex-lg-nowrap">
+            <div class="col mb-5">
+                <div class="card shadow bg-dark text-white" style="border-radius: 1rem;">
+                    <div class="card-body p-5">
+                        <div class="text-center">
+                            <h3 class="fw-bold text-uppercase">A summary of the contract with the two signed parts<br>has been sent to you by e-mail.</h3>
+                            <p class="fs-5 mt-4"><a class="text-white-50" href="{% url 'home' %}">Back to home page</a>
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+{% endblock %}

@@ -77,15 +77,23 @@
                                 <div class="d-flex justify-content-between">
                                     <p class="font-italic mb-1"><span class="fw-bold">Applicant : </span>{{ contract.applicant }}</p>
                                     <p class="font-italic mb-1"><span class="fw-bold">Tool Contracted : </span><a href="{% url 'tool-details' user.id contract.tool.id %}" style="text-decoration: none;">{{ contract.tool.name }}</a></p>
-                                    <p class="font-italic mb-1"><span class="fw-bold">Supplier : </span><a href="{% url 'member-profile' user.id contract.supplier.id %}" style="text-decoration: none;">{{ contract.supplier.username }}</a></p>
                                 </div>
+                                <div class="d-flex justify-content-between">
+                                    <p class="font-italic mb-1"><span class="fw-bold">Supplier : </span><a href="{% url 'member-profile' user.id contract.supplier.id %}" style="text-decoration: none;">{{ contract.supplier.username }}</a></p>
+                                    <p class="font-italic mb-1"><span class="fw-bold">PDF Contract : </span><a href="{% url 'borrowContract' user.id contract.contractID %}" style="text-decoration: none;">Contract</a></p>
+                                </div>
+                                <p class="text-center">-----------------------------------------------</p>
                                 {% endfor %}
                                 {% for contract in userSupplierContract %}
                                 <div class="d-flex justify-content-between">
                                     <p class="font-italic mb-1"><span class="fw-bold">Applicant : </span><a href="{% url 'member-profile' user.id contract.applicant.id %}" style="text-decoration: none;">{{ contract.applicant.username }}</a></p>
                                     <p class="font-italic mb-1"><span class="fw-bold">Tool Contracted : </span><a href="{% url 'tool-details' user.id contract.tool.id %}" style="text-decoration: none;">{{ contract.tool.name }}</a></p>
-                                    <p class="font-italic mb-1"><span class="fw-bold">Supplier : </span>{{ contract.supplier }}</p>
                                 </div>
+                                <div class="d-flex justify-content-between">
+                                    <p class="font-italic mb-1"><span class="fw-bold">Supplier : </span>{{ contract.supplier }}</p>
+                                    <p class="font-italic mb-1"><span class="fw-bold">PDF Contract : </span><a href="{% url 'borrowContract' user.id contract.contractID %}" style="text-decoration: none;">Contract</a></p>
+                                </div>
+                                <p class="text-center">-----------------------------------------------</p>
                                 {% endfor %}
                             </div>
                         </div>
@@ -274,6 +282,7 @@
                                     <p class="font-italic mb-1"><span class="fw-bold">Supplier : </span><a
                                             href="{% url 'member-profile' user.id contract.supplier.id %}" style="text-decoration: none;">{{ contract.supplier.username }}</a></p>
                                 </div>
+                                <p class="text-center">-----------------------------------------------</p>
                                 {% endfor %}
                                 {% for contract in userSupplierContract %}
                                 <div class="d-flex justify-content-between">
@@ -283,6 +292,7 @@
                                             href="{% url 'tool-details' user.id contract.tool.id %}" style="text-decoration: none;">{{ contract.tool.name }}</a></p>
                                     <p class="font-italic mb-1"><span class="fw-bold">Supplier : </span>{{ contract.supplier }}</p>
                                 </div>
+                                <p class="text-center">-----------------------------------------------</p>
                                 {% endfor %}
                             </div>
                         </div>

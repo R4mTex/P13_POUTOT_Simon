@@ -13,6 +13,8 @@ from blog.scripts.parser import Parser
 from blog.scripts.geocoderApi import Geocoder
 from django.core.mail import EmailMessage
 from datetime import date
+from django.http import JsonResponse
+
 
 
 # Create your views here.
@@ -75,6 +77,7 @@ class Research(LoginRequiredMixin, View):
     def get(self, request, userID):
         tools = blogModels.Blog.objects.all()
         favorites = blogModels.Favorite.objects.all()
+        contracts = blogModels.Contract.objects.all()
 
         for favorite in range(len(favorites)):
             for tool in range(len(tools)):
@@ -87,14 +90,32 @@ class Research(LoginRequiredMixin, View):
             else:
                 tools[tool].availabality = False
 
+        for contract in range(len(contracts)):
+            for tool in range(len(tools)):
+                if contracts[contract].contractedBlog.id == tools[tool].id:
+                    if date.today() > contracts[contract].endOfUse:
+                        tools[tool].onContract = False
+                        tools[tool].save()
+
         reverseToolsList = []
         for tool in reversed(range(len(tools))):
             reverseToolsList.append(tools[tool])
+
+        if len(reverseToolsList) <= 4:
+            tools = reverseToolsList[0:]
         
-        context = {
-            'tools': reverseToolsList,
-        }
-        return render(request, self.template_name, context=context)
+            context = {
+                'tools': tools,
+            }
+            return render(request, self.template_name, context=context)
+        elif len(reverseToolsList) > 4:
+            tools = reverseToolsList[0:3]
+            toolsCount = len(reverseToolsList)
+        
+            context = {
+                'tools': tools,
+            }
+            return render(request, self.template_name, context=context)
     
     def post(self, request, userID):
         if "allItems" in request.POST:
@@ -473,6 +494,7 @@ class Favorites(LoginRequiredMixin, View):
 
     def get(self, request, userID):
         userFavorites = blogModels.Favorite.objects.filter(user=userID)
+        contracts = blogModels.Contract.objects.all()
 
         favorites = []
         for favorite in range(len(userFavorites)):
@@ -483,6 +505,13 @@ class Favorites(LoginRequiredMixin, View):
                 favorites[tool].availabality = True
             else:
                 favorites[tool].availabality = False
+
+        for contract in range(len(contracts)):
+            for tool in range(len(favorites)):
+                if contracts[contract].contractedBlog.id == favorites[tool].id:
+                    if date.today() > contracts[contract].endOfUse:
+                        favorites[tool].onContract = False
+                        favorites[tool].save()
 
         reverseFavoritesList = []
         for tool in reversed(range(len(favorites))):
@@ -567,7 +596,8 @@ class Profile(LoginRequiredMixin, View):
             structure = {
                 'applicant': user.username,
                 'tool': userApplicantContracts[contract].contractedBlog,
-                'supplier': userApplicantContracts[contract].supplier
+                'supplier': userApplicantContracts[contract].supplier,
+                'contractID': userApplicantContracts[contract].id
             }
             userApplicantContractStructure.append(structure)
 
@@ -577,9 +607,9 @@ class Profile(LoginRequiredMixin, View):
                 'applicant': userSupplierContracts[contract].applicant,
                 'tool': userSupplierContracts[contract].contractedBlog,
                 'supplier': user.username,
+                'contractID': userSupplierContracts[contract].id
             }
             userSupplierContractStructure.append(structure)
-
 
         pathInfoUser = "/user/"+str(userID)+"/profile/"
         pathInfoMember = ""

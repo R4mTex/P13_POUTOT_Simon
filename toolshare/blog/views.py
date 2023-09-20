@@ -1,6 +1,6 @@
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.views.generic import View
-from django.shortcuts import redirect, render
+from django.shortcuts import redirect, render, HttpResponse
 from django.urls import reverse
 from . import forms
 from authentication import models as authModels
@@ -10,10 +10,12 @@ from blog.scripts.geocoderApi import Geocoder
 from django.contrib import messages
 from django.conf import settings
 from django.core.mail import EmailMessage, EmailMultiAlternatives
+from django.utils.html import strip_tags
 from datetime import date
 from django.template.loader import render_to_string
-from reportlab.pdfgen import canvas
-import base64
+from blog.pdf import html2pdf
+from email.mime.image import MIMEImage
+
 
 class editTool(LoginRequiredMixin, View):
     template_name = 'blog/editTool.html'
@@ -51,6 +53,7 @@ class personalTools(LoginRequiredMixin, View):
     def get(self, request, userID):
         user = authModels.User.objects.get(id=userID)
         personalTools = blogModels.Blog.objects.filter(author=user.id)
+        contracts = blogModels.Contract.objects.all()
 
         pathPersonalToolsUser = "/user/"+str(userID)+"/personal-tools/"
         pathPersonalToolsMember = ""
@@ -60,6 +63,13 @@ class personalTools(LoginRequiredMixin, View):
                 personalTools[tool].availabality = True
             else:
                 personalTools[tool].availabality = False
+
+        for contract in range(len(contracts)):
+            for tool in range(len(personalTools)):
+                if contracts[contract].contractedBlog.id == personalTools[tool].id:
+                    if date.today() > contracts[contract].endOfUse:
+                        personalTools[tool].onContract = False
+                        personalTools[tool].save()
 
         reversePersonalToolList = []
         for tool in reversed(range(len(personalTools))):
@@ -546,8 +556,7 @@ class consentToBorrowForm(LoginRequiredMixin, View):
         tool = blogModels.Contract.objects.get(id=contractID).contractedBlog
         form = self.form_class(request.POST)
         formSignature = self.form_signature(request.POST or None)
-        if 'test' in request.POST:
-            return redirect(reverse('pdf', kwargs={'contractID': contractID}))
+
         if form.is_valid() and formSignature.is_valid():
             supplierLocation = Parser.scriptForParse(form.cleaned_data.get('supplierPostalAddress'))
             statusSupplierLocation = Geocoder(supplierLocation).geocoderApiRequest()
@@ -644,37 +653,15 @@ class consentToBorrowForm(LoginRequiredMixin, View):
                 toolContracted.save()
 
                 contract = blogModels.Contract.objects.get(id=contractID)
-                contractInfo = {
-                    'applicantName': contract.applicantName,
-                    'contractedBlog': contract.contractedBlog,
-                    'startOfUse': contract.startOfUse,
-                    'endOfUse': contract.endOfUse,
-                    'applicantApproval': contract.applicantApproval,
-                    'requestDate': contract.requestDate,
-                    'applicantPostalAddress': contract.applicantPostalAddress,
-                    'applicantSignature': contract.applicantSignature,
-                    'supplierName': contract.supplierName,
-                    'supplierApproval': contract.supplierApproval,
-                    'approvalDate': contract.approvalDate,
-                    'supplierPostalAddress': contract.supplierPostalAddress,
-                    'supplierSignature': contract.supplierSignature,
-                }
-
-                new_key = base64.b64encode(bytes(str(contractInfo['applicantSignature'].signature), encoding='ascii'))
-                print(new_key)
-                
-                pdfBorrowContract = canvas.Canvas("Borrow-Contract.pdf")
-                pdfBorrowContract.drawString(0, 830, new_key)
-                pdfBorrowContract.showPage()
-                pdfBorrowContract.save()
 
                 subject = "Borrow Contract"
                 emailFrom = settings.EMAIL_HOST_USER
-                message = "Attached is the borrow contract signed by both parties."
+                message = ""
+                htmlContent = render_to_string('blog/borrowContractLink.html', {'userID': userID, 'contractID': contractID})
                 recipientList = [contract.applicant.email, contract.supplier.email]
 
-                email = EmailMessage(subject, message, emailFrom, recipientList)
-                email.attach_file("Borrow-Contract.pdf")
+                email = EmailMultiAlternatives(subject, message, emailFrom, recipientList)
+                email.attach_alternative(htmlContent, "text/html")
 
                 email.send()
 
@@ -703,3 +690,30 @@ class consentToBorrowConfirmation(LoginRequiredMixin, View):
 
     def get(self, request, userID, contractID):
         return render(request, self.template_name)
+    
+class borrowContractPDF(LoginRequiredMixin, View):
+    template_name = 'blog/borrowContract.html'
+
+    def get(self, request, userID, contractID):
+        contract = blogModels.Contract.objects.get(id=contractID)
+        creationDate = date.today()
+        contractInfo = {
+            'creationDate': creationDate,
+            'contractID': contract.id,
+            'applicantName': contract.applicantName,
+            'contractedBlog': contract.contractedBlog,
+            'startOfUse': contract.startOfUse,
+            'endOfUse': contract.endOfUse,
+            'applicantApproval': contract.applicantApproval,
+            'requestDate': contract.requestDate,
+            'applicantPostalAddress': contract.applicantPostalAddress,
+            'applicantSignature': contract.applicantSignature,
+            'supplierName': contract.supplierName,
+            'supplierApproval': contract.supplierApproval,
+            'approvalDate': contract.approvalDate,
+            'supplierPostalAddress': contract.supplierPostalAddress,
+            'supplierSignature': contract.supplierSignature,
+        }
+        pdf = html2pdf(self.template_name, context_dict={'contractInfo': contractInfo})
+
+        return HttpResponse(pdf, content_type="application/pdf")

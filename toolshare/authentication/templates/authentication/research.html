@@ -267,11 +267,11 @@
                                 <form method="post" role="form" novalidate>
                                     {% csrf_token %}
                                     <div class="text-center">
-                                        <button class="btn btn-outline-warning" type="submit" name="toolDetails" value="{{ tool.id }}">View details<i
+                                        <button class="btn btn-outline-warning" type="submit" name="toolDetails" value="{{ tool.id }}" id="viewDetails">View details<i
                                                 class="bi bi-gear ms-2"></i>
                                         </button>
                                         {% if tool.author.username != request.user.username and tool.match == False %}
-                                        <button class="btn btn-outline-danger mt-2" type="submit" name="addTool" value="{{ tool.id }}" onclick="addRequest()">Add to your Bag<i
+                                        <button class="btn btn-outline-danger mt-2" type="submit" name="addTool" value="{{ tool.id }}" id="addTool">Add to your Bag<i
                                                 class="bi bi-heart ms-2"></i>
                                         </button>
                                         {% elif tool.author.username != request.user.username and tool.match == True %}
@@ -569,7 +569,7 @@
                 </div>
             </div>
             <div class="text-center py-4">
-                <button class="btn btn-outline-secondary shadow-sm fw-bolder" type="submit">More</button>
+                <button class="btn btn-outline-secondary shadow-sm fw-bolder" type="submit" name="more">More</button>
             </div>
         </section>
         <!-- Section -->
@@ -582,6 +582,7 @@
 </div>
 
 <script src="/static/js/alert.js"></script>
+<script src="/static/js/researchPost.js"></script>
 <!--<script src="/static/js/researchPost.js"></script>-->
 
 {% endblock content %}

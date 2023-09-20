@@ -1,0 +1,43 @@
+{% load jsignature_filters %}
+
+<title>ToolShare</title>
+
+<div style="font-size: x-large">
+    <p style="text-align: right;">Fait le {{ contractInfo.creationDate }}</p>
+    <h1 style="text-align: center;">CONTRACT N°{{ contractInfo.contractID }}</h1>
+    
+    <br>
+    <br>
+
+    <h3 style="text-decoration: underline;">Conditions d'emprunt :</h3>
+
+    <p>L'applicant nommé <span style="font-weight: bold;">{{ contractInfo.applicantName }}</span> confirme avoir <span style="font-weight: bold;">{{ contractInfo.applicantApproval }}</span> les conditions d'emprunt le <span style="font-weight: bold;">{{ contractInfo.requestDate }}</span> à<br> <span style="font-weight: bold;">{{ contractInfo.applicantPostalAddress }}</span>.</p>
+
+    <br>
+
+    <div style="margin-left: 500px;">
+        <p style="text-decoration: underline;">Applicant Signature :</p>
+        <div style="height: 120px; width: 200px; border: 1px solid black;"><img src="{{ contractInfo.applicantSignature.signature|signature_base64 }}" /></div>
+    </div>
+
+    <br>
+    <br>
+
+    <h3 style="text-decoration: underline;">Conditions de prêt :</h3>
+
+    <p>Le supplier nommé <span style="font-weight: bold;">{{ contractInfo.supplierName }}</span> confirme avoir <span style="font-weight: bold;">{{ contractInfo.supplierApproval }}</span> les conditions de prêt le <span style="font-weight: bold;">{{ contractInfo.approvalDate }}</span> à<br> <span style="font-weight: bold;">{{ contractInfo.supplierPostalAddress }}</span>.</p>
+
+    <br>
+
+    <div style="margin-left: 500px;">
+        <p style="text-decoration: underline;">Supplier Signature :</p>
+        <div style="height: 120px; width: 200px; border: 1px solid black;"><img src="{{ contractInfo.supplierSignature.signature|signature_base64 }}"/></div>
+    </div>
+
+    <br>
+    <br>
+    <br>
+    <br>
+
+    <p>L'outil <span style="font-weight: bold;">{{ contractInfo.contractedBlog.name }}</span> sera emprunté/prêté du <span style="font-weight: bold;">{{ contractInfo.startOfUse }}</span> au <span style="font-weight: bold;">{{ contractInfo.endOfUse }}</span>.</p>
+</div>

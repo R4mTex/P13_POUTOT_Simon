@@ -74,26 +74,62 @@
                             <p class="lead fw-normal mb-1">Contracts</p>
                             <div class="p-4" style="background-color: #f8f9fa;">
                                 {% for contract in userApplicantContract %}
-                                <div class="d-flex justify-content-between">
-                                    <p class="font-italic mb-1"><span class="fw-bold">Applicant : </span>{{ contract.applicant }}</p>
-                                    <p class="font-italic mb-1"><span class="fw-bold">Tool Contracted : </span><a href="{% url 'tool-details' user.id contract.tool.id %}" style="text-decoration: none;">{{ contract.tool.name }}</a></p>
-                                </div>
-                                <div class="d-flex justify-content-between">
-                                    <p class="font-italic mb-1"><span class="fw-bold">Supplier : </span><a href="{% url 'member-profile' user.id contract.supplier.id %}" style="text-decoration: none;">{{ contract.supplier.username }}</a></p>
-                                    <p class="font-italic mb-1"><span class="fw-bold">PDF Contract : </span><a href="{% url 'borrowContract' user.id contract.contractID %}" style="text-decoration: none;">Contract</a></p>
-                                </div>
-                                <p class="text-center">-----------------------------------------------</p>
+                                    {% if contract.tool.onContract == True %}
+                                    <div class="d-flex justify-content-between">
+                                        <p class="font-italic mb-1"><span class="fw-bold">Applicant : </span>{{ contract.applicant }}</p>
+                                        <p class="font-italic mb-1"><span class="fw-bold">Tool Contracted : </span><a href="{% url 'tool-details' user.id contract.tool.id %}" style="text-decoration: none;">{{ contract.tool.name }}</a></p>
+                                    </div>
+                                    <div class="d-flex justify-content-between">
+                                        <p class="font-italic mb-1"><span class="fw-bold">Supplier : </span><a href="{% url 'member-profile' user.id contract.supplier.id %}" style="text-decoration: none;">{{ contract.supplier.username }}</a></p>
+                                        <p class="font-italic mb-1"><span class="fw-bold">PDF Contract : </span><a href="{% url 'borrowContract' user.id contract.contractID %}" style="text-decoration: none;">Contract</a></p>
+                                    </div>
+                                    <p class="text-center">-----------------------------------------------</p>
+                                    {% else %}
+                                    <div class="d-flex justify-content-between">
+                                        <p class="font-italic mb-1"><span class="fw-bold">Applicant : </span>{{ contract.applicant }}</p>
+                                        <h3 class="text-muted"
+                                            style="position: absolute; left: 320px; bottom: 610px; transform: skewY(-11deg); font-size: 60px; opacity: 0.6;">
+                                            Past</h3>
+                                        <p class="font-italic mb-1"><span class="fw-bold">Tool Contracted : </span><a
+                                                href="{% url 'tool-details' user.id contract.tool.id %}" style="text-decoration: none;">{{ contract.tool.name }}</a></p>
+                                    </div>
+                                    <div class="d-flex justify-content-between">
+                                        <p class="font-italic mb-1"><span class="fw-bold">Supplier : </span><a
+                                                href="{% url 'member-profile' user.id contract.supplier.id %}" style="text-decoration: none;">{{ contract.supplier.username }}</a></p>
+                                        <p class="font-italic mb-1"><span class="fw-bold">PDF Contract : </span><a
+                                                href="{% url 'borrowContract' user.id contract.contractID %}" style="text-decoration: none;">Contract</a>
+                                        </p>
+                                    </div>
+                                    <p class="text-center">-----------------------------------------------</p>
+                                    {% endif %}
                                 {% endfor %}
                                 {% for contract in userSupplierContract %}
-                                <div class="d-flex justify-content-between">
-                                    <p class="font-italic mb-1"><span class="fw-bold">Applicant : </span><a href="{% url 'member-profile' user.id contract.applicant.id %}" style="text-decoration: none;">{{ contract.applicant.username }}</a></p>
-                                    <p class="font-italic mb-1"><span class="fw-bold">Tool Contracted : </span><a href="{% url 'tool-details' user.id contract.tool.id %}" style="text-decoration: none;">{{ contract.tool.name }}</a></p>
-                                </div>
-                                <div class="d-flex justify-content-between">
-                                    <p class="font-italic mb-1"><span class="fw-bold">Supplier : </span>{{ contract.supplier }}</p>
-                                    <p class="font-italic mb-1"><span class="fw-bold">PDF Contract : </span><a href="{% url 'borrowContract' user.id contract.contractID %}" style="text-decoration: none;">Contract</a></p>
-                                </div>
-                                <p class="text-center">-----------------------------------------------</p>
+                                    {% if contract.tool.onContract == True %}
+                                    <div class="d-flex justify-content-between">
+                                        <p class="font-italic mb-1"><span class="fw-bold">Applicant : </span><a href="{% url 'member-profile' user.id contract.applicant.id %}" style="text-decoration: none;">{{ contract.applicant.username }}</a></p>
+                                        <p class="font-italic mb-1"><span class="fw-bold">Tool Contracted : </span><a href="{% url 'tool-details' user.id contract.tool.id %}" style="text-decoration: none;">{{ contract.tool.name }}</a></p>
+                                    </div>
+                                    <div class="d-flex justify-content-between">
+                                        <p class="font-italic mb-1"><span class="fw-bold">Supplier : </span>{{ contract.supplier }}</p>
+                                        <p class="font-italic mb-1"><span class="fw-bold">PDF Contract : </span><a href="{% url 'borrowContract' user.id contract.contractID %}" style="text-decoration: none;">Contract</a></p>
+                                    </div>
+                                    <p class="text-center">-----------------------------------------------</p>
+                                    {% else %}
+                                    <div class="d-flex justify-content-between">
+                                        <p class="font-italic mb-1"><span class="fw-bold">Applicant : </span><a
+                                                href="{% url 'member-profile' user.id contract.applicant.id %}" style="text-decoration: none;">{{ contract.applicant.username }}</a></p>
+                                        <h3 class="text-muted" style="position: absolute; left: 320px; bottom: 610px; transform: skewY(-11deg); font-size: 60px; opacity: 0.6;">Past</h3>
+                                        <p class="font-italic mb-1"><span class="fw-bold">Tool Contracted : </span><a
+                                                href="{% url 'tool-details' user.id contract.tool.id %}" style="text-decoration: none;">{{ contract.tool.name }}</a></p>
+                                    </div>
+                                    <div class="d-flex justify-content-between">
+                                        <p class="font-italic mb-1"><span class="fw-bold">Supplier : </span>{{ contract.supplier }}</p>
+                                        <p class="font-italic mb-1"><span class="fw-bold">PDF Contract : </span><a
+                                                href="{% url 'borrowContract' user.id contract.contractID %}" style="text-decoration: none;">Contract</a>
+                                        </p>
+                                    </div>
+                                    <p class="text-center">-----------------------------------------------</p>
+                                    {% endif %}
                                 {% endfor %}
                             </div>
                         </div>
@@ -275,24 +311,60 @@
                             <p class="lead fw-normal mb-1">Contracts</p>
                             <div class="p-4" style="background-color: #f8f9fa;">
                                 {% for contract in userApplicantContract %}
-                                <div class="d-flex justify-content-between">
-                                    <p class="font-italic mb-1"><span class="fw-bold">Applicant : </span>{{ contract.applicant }}</p>
-                                    <p class="font-italic mb-1"><span class="fw-bold">Tool Contracted : </span><a
-                                            href="{% url 'tool-details' user.id contract.tool.id %}" style="text-decoration: none;">{{ contract.tool.name }}</a></p>
-                                    <p class="font-italic mb-1"><span class="fw-bold">Supplier : </span><a
-                                            href="{% url 'member-profile' user.id contract.supplier.id %}" style="text-decoration: none;">{{ contract.supplier.username }}</a></p>
-                                </div>
-                                <p class="text-center">-----------------------------------------------</p>
+                                    {% if contract.tool.onContract == True %}
+                                    <div class="d-flex justify-content-between">
+                                        <p class="font-italic mb-1"><span class="fw-bold">Applicant : </span>{{ contract.applicant }}</p>
+                                        <p class="font-italic mb-1"><span class="fw-bold">Tool Contracted : </span><a
+                                                href="{% url 'tool-details' user.id contract.tool.id %}" style="text-decoration: none;">{{ contract.tool.name }}</a></p>
+                                    </div>
+                                    <div class="d-flex justify-content-between">
+                                        <p class="font-italic mb-1"><span class="fw-bold">Supplier : </span><a
+                                                href="{% url 'member-profile' user.id contract.supplier.id %}" style="text-decoration: none;">{{ contract.supplier.username }}</a></p>
+                                    </div>
+                                    <p class="text-center">-----------------------------------------------</p>
+                                    {% else %}
+                                    <div class="d-flex justify-content-between">
+                                        <p class="font-italic mb-1"><span class="fw-bold">Applicant : </span>{{ contract.applicant }}</p>
+                                        <h3 class="text-muted"
+                                            style="position: absolute; left: 320px; bottom: 610px; transform: skewY(-11deg); font-size: 60px; opacity: 0.6;">
+                                            Past</h3>
+                                        <p class="font-italic mb-1"><span class="fw-bold">Tool Contracted : </span><a
+                                                href="{% url 'tool-details' user.id contract.tool.id %}" style="text-decoration: none;">{{ contract.tool.name }}</a></p>
+                                    </div>
+                                    <div class="d-flex justify-content-between">
+                                        <p class="font-italic mb-1"><span class="fw-bold">Supplier : </span><a
+                                                href="{% url 'member-profile' user.id contract.supplier.id %}" style="text-decoration: none;">{{ contract.supplier.username }}</a></p>
+                                    </div>
+                                    <p class="text-center">-----------------------------------------------</p>
+                                    {% endif %}
                                 {% endfor %}
                                 {% for contract in userSupplierContract %}
-                                <div class="d-flex justify-content-between">
-                                    <p class="font-italic mb-1"><span class="fw-bold">Applicant : </span><a
-                                            href="{% url 'member-profile' user.id contract.applicant.id %}" style="text-decoration: none;">{{ contract.applicant.username }}</a></p>
-                                    <p class="font-italic mb-1"><span class="fw-bold">Tool Contracted : </span><a
-                                            href="{% url 'tool-details' user.id contract.tool.id %}" style="text-decoration: none;">{{ contract.tool.name }}</a></p>
-                                    <p class="font-italic mb-1"><span class="fw-bold">Supplier : </span>{{ contract.supplier }}</p>
-                                </div>
-                                <p class="text-center">-----------------------------------------------</p>
+                                    {% if contract.tool.onContract == True %}
+                                    <div class="d-flex justify-content-between">
+                                        <p class="font-italic mb-1"><span class="fw-bold">Applicant : </span><a
+                                                href="{% url 'member-profile' user.id contract.applicant.id %}" style="text-decoration: none;">{{ contract.applicant.username }}</a></p>
+                                        <p class="font-italic mb-1"><span class="fw-bold">Tool Contracted : </span><a
+                                                href="{% url 'tool-details' user.id contract.tool.id %}" style="text-decoration: none;">{{ contract.tool.name }}</a></p>
+                                    </div>
+                                    <div class="d-flex justify-content-between">
+                                        <p class="font-italic mb-1"><span class="fw-bold">Supplier : </span>{{ contract.supplier }}</p>
+                                    </div>
+                                    <p class="text-center">-----------------------------------------------</p>
+                                    {% else %}
+                                    <div class="d-flex justify-content-between">
+                                        <p class="font-italic mb-1"><span class="fw-bold">Applicant : </span><a
+                                                href="{% url 'member-profile' user.id contract.applicant.id %}" style="text-decoration: none;">{{ contract.applicant.username }}</a></p>
+                                        <h3 class="text-muted"
+                                            style="position: absolute; left: 320px; bottom: 610px; transform: skewY(-11deg); font-size: 60px; opacity: 0.6;">
+                                            Past</h3>
+                                        <p class="font-italic mb-1"><span class="fw-bold">Tool Contracted : </span><a
+                                                href="{% url 'tool-details' user.id contract.tool.id %}" style="text-decoration: none;">{{ contract.tool.name }}</a></p>
+                                    </div>
+                                    <div class="d-flex justify-content-between">
+                                        <p class="font-italic mb-1"><span class="fw-bold">Supplier : </span>{{ contract.supplier }}</p>
+                                    </div>
+                                    <p class="text-center">-----------------------------------------------</p>
+                                    {% endif %}
                                 {% endfor %}
                             </div>
                         </div>

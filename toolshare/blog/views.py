@@ -9,12 +9,10 @@ from blog.scripts.parser import Parser
 from blog.scripts.geocoderApi import Geocoder
 from django.contrib import messages
 from django.conf import settings
-from django.core.mail import EmailMessage, EmailMultiAlternatives
-from django.utils.html import strip_tags
+from django.core.mail import EmailMultiAlternatives
 from datetime import date
 from django.template.loader import render_to_string
 from blog.pdf import html2pdf
-from email.mime.image import MIMEImage
 
 
 class editTool(LoginRequiredMixin, View):
@@ -256,12 +254,14 @@ class memberTools(LoginRequiredMixin, View):
 
             for favorite in range(len(userFavorites)):
                 if userFavorites[favorite].blog.id == favoriteId:
+                    userFavorites[favorite].blog.match = False
+                    userFavorites[favorite].blog.save()
                     blogModels.Favorite.objects.filter(id=userFavorites[favorite].id).delete()
                     messages.info(request, "Removed from your Bag")
             
             tools = blogModels.Blog.objects.filter(author=member)
-
             favorites = blogModels.Favorite.objects.all()
+
             for favorite in range(len(favorites)):
                 for tool in range(len(tools)):
                     if tools[tool].id == favorites[favorite].blog.id and request.user.username == favorites[favorite].user.username:
@@ -347,6 +347,8 @@ class toolDetails(LoginRequiredMixin, View):
 
             for favorite in range(len(userFavorites)):
                 if userFavorites[favorite].blog.id == favoriteId:
+                    userFavorites[favorite].blog.match = False
+                    userFavorites[favorite].blog.save()
                     blogModels.Favorite.objects.filter(id=userFavorites[favorite].id).delete()
                     messages.info(request, "Removed from your Bag")
 

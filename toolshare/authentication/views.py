@@ -13,8 +13,6 @@ from blog.scripts.parser import Parser
 from blog.scripts.geocoderApi import Geocoder
 from django.core.mail import EmailMessage
 from datetime import date
-from django.http import JsonResponse
-
 
 
 # Create your views here.
@@ -310,12 +308,15 @@ class Research(LoginRequiredMixin, View):
                 messages.success(request, "Added to your Bag")
 
             tools = blogModels.Blog.objects.all()
-
             favorites = blogModels.Favorite.objects.all()
+
             for favorite in range(len(favorites)):
                 for tool in range(len(tools)):
+                    print("1", tools[tool].id == favorites[favorite].blog.id)
+                    print("2", request.user.username == favorites[favorite].user.username)
                     if tools[tool].id == favorites[favorite].blog.id and request.user.username == favorites[favorite].user.username:
                         tools[tool].match = True
+                        tools[tool].save()
 
             for tool in range(len(tools)):
                 if tools[tool].availabalityStart <= date.today() <= tools[tool].availabalityEnd:
@@ -342,16 +343,19 @@ class Research(LoginRequiredMixin, View):
 
             for favorite in range(len(userFavorites)):
                 if userFavorites[favorite].blog.id == favoriteId:
+                    userFavorites[favorite].blog.match = False
+                    userFavorites[favorite].blog.save()
                     blogModels.Favorite.objects.filter(id=userFavorites[favorite].id).delete()
                     messages.info(request, "Removed from your Bag")
             
             tools = blogModels.Blog.objects.all()
-
             favorites = blogModels.Favorite.objects.all()
+
             for favorite in range(len(favorites)):
                 for tool in range(len(tools)):
                     if tools[tool].id == favorites[favorite].blog.id and request.user.username == favorites[favorite].user.username:
                         tools[tool].match = True
+                        tools[tool].save()
 
             for tool in range(len(tools)):
                 if tools[tool].availabalityStart <= date.today() <= tools[tool].availabalityEnd:
@@ -384,8 +388,8 @@ class Research(LoginRequiredMixin, View):
                         messages.warning(request, "Removed from your Personal Tools")
 
             tools = blogModels.Blog.objects.all()
-
             favorites = blogModels.Favorite.objects.all()
+    
             for favorite in range(len(favorites)):
                 for tool in range(len(tools)):
                     if tools[tool].id == favorites[favorite].blog.id and request.user.username == favorites[favorite].user.username:
@@ -557,6 +561,8 @@ class Favorites(LoginRequiredMixin, View):
 
             for favorite in range(len(userFavorites)):
                 if userFavorites[favorite].blog.id == favoriteId:
+                    userFavorites[favorite].blog.match = False
+                    userFavorites[favorite].blog.save()
                     blogModels.Favorite.objects.filter(id=userFavorites[favorite].id).delete()
                     messages.info(request, "Removed from your Bag")
             

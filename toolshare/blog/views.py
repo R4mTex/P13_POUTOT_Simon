@@ -62,13 +62,6 @@ class personalTools(LoginRequiredMixin, View):
             else:
                 personalTools[tool].availabality = False
 
-        for contract in range(len(contracts)):
-            for tool in range(len(personalTools)):
-                if contracts[contract].contractedBlog.id == personalTools[tool].id:
-                    if date.today() > contracts[contract].endOfUse:
-                        personalTools[tool].onContract = False
-                        personalTools[tool].save()
-
         reversePersonalToolList = []
         for tool in reversed(range(len(personalTools))):
             reversePersonalToolList.append(personalTools[tool])
@@ -438,8 +431,9 @@ class borrowRequestForm(LoginRequiredMixin, View):
                     'formSignature': formSignature,
                 }
                 return render(request, self.template_name, context=context)
-            elif Parser.scriptForParse(form.cleaned_data.get('applicantApproval')) != ['lu', 'approuve']:
+            elif Parser.scriptForParse(form.cleaned_data.get('applicantApproval')) != ['read', 'approved']:
                 print("Here 2")
+                print(Parser.scriptForParse(form.cleaned_data.get('applicantApproval')))
                 context = {
                     'form': form,
                     'user': user,
@@ -580,7 +574,7 @@ class consentToBorrowForm(LoginRequiredMixin, View):
                     'applicantInfo': applicantInfo,
                 }
                 return render(request, self.template_name, context=context)
-            elif Parser.scriptForParse(form.cleaned_data.get('supplierApproval')) != ['lu', 'approuve']:
+            elif Parser.scriptForParse(form.cleaned_data.get('supplierApproval')) != ['read', 'approved']:
                 print("Here 2")
                 applicantInfo = {
                     'applicant': contract.applicant,

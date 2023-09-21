@@ -95,7 +95,7 @@ ocStopWords = ["a", "abord", "absolument", "afin", "ah", "ai", "aie", "ailleurs"
                  "zut", "à", "â", "ça", "ès", "étaient", "étais", "était", "étant",
                  "été", "être", "ô"]
 customStopWords = ["salut", "grandpy", "estce", "connais", "l", "m", "d",
-                     "n", "t", "ladresse", "coucou", "saistu", "trouve", "cherche", "sais", "aller", "centre"]
+                     "n", "t", "ladresse", "coucou", "saistu", "trouve", "cherche", "sais", "aller", "centre", "and"]
 
 
 class Parser:

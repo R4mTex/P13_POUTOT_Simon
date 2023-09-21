@@ -3,35 +3,75 @@
 <title>ToolShare</title>
 
 <div style="font-size: x-large">
-    <p style="text-align: right;">Fait le {{ contractInfo.creationDate }}</p>
-    <h1 style="text-align: center;">CONTRACT N°{{ contractInfo.contractID }}</h1>
-    
+    <p style="text-align: right;">Done on {{ contractInfo.creationDate }}</p>
+
+    <br>
+
+    <h1 style="text-align: center;">CONTRACT No. {{ contractInfo.contractID }}</h1>
+
     <br>
     <br>
 
-    <h3 style="text-decoration: underline;">Conditions d'emprunt :</h3>
+    <h3 style="text-decoration: underline;">Borrowing Conditions:</h3>
 
-    <p>L'applicant nommé <span style="font-weight: bold;">{{ contractInfo.applicantName }}</span> confirme avoir <span style="font-weight: bold;">{{ contractInfo.applicantApproval }}</span> les conditions d'emprunt le <span style="font-weight: bold;">{{ contractInfo.requestDate }}</span> à<br> <span style="font-weight: bold;">{{ contractInfo.applicantPostalAddress }}</span>.</p>
+    <ul>
+        <li>Commit to respecting the equipment</li>
+        <li>Commit to returning the equipment clean and with a full tank</li>
+        <li>Commit to notifying the owner in case of equipment failure during use</li>
+        <li>Commit not to lend/sublet/sell the equipment</li>
+        <li>Commit to being the sole user of the equipment</li>
+        <li>Commit to using the equipment only on a personal construction site</li>
+        <li>Commit to using the equipment only for its intended purpose</li>
+        <li>Commit to respecting deadlines</li>
+        <li>Commit to wearing the necessary safety equipment while using the equipment</li>
+        <li>Commit to reimbursing for equipment damage or loss</li>
+        <li>Commit not to file a complaint in case of accidents caused by human error</li>
+    </ul>
+    <p>In case of non-compliance with these conditions, a penalty or legal action will be applied.</p>
+
+    <p>- The applicant named <span style="font-weight: bold;">{{ contractInfo.applicantName }}</span> confirms having
+        <span style="font-weight: bold;">{{ contractInfo.applicantApproval }}</span> the borrowing conditions <br>on
+        <span style="font-weight: bold;">{{ contractInfo.requestDate }}</span> at <span style="font-weight: bold;">{{ contractInfo.applicantPostalAddress }}</span>.</p>
 
     <br>
 
     <div style="margin-left: 500px;">
-        <p style="text-decoration: underline;">Applicant Signature :</p>
-        <div style="height: 120px; width: 200px; border: 1px solid black;"><img src="{{ contractInfo.applicantSignature.signature|signature_base64 }}" /></div>
+        <p style="text-decoration: underline;">Applicant Signature:</p>
+        <div style="height: 120px; width: 200px; border: 1px solid black;"><img
+                src="{{ contractInfo.applicantSignature.signature|signature_base64 }}" /></div>
     </div>
 
     <br>
     <br>
+    <br>
+    <br>
+    <br>
+    <br>
+    <br>
+    <br>
 
-    <h3 style="text-decoration: underline;">Conditions de prêt :</h3>
+    <h3 style="text-decoration: underline;">Lending Conditions:</h3>
 
-    <p>Le supplier nommé <span style="font-weight: bold;">{{ contractInfo.supplierName }}</span> confirme avoir <span style="font-weight: bold;">{{ contractInfo.supplierApproval }}</span> les conditions de prêt le <span style="font-weight: bold;">{{ contractInfo.approvalDate }}</span> à<br> <span style="font-weight: bold;">{{ contractInfo.supplierPostalAddress }}</span>.</p>
+    <ul>
+        <li>Commit to lending the equipment in good condition, clean, and with a full tank</li>
+        <li>Commit to respecting deadlines</li>
+        <li>Commit to returning the deposit if the equipment's integrity is maintained</li>
+        <li>Commit to informing the borrower if the equipment has been modified</li>
+        <li>Commit to explaining the equipment's operation</li>
+        <li>Commit to being honest about the equipment's condition during handover</li>
+    </ul>
+    <p>In case of non-compliance with these conditions, a penalty or legal action will be applied.</p>
+
+    <p>- The supplier named <span style="font-weight: bold;">{{ contractInfo.supplierName }}</span> confirms having
+        <span style="font-weight: bold;">{{ contractInfo.supplierApproval }}</span> the lending conditions <br>on <span
+            style="font-weight: bold;">{{ contractInfo.approvalDate }}</span> at <span style="font-weight: bold;">{{ contractInfo.supplierPostalAddress }}</span>.</p>
 
     <br>
 
     <div style="margin-left: 500px;">
-        <p style="text-decoration: underline;">Supplier Signature :</p>
-        <div style="height: 120px; width: 200px; border: 1px solid black;"><img src="{{ contractInfo.supplierSignature.signature|signature_base64 }}"/></div>
+        <p style="text-decoration: underline;">Supplier Signature:</p>
+        <div style="height: 120px; width: 200px; border: 1px solid black;"><img
+                src="{{ contractInfo.supplierSignature.signature|signature_base64 }}" /></div>
     </div>
 
     <br>
@@ -39,5 +79,7 @@
     <br>
     <br>
 
-    <p>L'outil <span style="font-weight: bold;">{{ contractInfo.contractedBlog.name }}</span> sera emprunté/prêté du <span style="font-weight: bold;">{{ contractInfo.startOfUse }}</span> au <span style="font-weight: bold;">{{ contractInfo.endOfUse }}</span>.</p>
+    <p>The tool <span style="font-weight: bold;">{{ contractInfo.contractedBlog.name }}</span> will be borrowed/lent
+        from <span style="font-weight: bold;">{{ contractInfo.startOfUse }}</span> to <span
+            style="font-weight: bold;">{{ contractInfo.endOfUse }}</span>.</p>
 </div>

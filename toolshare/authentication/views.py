@@ -312,8 +312,6 @@ class Research(LoginRequiredMixin, View):
 
             for favorite in range(len(favorites)):
                 for tool in range(len(tools)):
-                    print("1", tools[tool].id == favorites[favorite].blog.id)
-                    print("2", request.user.username == favorites[favorite].user.username)
                     if tools[tool].id == favorites[favorite].blog.id and request.user.username == favorites[favorite].user.username:
                         tools[tool].match = True
                         tools[tool].save()
@@ -593,9 +591,18 @@ class Profile(LoginRequiredMixin, View):
 
     def get(self, request, userID):
         user = authModels.User.objects.get(id=userID)
+        contracts = blogModels.Contract.objects.all()
+        tools = blogModels.Blog.objects.all()
         personalTools = blogModels.Blog.objects.filter(author=user.id)
         userApplicantContracts = blogModels.Contract.objects.filter(applicant=user)
         userSupplierContracts = blogModels.Contract.objects.filter(supplier=user)
+
+        for contract in range(len(contracts)):
+            for tool in range(len(tools)):
+                if contracts[contract].contractedBlog.id == tools[tool].id:
+                    if date.today() > contracts[contract].endOfUse:
+                        tools[tool].onContract = False
+                        tools[tool].save()
 
         userApplicantContractStructure = []
         for contract in range(len(userApplicantContracts)):
@@ -616,6 +623,7 @@ class Profile(LoginRequiredMixin, View):
                 'contractID': userSupplierContracts[contract].id
             }
             userSupplierContractStructure.append(structure)
+        print(userApplicantContractStructure)
 
         pathInfoUser = "/user/"+str(userID)+"/profile/"
         pathInfoMember = ""

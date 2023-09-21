@@ -235,7 +235,7 @@ def test_borrowRequestForm_view_post():
     client.login(username='Test User', email='', password='')
     path = reverse('borrow-request-form', kwargs={'userID':1, 'toolID':1})
     response = client.post(path, data={'applicantName': ['TestTest'], 
-                                       'applicantApproval': ['Lu et Approuvé'], 
+                                       'applicantApproval': ['Read and approved'], 
                                        'requestDate': ['2023-09-12'], 
                                        'initial-requestDate': ['2023-09-12'], 
                                        'applicantPostalAddress': ['La Barrie 46500 GRAMAT'], 

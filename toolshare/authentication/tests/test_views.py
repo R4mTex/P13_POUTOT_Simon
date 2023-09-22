@@ -3,8 +3,9 @@ import pytest
 from django.urls import reverse
 from django.test import Client
 from authentication.models import User
-from blog.models import Blog
+from blog.models import Blog, Contract, SignatureModel, Favorite
 from pytest_django.asserts import assertTemplateUsed
+from datetime import date, timedelta
 
 
 client = Client()
@@ -57,7 +58,14 @@ def test_contact_view_post():
                              )
     client.login(username='Test User', email='', password='')
     path = reverse('contact', kwargs={'userID':1})
-    response = client.post(path)
+    response = client.post(path, data={'subject': ['Test'],
+                                       'message': ['Test']
+                                       })
+    assert response.status_code == 302
+    assert response.url == '/user/1/contact/success/'
+
+    response = client.post(path, data={'subject': ['Test']
+                                       })
     assert response.status_code == 200
     assertTemplateUsed(response, "authentication/contact.html")
 
@@ -80,7 +88,72 @@ def test_research_view_get():
     User.objects.create_user(username='Test User',
                              email='',
                              password='',
+                            )
+    User.objects.create_user(username='Test User 2',
+                             fullname='Test2Test2',
+                             email='test@test.com',
+                             password='',
+                             postalAddress='La Barrie 46500 GRAMAT',
+                             phoneNumber='0000000000',
                              )
+    Blog.objects.create(name='Test Blog',
+                        category='Other',
+                        location='La Barrie 46500 GRAMAT',
+                        description='Test',
+                        availabalityStart=date.today(),
+                        availabalityEnd=date.today() + timedelta(days=1),
+                        deposit='True',
+                        author=User.objects.get(id=2)
+                        )
+    Blog.objects.create(name='Test Blog',
+                        category='Other',
+                        location='La Barrie 46500 GRAMAT',
+                        description='Test',
+                        availabalityStart='2023-09-15',
+                        availabalityEnd='2023-09-16',
+                        deposit='True',
+                        author=User.objects.get(id=2)
+                        )
+    Favorite.objects.create(user=User.objects.get(id=1),
+                            blog=Blog.objects.get(id=1))
+    SignatureModel.objects.create(user=User.objects.get(id=1),
+                                 signature='[{"x":[178,172,165,156,145,133,121,112,102,96,92,97,103,116,131,146,169,185,202,220,234,245,254,261,266,268,268,267,262,256,247,238,229,218,208,198,188,181,177,177,176,176,178,183,187,194,201,208,213,219,211,201,189,174,154,135,114,100,86,75,67,62,60,60,60,60,61,62,64],"y":[59,56,56,54,54,54,53,51,50,48,46,39,34,28,22,19,14,13,11,11,12,16,20,26,32,37,44,50,56,61,67,71,74,77,78,78,78,77,75,70,64,56,48,39,32,23,16,9,5,0,1,5,9,15,23,31,41,51,62,75,88,100,108,118,125,131,136,141,145]}]',
+                                 )
+    SignatureModel.objects.create(user=User.objects.get(id=2),
+                                 signature='[{"x":[179,172,165,156,145,133,121,112,102,96,92,97,103,116,131,146,169,185,202,220,234,245,254,261,266,268,268,267,262,256,247,238,229,218,208,198,188,181,177,177,176,176,178,183,187,194,201,208,213,219,211,201,189,174,154,135,114,100,86,75,67,62,60,60,60,60,61,62,64],"y":[59,56,56,54,54,54,53,51,50,48,46,39,34,28,22,19,14,13,11,11,12,16,20,26,32,37,44,50,56,61,67,71,74,77,78,78,78,77,75,70,64,56,48,39,32,23,16,9,5,0,1,5,9,15,23,31,41,51,62,75,88,100,108,118,125,131,136,141,145]}]',
+                                 )
+    Contract.objects.create(applicant=User.objects.get(id=1),
+                            supplier=User.objects.get(id=2),
+                            applicantName='TestTest',
+                            contractedBlog=Blog.objects.get(id=1),
+                            startOfUse=date.today(),
+                            endOfUse=date.today() + timedelta(days=1),
+                            applicantApproval='Read and Approved',
+                            requestDate=date.today(),
+                            applicantPostalAddress='La Barrie 46500 GRAMAT',
+                            applicantSignature=SignatureModel.objects.get(id=1),
+                            supplierName='Test2Test2',
+                            supplierApproval='Read and Approved',
+                            approvalDate=date.today(),
+                            supplierPostalAddress='La Barrie 46500 GRAMAT',
+                            supplierSignature=SignatureModel.objects.get(id=2),
+                            )
+    Contract.objects.create(applicant=User.objects.get(id=1),
+                            supplier=User.objects.get(id=2),
+                            applicantName='TestTest',
+                            contractedBlog=Blog.objects.get(id=1),
+                            startOfUse=date.today(),
+                            endOfUse='2023-09-21',
+                            applicantApproval='Read and Approved',
+                            requestDate=date.today(),
+                            applicantPostalAddress='La Barrie 46500 GRAMAT',
+                            applicantSignature=SignatureModel.objects.get(id=1),
+                            supplierName='Test2Test2',
+                            supplierApproval='Read and Approved',
+                            approvalDate=date.today(),
+                            supplierPostalAddress='La Barrie 46500 GRAMAT',
+                            supplierSignature=SignatureModel.objects.get(id=2),
+                            )
     client.login(username='Test User', email='', password='')
     path = reverse('research', kwargs={'userID':1})
     response = client.get(path)
@@ -98,11 +171,44 @@ def test_research_view_post():
                         category='Other',
                         location='La Barrie 46500 GRAMAT',
                         description='Test',
-                        availabalityStart='2023-09-12',
-                        availabalityEnd='2023-09-13',
+                        availabalityStart=date.today(),
+                        availabalityEnd=date.today() + timedelta(days=1),
                         deposit='True',
                         author=User.objects.get(id=1)
                         )
+    Blog.objects.create(name='Test Blog 2',
+                        category='Other',
+                        location='La Barrie 46500 GRAMAT',
+                        description='Test',
+                        availabalityStart='2023-09-18',
+                        availabalityEnd='2023-09-20',
+                        deposit='True',
+                        author=User.objects.get(id=1)
+                        )
+    Blog.objects.create(name='Test Blog 3',
+                        category='Equipment',
+                        location='La Barrie 46500 GRAMAT',
+                        description='Test',
+                        availabalityStart='2023-09-25',
+                        availabalityEnd='2023-09-30',
+                        deposit='True',
+                        author=User.objects.get(id=1)
+                        )
+    Blog.objects.create(name='Test Blog 4',
+                        category='Equipment',
+                        location='La Barrie 46500 GRAMAT',
+                        description='Test',
+                        availabalityStart=date.today(),
+                        availabalityEnd=date.today() + timedelta(days=1),
+                        deposit='True',
+                        author=User.objects.get(id=1)
+                        )
+    Favorite.objects.create(user=User.objects.get(id=1),
+                            blog=Blog.objects.get(id=1))
+    Favorite.objects.create(user=User.objects.get(id=1),
+                            blog=Blog.objects.get(id=2))
+    Favorite.objects.create(user=User.objects.get(id=1),
+                            blog=Blog.objects.get(id=3))
     client.login(username='Test User', email='', password='')
     path = reverse('research', kwargs={'userID':1})
 
@@ -131,6 +237,10 @@ def test_research_view_post():
     assert responseToolDetails.url == '/user/1/tool/1/details/'
     
     responseAddTool = client.post(path, data={'addTool': ['1']})
+    assert responseAddTool.status_code == 200
+    assertTemplateUsed(responseAddTool, "authentication/research.html")
+
+    responseAddTool = client.post(path, data={'addTool': ['4']})
     assert responseAddTool.status_code == 200
     assertTemplateUsed(responseAddTool, "authentication/research.html")
 

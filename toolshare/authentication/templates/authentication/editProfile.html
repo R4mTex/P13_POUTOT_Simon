@@ -118,46 +118,35 @@ background: linear-gradient(to right, rgba(251, 194, 235, 1), rgba(166, 193, 238
                                                 </div>
                                             </div>
                                             </form>
-                                            <form>
+                                            <form method="post">
+                                                {% if form.errors %}
+                                                {{ form.errors }}
+                                                {% endif %}
+                                                {% csrf_token %}
                                                 <div class="row">
                                                     <div class="col-12 col-sm-6 mb-3">
                                                         <div class="mb-2"><b>Change Password</b></div>
-                                                        {{ form_password }}
-                                                        <!--
-                                                        <div class="row">
-                                                            <div class="col">
-                                                                <div class="form-group">
-                                                                    <label class="mb-1 fw-bold">Current Password</label>
-                                                                    <input class="form-control mb-2" type="text"
-                                                                        placeholder="" value="{{ user.password }}">
-                                                                </div>
-                                                            </div>
+                                                        <label class="mb-1 fw-italic">Old Password</label>
+                                                        {% render_field form_password.old_password class+="form-control mb-2" type="password" name="password" placeholder="Old Password" %}
+                                                        <label class="mb-1 fw-italic">New Password</label>
+                                                        {% render_field form_password.new_password1 class+="form-control mb-2" type="password" name="password" placeholder="New Password" %}
+                                                        <div class="helptext">
+                                                            <ul>
+                                                                <li>Your password can’t be too similar to your other personal information.</li>
+                                                                <li>Your password must contain at least 8 characters.</li>
+                                                                <li>Your password must contain at least one upper or lower case letter.</li>
+                                                                <li>Your password must contain at least one number.</li>
+                                                                <li>Your password can’t be a commonly used password.</li>
+                                                                <li>Your password can’t be entirely numeric.</li>
+                                                            </ul>
                                                         </div>
-                                                        <div class="row">
-                                                            <div class="col">
-                                                                <div class="form-group">
-                                                                    <label class="mb-1 fw-bold">New Password</label>
-                                                                    <input class="form-control mb-2" type="password"
-                                                                        placeholder="••••••">
-                                                                </div>
-                                                            </div>
-                                                        </div>
-                                                        <div class="row">
-                                                            <div class="col">
-                                                                <div class="form-group">
-                                                                    <label class="mb-1 fw-bold">Confirm <span
-                                                                            class="d-none d-xl-inline">Password</span></label>
-                                                                    <input class="form-control mb-2" type="password"
-                                                                        placeholder="••••••">
-                                                                </div>
-                                                            </div>
-                                                        </div>
-                                                        -->
+                                                        <label class="mb-1 fw-italic">New Password Confirmation</label>
+                                                        {% render_field form_password.new_password2 class+="form-control mb-2" type="password" name="password" placeholder="New Password Confirmation" %}
                                                     </div>
                                                 </div>
                                                 <div class="row">
                                                     <div class="col d-flex justify-content-start">
-                                                        <button class="btn btn-primary" type="submit" name="changePassword">Set New Password</button>
+                                                        <button class="btn btn-primary" type="submit" name="setNewPassword">Set New Password</button>
                                                     </div>
                                                 </div>
                                             </form>

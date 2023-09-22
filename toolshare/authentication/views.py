@@ -787,7 +787,7 @@ class editProfile(LoginRequiredMixin, View):
                     'form_password': form_password,
                 }
                 return render(request, self.template_name, context=context)
-        if 'updateUserProfile' in request.POST:
+        elif 'updateUserProfile' in request.POST:
             form_profile = self.form_profile(request.POST)
             if form_profile.is_valid():
                 user = authModels.User.objects.get(id=userID)
@@ -815,6 +815,39 @@ class editProfile(LoginRequiredMixin, View):
                     'form_password': form_password,
                 }
                 return render(request, self.template_name, context=context)
+        elif 'setNewPassword' in request.POST:
+            form = self.form_password(request.POST)
+            if form.is_valid():
+                print(form)
+
+                user = authModels.User.objects.get(id=userID)
+                form_picture = self.form_picture()
+                form_profile = self.form_profile(instance=request.user)
+                form_password = self.form_password(request.POST)
+
+                context = {
+                    'user': user,
+                    'form_picture': form_picture,
+                    'form_profile': form_profile,
+                    'form_password': form_password,
+                }
+                return render(request, self.template_name, context=context)
+            else:
+                print("No", form.errors, form.error_messages, form.error_class)
+                print(request.POST)
+                user = authModels.User.objects.get(id=userID)
+                form_picture = self.form_picture()
+                form_profile = self.form_profile(instance=request.user)
+                form_password = self.form_password(userID)
+
+                context = {
+                    'user': user,
+                    'form_picture': form_picture,
+                    'form_profile': form_profile,
+                    'form_password': form_password,
+                }
+                return render(request, self.template_name, context=context)
+
             
 
 class Registration(View):

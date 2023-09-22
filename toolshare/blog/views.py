@@ -433,7 +433,6 @@ class borrowRequestForm(LoginRequiredMixin, View):
                 return render(request, self.template_name, context=context)
             elif Parser.scriptForParse(form.cleaned_data.get('applicantApproval')) != ['read', 'approved']:
                 print("Here 2")
-                print(Parser.scriptForParse(form.cleaned_data.get('applicantApproval')))
                 context = {
                     'form': form,
                     'user': user,
@@ -502,6 +501,7 @@ class borrowRequestForm(LoginRequiredMixin, View):
                 return redirect(reverse('borrow-request-confirmation', kwargs={'userID': userID, 'toolID': toolID}))
         else:
             print("Here 6")
+            print(form.errors)
             context = {
                 'form': form,
                 'user': user,
@@ -662,23 +662,25 @@ class consentToBorrowForm(LoginRequiredMixin, View):
                 email.send()
 
                 return redirect(reverse('consent-to-borrow-confirmation', kwargs={'userID': userID, 'contractID': contractID}))
-        print("Here 6")
-        applicantInfo = {
-            'applicant': contract.applicant,
-            'applicantName': contract.applicantName,
-            'applicantApproval': contract.applicantApproval,
-            'applicantSignature': contract.applicantSignature.signature,
-            'requestDate': contract.requestDate,
-            'startOfUse': contract.startOfUse,
-            'endOfUse': contract.endOfUse,
-        }
-        context = {
-            'form': form,
-            'tool': tool,
-            'formSignature': formSignature,
-            'applicantInfo': applicantInfo,
-        }
-        return render(request, self.template_name, context=context)
+        else:
+            print("Here 6")
+            print(form.errors, formSignature.errors)
+            applicantInfo = {
+                'applicant': contract.applicant,
+                'applicantName': contract.applicantName,
+                'applicantApproval': contract.applicantApproval,
+                'applicantSignature': contract.applicantSignature.signature,
+                'requestDate': contract.requestDate,
+                'startOfUse': contract.startOfUse,
+                'endOfUse': contract.endOfUse,
+            }
+            context = {
+                'form': form,
+                'tool': tool,
+                'formSignature': formSignature,
+                'applicantInfo': applicantInfo,
+            }
+            return render(request, self.template_name, context=context)
 
 
 class consentToBorrowConfirmation(LoginRequiredMixin, View):

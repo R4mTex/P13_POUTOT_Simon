@@ -71,24 +71,24 @@
                     </li>
                 </ul>
                 <!-- Work to do about phone format -->
-                <form class="me-auto form" role="form" action="{% url 'research' user.id %}">
+                <form class="py-sm-1 p-lg-0 me-auto form" role="form" action="{% url 'research' user.id %}">
                     <input class="ps-2 py-1" type="search" name="search" id="searchBar" value=""
                         placeholder="Do your research." size="30"
                         style="background-color: rgb(214, 214, 214); border-radius: 4%;">
                 </form>
-                <form class="d-flex" action="{% url 'favorites' user.id %}">
+                <form class="py-sm-1 px-lg-1 d-flex" action="{% url 'favorites' user.id %}">
                     <button class="btn btn-outline-dark" type="submit">
                         <i class="bi bi-tools me-1"></i>
                         Bag
                     </button>
                 </form>
-                <form class="d-flex" action="{% url 'profile' user.id %}">
-                    <button class="btn btn-outline-dark mx-2" type="submit">
+                <form class="py-sm-1 px-lg-1 d-flex" action="{% url 'profile' user.id %}">
+                    <button class="btn btn-outline-dark" type="submit">
                         <i class="bi bi-person-circle me-1"></i>
                         Profile
                     </button>
                 </form>
-                <form class="d-flex" action="{% url 'logout' %}">
+                <form class="py-sm-1 px-lg-1 d-flex" action="{% url 'logout' %}">
                     <button class="btn btn-outline-dark" type="submit">
                         <i class="bi bi-power me-1" style="color:rgb(182, 0, 0)"></i>
                         Logout

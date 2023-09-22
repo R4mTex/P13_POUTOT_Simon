@@ -421,6 +421,17 @@ class memberProfile(LoginRequiredMixin, View):
     def get(self, request, userID, memberID):
         user = authModels.User.objects.get(id=userID)
         member = authModels.User.objects.get(id=memberID)
+  
+        tools = blogModels.Blog.objects.all()
+        contracts = blogModels.Contract.objects.all()
+
+        for contract in range(len(contracts)):
+            for tool in range(len(tools)):
+                if contracts[contract].contractedBlog.id == tools[tool].id:
+                    if date.today() > contracts[contract].endOfUse:
+                        tools[tool].onContract = False
+                        tools[tool].save()
+
         personalTools = blogModels.Blog.objects.filter(author=member.id)
         userApplicantContracts = blogModels.Contract.objects.filter(applicant=member)
         userSupplierContracts = blogModels.Contract.objects.filter(supplier=member)
@@ -591,11 +602,10 @@ class Profile(LoginRequiredMixin, View):
 
     def get(self, request, userID):
         user = authModels.User.objects.get(id=userID)
-        contracts = blogModels.Contract.objects.all()
-        tools = blogModels.Blog.objects.all()
         personalTools = blogModels.Blog.objects.filter(author=user.id)
-        userApplicantContracts = blogModels.Contract.objects.filter(applicant=user)
-        userSupplierContracts = blogModels.Contract.objects.filter(supplier=user)
+
+        tools = blogModels.Blog.objects.all()
+        contracts = blogModels.Contract.objects.all()
 
         for contract in range(len(contracts)):
             for tool in range(len(tools)):
@@ -603,6 +613,9 @@ class Profile(LoginRequiredMixin, View):
                     if date.today() > contracts[contract].endOfUse:
                         tools[tool].onContract = False
                         tools[tool].save()
+
+        userApplicantContracts = blogModels.Contract.objects.filter(applicant=user)
+        userSupplierContracts = blogModels.Contract.objects.filter(supplier=user)
 
         userApplicantContractStructure = []
         for contract in range(len(userApplicantContracts)):

@@ -113,7 +113,12 @@
                                     <div style="position: relative; width: 100%; height: 100%;">
                                         <div class="d-flex justify-content-between">
                                             <p class="font-italic mb-1"><span class="fw-bold">Applicant : </span><a href="{% url 'member-profile' user.id contract.applicant.id %}" style="text-decoration: none;">{{ contract.applicant.username }}</a></p>
-                                            <p class="font-italic mb-1"><span class="fw-bold">Tool Contracted : </span><a href="{% url 'tool-details' user.id contract.tool.id %}" style="text-decoration: none;">{{ contract.tool.name }}</a></p>
+                                            <form method="post">
+                                                {% csrf_token %}
+                                                <p class="font-italic mb-1"><span class="fw-bold">Tool Contracted : </span><button type="submit"
+                                                        name="toolDetailsContract" value="{{ contract.tool.id }}" class="mb-1 p-0 btn btn-link"
+                                                        style="text-decoration: none;">{{ contract.tool.name }}</button></p>
+                                            </form>
                                         </div>
                                         <div class="d-flex justify-content-between">
                                             <p class="font-italic mb-1"><span class="fw-bold">Supplier : </span>{{ contract.supplier }}</p>
@@ -127,8 +132,10 @@
                                             <p class="font-italic mb-1"><span class="fw-bold">Applicant : </span><a
                                                     href="{% url 'member-profile' user.id contract.applicant.id %}" style="text-decoration: none;">{{ contract.applicant.username }}</a></p>
                                             <h3 class="text-muted" style="position: absolute; left: 40%; bottom: 20%; transform: skewY(-11deg); font-size: 60px; opacity: 0.4;">Past</h3>
-                                            <p class="font-italic mb-1"><span class="fw-bold">Tool Contracted : </span><a
-                                                    href="{% url 'tool-details' user.id contract.tool.id %}" style="text-decoration: none;">{{ contract.tool.name }}</a></p>
+                                            <form method="post">
+                                                {% csrf_token %}
+                                                <p class="font-italic mb-1"><span class="fw-bold">Tool Contracted : </span><button type="submit" name="toolDetailsContract" value="{{ contract.tool.id }}" class="mb-1 p-0 btn btn-link" style="text-decoration: none;">{{ contract.tool.name }}</button></p>
+                                            </form>
                                         </div>
                                         <div class="d-flex justify-content-between">
                                             <p class="font-italic mb-1"><span class="fw-bold">Supplier : </span>{{ contract.supplier }}</p>
@@ -324,8 +331,12 @@
                                     <div style="position: relative; width: 100%; height: 100%;">
                                         <div class="d-flex justify-content-between">
                                             <p class="font-italic mb-1"><span class="fw-bold">Applicant : </span>{{ contract.applicant }}</p>
-                                            <p class="font-italic mb-1"><span class="fw-bold">Tool Contracted : </span><a
-                                                    href="{% url 'tool-details' user.id contract.tool.id %}" style="text-decoration: none;">{{ contract.tool.name }}</a></p>
+                                            <form method="post">
+                                                {% csrf_token %}
+                                                <p class="font-italic mb-1"><span class="fw-bold">Tool Contracted : </span><button type="submit"
+                                                        name="toolDetailsContract" value="{{ contract.tool.id }}" class="mb-1 p-0 btn btn-link"
+                                                        style="text-decoration: none;">{{ contract.tool.name }}</button></p>
+                                            </form>
                                         </div>
                                         <div class="d-flex justify-content-between">
                                             <p class="font-italic mb-1"><span class="fw-bold">Supplier : </span><a
@@ -340,8 +351,12 @@
                                             <h3 class="text-muted"
                                                 style="position: absolute; left: 40%; bottom: 20%; transform: skewY(-11deg); font-size: 60px; opacity: 0.4;">
                                                 Past</h3>
-                                            <p class="font-italic mb-1"><span class="fw-bold">Tool Contracted : </span><a
-                                                    href="{% url 'tool-details' user.id contract.tool.id %}" style="text-decoration: none;">{{ contract.tool.name }}</a></p>
+                                            <form method="post">
+                                                {% csrf_token %}
+                                                <p class="font-italic mb-1"><span class="fw-bold">Tool Contracted : </span><button type="submit"
+                                                        name="toolDetailsContract" value="{{ contract.tool.id }}" class="mb-1 p-0 btn btn-link"
+                                                        style="text-decoration: none;">{{ contract.tool.name }}</button></p>
+                                            </form>
                                         </div>
                                         <div class="d-flex justify-content-between">
                                             <p class="font-italic mb-1"><span class="fw-bold">Supplier : </span><a
@@ -357,8 +372,12 @@
                                         <div class="d-flex justify-content-between">
                                             <p class="font-italic mb-1"><span class="fw-bold">Applicant : </span><a
                                                     href="{% url 'member-profile' user.id contract.applicant.id %}" style="text-decoration: none;">{{ contract.applicant.username }}</a></p>
-                                            <p class="font-italic mb-1"><span class="fw-bold">Tool Contracted : </span><a
-                                                    href="{% url 'tool-details' user.id contract.tool.id %}" style="text-decoration: none;">{{ contract.tool.name }}</a></p>
+                                            <form method="post">
+                                                {% csrf_token %}
+                                                <p class="font-italic mb-1"><span class="fw-bold">Tool Contracted : </span><button type="submit"
+                                                        name="toolDetailsContract" value="{{ contract.tool.id }}" class="mb-1 p-0 btn btn-link"
+                                                        style="text-decoration: none;">{{ contract.tool.name }}</button></p>
+                                            </form>
                                         </div>
                                         <div class="d-flex justify-content-between">
                                             <p class="font-italic mb-1"><span class="fw-bold">Supplier : </span>{{ contract.supplier }}</p>
@@ -373,8 +392,12 @@
                                             <h3 class="text-muted"
                                                 style="position: absolute; left: 40%; bottom: 20%; transform: skewY(-11deg); font-size: 60px; opacity: 0.4;">
                                                 Past</h3>
-                                            <p class="font-italic mb-1"><span class="fw-bold">Tool Contracted : </span><a
-                                                    href="{% url 'tool-details' user.id contract.tool.id %}" style="text-decoration: none;">{{ contract.tool.name }}</a></p>
+                                            <form method="post">
+                                                {% csrf_token %}
+                                                <p class="font-italic mb-1"><span class="fw-bold">Tool Contracted : </span><button type="submit"
+                                                        name="toolDetailsContract" value="{{ contract.tool.id }}" class="mb-1 p-0 btn btn-link"
+                                                        style="text-decoration: none;">{{ contract.tool.name }}</button></p>
+                                            </form>
                                         </div>
                                         <div class="d-flex justify-content-between">
                                             <p class="font-italic mb-1"><span class="fw-bold">Supplier : </span>{{ contract.supplier }}</p>

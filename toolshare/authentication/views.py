@@ -498,6 +498,30 @@ class memberProfile(LoginRequiredMixin, View):
                     }
             request.session['data'] = data
             return redirect(reverse('tool-details', kwargs={'userID': userID, 'toolID': toolID}))
+        elif "toolDetailsContract" in request.POST:
+            print("1")
+            toolID = int(request.POST.get("toolDetailsContract"))
+
+            tool = blogModels.Blog.objects.get(id=toolID)
+            toolLocationParsed = Parser.scriptForParse(tool.location)
+
+            geocoderRequest = Geocoder(toolLocationParsed).geocoderApiRequest()
+            queryLocation = Geocoder(geocoderRequest).dataRequest()
+
+            if queryLocation['status'] == 'OK':
+                data = {
+                    'status': queryLocation['status'],
+                    'longName': queryLocation['longName'],
+                    'lat': queryLocation['lat'],
+                    'lng': queryLocation['lng'],
+                    'placeID': queryLocation['placeID'],
+                    }
+            elif queryLocation['status'] != 'OK':
+                data = {
+                    'status': queryLocation['status'],
+                    }
+            request.session['data'] = data
+            return redirect(reverse('tool-details', kwargs={'userID': userID, 'toolID': toolID}))
         elif "showPersonalTools" in request.POST:
             return redirect(reverse('member-tools', kwargs={'userID': userID, 'memberID': memberID}))
         
@@ -636,7 +660,6 @@ class Profile(LoginRequiredMixin, View):
                 'contractID': userSupplierContracts[contract].id
             }
             userSupplierContractStructure.append(structure)
-        print(userApplicantContractStructure)
 
         pathInfoUser = "/user/"+str(userID)+"/profile/"
         pathInfoMember = ""
@@ -660,6 +683,29 @@ class Profile(LoginRequiredMixin, View):
     def post(self, request, userID):
         if "toolDetails" in request.POST:
             toolID = int(request.POST.get("toolDetails"))
+
+            tool = blogModels.Blog.objects.get(id=toolID)
+            toolLocationParsed = Parser.scriptForParse(tool.location)
+
+            geocoderRequest = Geocoder(toolLocationParsed).geocoderApiRequest()
+            queryLocation = Geocoder(geocoderRequest).dataRequest()
+
+            if queryLocation['status'] == 'OK':
+                data = {
+                    'status': queryLocation['status'],
+                    'longName': queryLocation['longName'],
+                    'lat': queryLocation['lat'],
+                    'lng': queryLocation['lng'],
+                    'placeID': queryLocation['placeID'],
+                    }
+            elif queryLocation['status'] != 'OK':
+                data = {
+                    'status': queryLocation['status'],
+                    }
+            request.session['data'] = data
+            return redirect(reverse('tool-details', kwargs={'userID': userID, 'toolID': toolID}))
+        elif "toolDetailsContract" in request.POST:
+            toolID = int(request.POST.get("toolDetailsContract"))
 
             tool = blogModels.Blog.objects.get(id=toolID)
             toolLocationParsed = Parser.scriptForParse(tool.location)

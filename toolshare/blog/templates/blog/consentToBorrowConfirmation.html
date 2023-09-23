@@ -23,9 +23,12 @@
                 <div class="card shadow bg-dark text-white" style="border-radius: 1rem;">
                     <div class="card-body p-5">
                         <div class="text-center">
+                            {% if exists == True %}
                             <h3 class="fw-bold text-uppercase">A summary of the contract with the two signed parts<br>has been sent to you by e-mail.</h3>
-                            <p class="fs-5 mt-4"><a class="text-white-50" href="{% url 'home' %}">Back to home page</a>
-                            </p>
+                            {% else %}
+                            <h3 class="fw-bold text-uppercase">Confirmation of your declination on this contract.</h3>
+                            {% endif %}
+                            <p class="fs-5 mt-4"><a class="text-white-50" href="{% url 'home' %}">Back to home page</a></p>
                         </div>
                     </div>
                 </div>

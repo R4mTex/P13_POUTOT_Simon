@@ -643,13 +643,16 @@ class Profile(LoginRequiredMixin, View):
 
         userApplicantContractStructure = []
         for contract in range(len(userApplicantContracts)):
-            structure = {
-                'applicant': user.username,
-                'tool': userApplicantContracts[contract].contractedBlog,
-                'supplier': userApplicantContracts[contract].supplier,
-                'contractID': userApplicantContracts[contract].id
-            }
-            userApplicantContractStructure.append(structure)
+            if userApplicantContracts[contract].supplierSignature == None:
+                break
+            else:
+                structure = {
+                    'applicant': user.username,
+                    'tool': userApplicantContracts[contract].contractedBlog,
+                    'supplier': userApplicantContracts[contract].supplier,
+                    'contractID': userApplicantContracts[contract].id
+                }
+                userApplicantContractStructure.append(structure)
 
         userSupplierContractStructure = []
         for contract in range(len(userSupplierContracts)):

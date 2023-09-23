@@ -62,6 +62,7 @@
                                     {% if form.errors %}
                                     {{ form.errors }}
                                     {% endif %}
+                                    <p class="me-1">(max : {{ tool.availabalityEnd }})</p>
                                     <p>Hello, I would like to borrow the tool "<a href="{% url 'tool-details' user.id tool.id %}" target="_blank"
                                             style="color: black;">{{ tool.name }}</a>" from {% render_field form.startOfUse name="startOfUse" type="date" %}
                                         to {% render_field form.endOfUse name="endOfUse" type="date" %}.</p>

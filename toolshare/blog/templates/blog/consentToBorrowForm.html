@@ -69,7 +69,7 @@
                             <p class="text-muted">Their consent:<br>I, the undersigned: <span class="fw-bold">{{ applicantInfo.applicantName }}</span> have <span class="fw-bold">{{ applicantInfo.applicantApproval }}</span> the terms of borrowing on <span
                                     class="fw-bold">{{ applicantInfo.requestDate }}</span>.</p>
                             <img src="{{ applicantInfo.applicantSignature|signature_base64 }}" alt="applicantSignature" style="border: 1px solid black; opacity: 0.5;"/>
-                            <form action="" method="post">
+                            <form action="" method="post" novalidate>
                                 {% csrf_token %}
                                 {% if form.errors %}
                                 {{ form.errors }}
@@ -95,8 +95,8 @@
                                         {{ formSignature.signature }}
                                     </div>
                                 </div>
-                                <p class="text-center"><button class="btn btn-outline-primary" type="submit"
-                                        name="sendContract">Send</button></p>
+                                <p class="text-center"><button class="btn btn-outline-primary" type="submit" name="consent">Consent</button></p>
+                                <p class="text-center"><button class="btn btn-outline-danger" type="submit" name="decline">Decline</button></p>
                             </form>
                         </div>
                     </div>

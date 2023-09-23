@@ -82,4 +82,10 @@
     <p>The tool <span style="font-weight: bold;">{{ contractInfo.contractedBlog.name }}</span> will be borrowed/lent
         from <span style="font-weight: bold;">{{ contractInfo.startOfUse }}</span> to <span
             style="font-weight: bold;">{{ contractInfo.endOfUse }}</span>.</p>
+    {% if user.id == contractInfo.applicant.id %}
+    <p>To arrange a meeting place, please contact the supplier at the following e-mail address: <span style="font-weight: bold;">{{ contractInfo.supplier.email }}</span></p>
+    {% elif user.id == contractInfo.supplier.id %}
+    <p>To arrange a meeting place, please contact the borrower at the following e-mail address: <span style="font-weight: bold;">{{ contractInfo.applicant.email }}</span></p>
+    {% endif %}
+    
 </div>

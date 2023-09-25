@@ -9,7 +9,7 @@ from blog.scripts.parser import Parser
 from blog.scripts.geocoderApi import Geocoder
 from django.contrib import messages
 from django.conf import settings
-from django.core.mail import EmailMultiAlternatives
+from django.core.mail import EmailMultiAlternatives, EmailMessage
 from datetime import date
 from django.template.loader import render_to_string
 from blog.pdf import html2pdf
@@ -664,8 +664,6 @@ class consentToBorrowForm(LoginRequiredMixin, View):
 
                     return redirect(reverse('consent-to-borrow-confirmation', kwargs={'userID': userID, 'contractID': contractID}))
             else:
-                print("Here 6")
-                print(form.errors, formSignature.errors)
                 applicantInfo = {
                     'applicant': contract.applicant,
                     'applicantName': contract.applicantName,
@@ -685,6 +683,15 @@ class consentToBorrowForm(LoginRequiredMixin, View):
         elif "decline" in request.POST:
             contract = blogModels.Contract.objects.get(id=contractID)
             contract.delete()
+
+            subject = "Borrow Request Declined"
+            emailFrom = settings.EMAIL_HOST_USER
+            message = "The request has been declined by the supplier"
+            recipientList = [contract.applicant.email,]
+
+            email = EmailMessage(subject, message, emailFrom, recipientList)
+
+            email.send()
             return redirect(reverse('consent-to-borrow-confirmation', kwargs={'userID': userID, 'contractID': contractID}))
 
 

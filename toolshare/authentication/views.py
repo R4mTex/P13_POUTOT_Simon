@@ -1,6 +1,6 @@
 from django.conf import settings
 from django.shortcuts import render, redirect
-from django.contrib.auth import login
+from django.contrib.auth import login, update_session_auth_hash
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.views.generic import View
 from authentication import forms
@@ -743,8 +743,8 @@ class editProfile(LoginRequiredMixin, View):
     def get(self, request, userID):
         user = authModels.User.objects.get(id=userID)
         form_picture = self.form_picture()
-        form_profile = self.form_profile(instance=user)
-        form_password = self.form_password(id)
+        form_profile = self.form_profile(instance=request.user)
+        form_password = self.form_password(user)
 
         context = {
             'user': user,
@@ -767,8 +767,8 @@ class editProfile(LoginRequiredMixin, View):
                 
                 user = authModels.User.objects.get(id=userID)
                 form_picture = self.form_picture()
-                form_profile = self.form_profile(instance=user)
-                form_password = self.form_password(id)
+                form_profile = self.form_profile(instance=request.user)
+                form_password = self.form_password(user)
 
                 context = {
                     'user': user,
@@ -781,7 +781,7 @@ class editProfile(LoginRequiredMixin, View):
                 user = authModels.User.objects.get(id=userID)
                 form_picture = self.form_picture()
                 form_profile = self.form_profile(instance=user)
-                form_password = self.form_password(userID)
+                form_password = self.form_password(user)
 
                 context = {
                     'user': user,
@@ -793,10 +793,11 @@ class editProfile(LoginRequiredMixin, View):
         elif 'updateUserProfile' in request.POST:
             form_profile = self.form_profile(request.POST)
             if form_profile.is_valid():
+                print("Yes")
                 user = authModels.User.objects.get(id=userID)
                 form_picture = self.form_picture()
                 form_profile = self.form_profile(instance=request.user)
-                form_password = self.form_password(userID)
+                form_password = self.form_password(user)
 
                 context = {
                     'user': user,
@@ -806,10 +807,11 @@ class editProfile(LoginRequiredMixin, View):
                 }
                 return render(request, self.template_name, context=context)
             else:
+                print(form_profile.errors)
                 user = authModels.User.objects.get(id=userID)
                 form_picture = self.form_picture()
                 form_profile = self.form_profile(instance=request.user)
-                form_password = self.form_password(userID)
+                form_password = self.form_password(user)
 
                 context = {
                     'user': user,
@@ -819,14 +821,15 @@ class editProfile(LoginRequiredMixin, View):
                 }
                 return render(request, self.template_name, context=context)
         elif 'setNewPassword' in request.POST:
-            form = self.form_password(request.POST)
+            form = self.form_password(user=request.user, data=request.POST)
             if form.is_valid():
-                print(form)
+                form.save()
+                update_session_auth_hash(request, form.user)
 
                 user = authModels.User.objects.get(id=userID)
                 form_picture = self.form_picture()
                 form_profile = self.form_profile(instance=request.user)
-                form_password = self.form_password(request.POST)
+                form_password = self.form_password(user)
 
                 context = {
                     'user': user,
@@ -836,12 +839,10 @@ class editProfile(LoginRequiredMixin, View):
                 }
                 return render(request, self.template_name, context=context)
             else:
-                print("No", form.errors, form.error_messages, form.error_class)
-                print(request.POST)
                 user = authModels.User.objects.get(id=userID)
                 form_picture = self.form_picture()
                 form_profile = self.form_profile(instance=request.user)
-                form_password = self.form_password(userID)
+                form_password = self.form_password(user)
 
                 context = {
                     'user': user,
@@ -850,8 +851,7 @@ class editProfile(LoginRequiredMixin, View):
                     'form_password': form_password,
                 }
                 return render(request, self.template_name, context=context)
-
-            
+         
 
 class Registration(View):
     template_name = 'authentication/registration.html'

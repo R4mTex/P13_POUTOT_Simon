@@ -499,7 +499,6 @@ class memberProfile(LoginRequiredMixin, View):
             request.session['data'] = data
             return redirect(reverse('tool-details', kwargs={'userID': userID, 'toolID': toolID}))
         elif "toolDetailsContract" in request.POST:
-            print("1")
             toolID = int(request.POST.get("toolDetailsContract"))
 
             tool = blogModels.Blog.objects.get(id=toolID)
@@ -791,9 +790,10 @@ class editProfile(LoginRequiredMixin, View):
                 }
                 return render(request, self.template_name, context=context)
         elif 'updateUserProfile' in request.POST:
-            form_profile = self.form_profile(request.POST)
+            form_profile = self.form_profile(request.POST, instance=request.user)
             if form_profile.is_valid():
-                print("Yes")
+                form_profile.save()
+
                 user = authModels.User.objects.get(id=userID)
                 form_picture = self.form_picture()
                 form_profile = self.form_profile(instance=request.user)
@@ -807,7 +807,6 @@ class editProfile(LoginRequiredMixin, View):
                 }
                 return render(request, self.template_name, context=context)
             else:
-                print(form_profile.errors)
                 user = authModels.User.objects.get(id=userID)
                 form_picture = self.form_picture()
                 form_profile = self.form_profile(instance=request.user)

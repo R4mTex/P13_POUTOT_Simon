@@ -2,6 +2,7 @@ from django.contrib.auth.forms import UserCreationForm, UserChangeForm, Password
 from django.contrib.auth import get_user_model
 from django import forms
 from authentication.models import User
+from phonenumber_field.modelfields import PhoneNumberField
 
 
 class SignupForm(UserCreationForm):
@@ -21,8 +22,14 @@ class UploadProfilePictureForm(forms.ModelForm):
         fields = ('profilePicture',)
 
 
-class UpdateUserProfile(UserChangeForm):
-    password = None
+class UpdateUserProfile(forms.ModelForm):
+    fullname = forms.CharField(max_length=256,)
+    username = forms.CharField(max_length=256,)
+    email = forms.EmailField()
+    phoneNumber = PhoneNumberField()
+    postalAddress = forms.CharField(max_length=256,)
+    bio = forms.CharField(widget=forms.Textarea(attrs={'rows': 5}), max_length=256)
+
     class Meta:
         model = User
         fields = ('fullname', 'username', 'email', 'phoneNumber', 'postalAddress', 'bio',)

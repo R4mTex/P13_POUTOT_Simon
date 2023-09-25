@@ -60,7 +60,7 @@ background: linear-gradient(to right, rgba(251, 194, 235, 1), rgba(166, 193, 238
                                     <div class="tab-content pt-3">
                                         <div class="tab-pane active">
                                             {% if form_profile.errors %}
-                                            {{ form_profile.errorlist }}
+                                            {{ form_profile.erros }}
                                             {% endif %}
                                             <form method="post" novalidate>
                                                 {% csrf_token %}
@@ -106,7 +106,7 @@ background: linear-gradient(to right, rgba(251, 194, 235, 1), rgba(166, 193, 238
                                                             <div class="col">
                                                                 <div class="form-group">
                                                                     <label class="mb-1 fw-bold">About</label>
-                                                                    {% render_field form_profile.bio class+="form-control mb-2" type="text" name="bio" placeholder="My bio" rows="5" %}
+                                                                    {% render_field form_profile.bio class+="form-control mb-2" type="text" name="bio" placeholder="My bio" %}
                                                                 </div>
                                                             </div>
                                                         </div>

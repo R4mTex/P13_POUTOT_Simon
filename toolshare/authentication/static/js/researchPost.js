@@ -1,22 +1,16 @@
-$(document).ready(function () {
-    // catch the form's submit event
-    $('#addTool').click(function () {
-        // create an AJAX call
-        $.ajax({
-            data: $(this).serialize(), // get the form data
-            type: $(this).attr('method'), // GET or POST
-            url: "{% url 'research' user.id %}",
-            // on success
-            success: function (response) {
-                alert("Thank you for reaching us out " + response.tools);
-            },
-            // on error
-            error: function (response) {
-                // alert the error if any error occurred
-                alert(response.responseJSON.errors);
-                console.log(response.responseJSON.errors)
-            }
-        });
-        return false;
-    });
-})
+$.ajax({
+    url: '/user/2/research/all-items/',  // Replace with your actual URL
+    type: 'POST',  // Use 'POST' if needed
+    dataType: 'json',  // Change based on your response type
+    headers: {
+        'X-CSRFToken': $('input[name=csrfmiddlewaretoken]').val()
+    },
+    success: function (response) {
+        // Handle the response here
+        console.log(response.message);
+    },
+    error: function (error) {
+        // Handle any errors here
+        console.error(error);
+    }
+});

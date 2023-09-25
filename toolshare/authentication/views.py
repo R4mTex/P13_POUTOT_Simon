@@ -13,6 +13,7 @@ from blog.scripts.parser import Parser
 from blog.scripts.geocoderApi import Geocoder
 from django.core.mail import EmailMessage
 from datetime import date
+from django.http import JsonResponse, HttpResponse
 
 
 # Create your views here.
@@ -413,6 +414,44 @@ class Research(LoginRequiredMixin, View):
             else:
                 memberID = int(request.POST.get("authorProfile"))
                 return redirect(reverse('member-profile', kwargs={'userID': userID, 'memberID': memberID}))
+            
+
+class testBestRated(LoginRequiredMixin, View):
+    template_name = 'authentication/test.html'
+    def get(self, request, userID):
+            tools = blogModels.Blog.objects.all()
+            
+            scoreRate = []
+            for tool in range(len(tools)):
+                scoreRate.append(tools[tool].rating)
+
+            scoreRate.sort(reverse=True)
+
+            toolBestRated = []
+            for score in range(len(scoreRate)):
+                toolBestRated.append(blogModels.Blog.objects.filter(rating=scoreRate[score]))
+            
+            bestTools = []
+            for value in range(len(toolBestRated)):
+                bestTools.append(toolBestRated[value][0])
+
+            favorites = blogModels.Favorite.objects.all()
+
+            for favorite in range(len(favorites)):
+                for tool in range(len(bestTools)):
+                    if bestTools[tool].id == favorites[favorite].blog.id and request.user.username == favorites[favorite].user.username:
+                        bestTools[tool].match = True
+
+            for tool in range(len(bestTools)):
+                if bestTools[tool].availabalityStart <= date.today() <= bestTools[tool].availabalityEnd:
+                    bestTools[tool].availabality = True
+                else:
+                    bestTools[tool].availabality = False
+
+            context = {
+                'tools': bestTools,
+            }
+            return render(request, self.template_name, context=context)
         
 
 class memberProfile(LoginRequiredMixin, View):

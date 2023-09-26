@@ -182,6 +182,25 @@
                             </div>
                         </td>
                     </tr>
+                    <input type="hidden" id="tools" value="{{ tools }}">
+                    <script>
+                        let flexRadioDefault1 = document.getElementById("flexRadioDefault1")
+
+                        flexRadioDefault1.addEventListener("change", function (event) {
+                            event.preventDefault();
+                            let tools = new FormData()
+                            tools.append("tools", document.getElementById("tools").value)
+                            tools.append("csrfmiddlewaretoken", "{{ csrf_token }}")
+                            axios.post('sorted-by-alphabetic-from-A-to-Z/', tools)
+                            .then(function (resp) {
+                                console.log(resp)
+                                result.innerHTML = resp.data
+                            }).catch(function (err) {
+                                console.log(err)
+                            })
+                        })
+                    </script>
+                    <div id="result"></div>
                 </tbody>
                 <!-- Table body -->
             </table>

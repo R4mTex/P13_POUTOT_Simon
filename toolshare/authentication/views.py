@@ -74,7 +74,6 @@ class Research(LoginRequiredMixin, View):
     template_name = 'authentication/research.html'
 
     def get(self, request, userID):
-        print(request.GET)
         tools = blogModels.Blog.objects.all()
         favorites = blogModels.Favorite.objects.all()
         contracts = blogModels.Contract.objects.all()
@@ -271,6 +270,7 @@ class Research(LoginRequiredMixin, View):
             return redirect(reverse('tool-details', kwargs={'userID': userID, 'toolID': toolID}))
         elif "addTool" in request.POST:
             toolID = int(request.POST.get("addTool"))
+            print(request.POST.get("tools"))
 
             toolSelected = blogModels.Blog.objects.get(id=toolID)
             toolSelected.popularity += 1
@@ -397,42 +397,18 @@ class Research(LoginRequiredMixin, View):
                 return redirect(reverse('member-profile', kwargs={'userID': userID, 'memberID': memberID}))
             
 
-class testBestRated(LoginRequiredMixin, View):
-    template_name = 'authentication/test.html'
-    def get(self, request, userID):
-            tools = blogModels.Blog.objects.all()
-            
-            scoreRate = []
-            for tool in range(len(tools)):
-                scoreRate.append(tools[tool].rating)
+class alphabeticA_Z(LoginRequiredMixin, View):
+    template_name = 'authentication/research.html'
 
-            scoreRate.sort(reverse=True)
+    def post(self, request, userID):
+        tools = dict(request.POST.get("tools"))
+        print(tools)
+        print(type(tools))
 
-            toolBestRated = []
-            for score in range(len(scoreRate)):
-                toolBestRated.append(blogModels.Blog.objects.filter(rating=scoreRate[score]))
-            
-            bestTools = []
-            for value in range(len(toolBestRated)):
-                bestTools.append(toolBestRated[value][0])
-
-            favorites = blogModels.Favorite.objects.all()
-
-            for favorite in range(len(favorites)):
-                for tool in range(len(bestTools)):
-                    if bestTools[tool].id == favorites[favorite].blog.id and request.user.username == favorites[favorite].user.username:
-                        bestTools[tool].match = True
-
-            for tool in range(len(bestTools)):
-                if bestTools[tool].availabalityStart <= date.today() <= bestTools[tool].availabalityEnd:
-                    bestTools[tool].availabality = True
-                else:
-                    bestTools[tool].availabality = False
-
-            context = {
-                'tools': bestTools,
-            }
-            return render(request, self.template_name, context=context)
+        resp = {
+            'status': "success"
+        }
+        return JsonResponse(resp)
         
 
 class memberProfile(LoginRequiredMixin, View):

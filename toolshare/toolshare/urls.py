@@ -37,8 +37,11 @@ urlpatterns = [
     path('user/<int:userID>/research/all-tools/', authView.Research.as_view(template_name='authentication/research.html'), name='research-all-tools'),
     path('user/<int:userID>/research/all-equipments/', authView.Research.as_view(template_name='authentication/research.html'), name='research-all-equipments'),
     path('user/<int:userID>/research/most-popular/', authView.Research.as_view(template_name='authentication/research.html'), name='research-most-popular'),
-    path('user/<int:userID>/research/best-rated/', authView.testBestRated.as_view(template_name='authentication/test.html'), name='research-best-rated'),
+    path('user/<int:userID>/research/best-rated/', authView.Research.as_view(template_name='authentication/research.html'), name='research-best-rated'),
     ### /Research ###
+    ### Research Sorted By ###
+    path('user/<int:userID>/research/sorted-by-alphabetic-from-A-to-Z/', authView.alphabeticA_Z.as_view(template_name='authentication/research.html'), name='research-sorted-by-alphabetic-from-A-to-Z'),
+    ### /Research Sorted By ###
     path('user/<int:userID>/favorites/', authView.Favorites.as_view(template_name='authentication/favorites.html'), name='favorites'),
     path('user/<int:userID>/profile/', authView.Profile.as_view(template_name='authentication/profile.html'), name='profile'),
     path('user/<int:userID>/member/<int:memberID>/member-profile/', authView.memberProfile.as_view(template_name='authentication/profile.html'), name='member-profile'),

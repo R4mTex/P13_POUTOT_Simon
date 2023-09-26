@@ -74,6 +74,7 @@ class Research(LoginRequiredMixin, View):
     template_name = 'authentication/research.html'
 
     def get(self, request, userID):
+        print(request.GET)
         tools = blogModels.Blog.objects.all()
         favorites = blogModels.Favorite.objects.all()
         contracts = blogModels.Contract.objects.all()
@@ -215,15 +216,18 @@ class Research(LoginRequiredMixin, View):
             for tool in range(len(tools)):
                 scoreRate.append(tools[tool].rating)
 
+            scoreRate = list(set(scoreRate))
+            
             scoreRate.sort(reverse=True)
 
             toolBestRated = []
             for score in range(len(scoreRate)):
                 toolBestRated.append(blogModels.Blog.objects.filter(rating=scoreRate[score]))
-            
+
             bestTools = []
-            for value in range(len(toolBestRated)):
-                bestTools.append(toolBestRated[value][0])
+            for query in range(len(toolBestRated)):
+                for blog in range(len(toolBestRated[query])):
+                    bestTools.append(toolBestRated[query][blog])
 
             favorites = blogModels.Favorite.objects.all()
 

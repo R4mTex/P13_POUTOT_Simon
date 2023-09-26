@@ -220,20 +220,7 @@
                 {% endfor %}
             </div>
             <div class="container px-4 px-lg-5 mt-5">
-                <div class="row ps-4 ps-md-0 gx-4 gx-lg-5 row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-xl-4" id="test">
-                    <button id="firstTry">TEST</button>
-                    <script>
-                        var load_tool_filter = document.getElementById("firstTry");
-                        var result = document.getElementById("test");
-
-                        load_tool_filter.addEventListener('click', function () {
-                            axios.get("/user/2/research/best-rated/").then(function (resp) {
-                                result.innerHTML = resp.data
-                            }).catch(function (err) {
-                                console.log(err)
-                            })
-                        })
-                    </script>
+                <div class="row ps-4 ps-md-0 gx-4 gx-lg-5 row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-xl-4">
                     {% if tools|length >= 4 %}
                         {% for tool in tools %}
                         <div class="col col-sm-6 col-md-4 col-xl-3 mb-5" name="toolCard">
@@ -595,6 +582,28 @@
 </div>
 
 <script src="/static/js/alert.js"></script>
-<!--<script src="/static/js/researchPost.js"></script>-->
+<!--<script src="/static/js/researchPost.js"></script>
+<script>
+    let result = document.getElementById("result");
 
+    $(document).ready(function () {
+        axios.get("/user/{{ user.id }}/research/").then(function (resp) {
+            result.innerHTML = resp.data
+        }).catch(function (err) {
+            console.log(err)
+        })
+
+        let allTools = document.getElementById("allTools");
+
+        allTools.addEventListener("click", function (event) {
+            event.preventDefault();
+            axios.get("/user/{{ user.id }}/research/all-tools/").then(function (resp) {
+                result.innerHTML = resp.data
+            }).catch(function (err) {
+                console.log(err)
+            })
+        })
+    })
+</script>
+-->
 {% endblock content %}

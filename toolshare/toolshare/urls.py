@@ -34,7 +34,6 @@ urlpatterns = [
     path('user/<int:userID>/publisher/', authView.Publisher.as_view(template_name='authentication/publisher.html'), name='publisher'),
     ### Research ###
     path('user/<int:userID>/research/', authView.Research.as_view(template_name='authentication/research.html'), name='research'),
-    path('user/<int:userID>/research/all-items/', authView.Research.as_view(template_name='authentication/research.html'), name='research-all-items'),
     path('user/<int:userID>/research/all-tools/', authView.Research.as_view(template_name='authentication/research.html'), name='research-all-tools'),
     path('user/<int:userID>/research/all-equipments/', authView.Research.as_view(template_name='authentication/research.html'), name='research-all-equipments'),
     path('user/<int:userID>/research/most-popular/', authView.Research.as_view(template_name='authentication/research.html'), name='research-most-popular'),

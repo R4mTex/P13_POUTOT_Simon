@@ -117,30 +117,7 @@ class Research(LoginRequiredMixin, View):
             return render(request, self.template_name, context=context)
     
     def post(self, request, userID):
-        if "allItems" in request.POST:
-            allItems = blogModels.Blog.objects.all()
-            favorites = blogModels.Favorite.objects.all()
-
-            for favorite in range(len(favorites)):
-                for tool in range(len(allItems)):
-                    if allItems[tool].id == favorites[favorite].blog.id and request.user.username == favorites[favorite].user.username:
-                        allItems[tool].match = True
-
-            for tool in range(len(allItems)):
-                if allItems[tool].availabalityStart <= date.today() <= allItems[tool].availabalityEnd:
-                    allItems[tool].availabality = True
-                else:
-                    allItems[tool].availabality = False
-
-            reverseToolsList = []
-            for tool in reversed(range(len(allItems))):
-                reverseToolsList.append(allItems[tool])
-            
-            context = {
-                'tools': reverseToolsList,
-            }
-            return render(request, self.template_name, context=context)
-        elif "allTools" in request.POST:
+        if "allTools" in request.POST:
             allTools = blogModels.Blog.objects.exclude(category="Equipment")
             favorites = blogModels.Favorite.objects.all()
 

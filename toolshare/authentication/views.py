@@ -14,6 +14,7 @@ from blog.scripts.geocoderApi import Geocoder
 from django.core.mail import EmailMessage
 from datetime import date
 from django.http import JsonResponse, HttpResponse
+import re
 
 
 # Create your views here.
@@ -100,21 +101,11 @@ class Research(LoginRequiredMixin, View):
         for tool in reversed(range(len(tools))):
             reverseToolsList.append(tools[tool])
 
-        if len(reverseToolsList) <= 4:
-            tools = reverseToolsList[0:]
-        
-            context = {
-                'tools': tools,
-            }
-            return render(request, self.template_name, context=context)
-        elif len(reverseToolsList) > 4:
-            tools = reverseToolsList[0:3]
-            toolsCount = len(reverseToolsList)
-        
-            context = {
-                'tools': tools,
-            }
-            return render(request, self.template_name, context=context)
+        context = {
+            'tools': reverseToolsList,
+        }
+
+        return render(request, self.template_name, context=context)
     
     def post(self, request, userID):
         if "allTools" in request.POST:
@@ -270,7 +261,6 @@ class Research(LoginRequiredMixin, View):
             return redirect(reverse('tool-details', kwargs={'userID': userID, 'toolID': toolID}))
         elif "addTool" in request.POST:
             toolID = int(request.POST.get("addTool"))
-            print(request.POST.get("tools"))
 
             toolSelected = blogModels.Blog.objects.get(id=toolID)
             toolSelected.popularity += 1
@@ -401,14 +391,37 @@ class alphabeticA_Z(LoginRequiredMixin, View):
     template_name = 'authentication/research.html'
 
     def post(self, request, userID):
-        tools = dict(request.POST.get("tools"))
-        print(tools)
-        print(type(tools))
+        tools = request.POST.get('tools')
+
+        temp = re.findall(r'\d+', tools)
+        res = list(map(int, temp))
+        
+        toolsIDNameList = []
+        for number in range(len(res)):
+            toolsNameID = {
+                'id': blogModels.Blog.objects.get(id=res[number]).id,
+                'name': Parser.removeUpperCase(blogModels.Blog.objects.get(id=res[number]).name)           
+            }
+            toolsIDNameList.append(toolsNameID)
+
+        def get_names(toolsIDNameList):
+            return toolsIDNameList.get('name')
+
+        toolsIDNameList.sort(key=get_names, reverse=False)
+
+        toolsObjects = []
+        for toolObject in range(len(toolsIDNameList)):
+            toolsObjects.append(blogModels.Blog.objects.filter(id=toolsIDNameList[toolObject]['id']))
+
+        toolsSortedBy = []
+        for tool in range(len(toolsObjects)):
+            toolsSortedBy.append(toolsObjects[tool][0])
 
         resp = {
+            'tools': toolsSortedBy,
             'status': "success"
         }
-        return JsonResponse(resp)
+        return JsonResponse({'resp': list(resp)})
         
 
 class memberProfile(LoginRequiredMixin, View):

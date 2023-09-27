@@ -34,6 +34,7 @@ class editTool(LoginRequiredMixin, View):
 
         if blog_form.is_valid():
             blog = blog_form.save(commit=False)
+            blog.name = Parser.removeUpperCase(blog_form.cleaned_data.get('name'))
             blog.author = request.user
             blog.save()
             return redirect(reverse('profile', kwargs={'userID': userID}))

@@ -193,11 +193,99 @@
                             tools.append("csrfmiddlewaretoken", "{{ csrf_token }}")
                             axios.post('sorted-by-alphabetic-from-A-to-Z/', tools)
                             .then(function (response) {
-                                for (let i = 0; i < response.data['tools'].length; i++) {
-                                    $("#toolName").html(response.data['tools'][i]['name'])
+                                console.log(response.data['tools'])
+                                let html = ""
+                                $.each(response.data, function (key, value) {
+                                    html += `<div class="col col-sm-6 col-md-4 col-xl-3 mb-5" name="toolCard">
+                                                <div class="card gradient-custom-card h-100 shadow">
+                                                    <!-- Available/Unavailable badge -->
+                                                    {% if ${value.availabality} == True and ${value.onContract} == False %}
+                                                    <div class="badge bg-success text-white position-absolute" style="top: 0.5rem; right: 0.5rem">
+                                                        Available</div>
+                                                    {% elif ${value.availabality} == False and ${value.onContract} == False %}
+                                                    <div class="badge bg-danger text-white position-absolute" style="top: 0.5rem; right: 0.5rem">
+                                                        Unavailable</div>
+                                                    {% elif ${value.onContract} == True %}
+                                                    <div class="badge bg-primary text-white position-absolute" style="top: 0.5rem; right: 0.5rem">
+                                                        On Contract</div>
+                                                    {% endif %}
+                                                    <!-- Tool image -->
+                                                    <img class="card-img-top border-bottom p-3" src="${value.image}" alt="..."
+                                                        style="height: 200px; width: auto;" />
+                                                    <!-- Tool details -->
+                                                    <div class="card-body p-4">
+                                                        <div class="text-center">
+                                                            <!-- Tool name -->
+                                                            <h5 class="fw-bolder" style="text-transform: capitalize;">${value.name}</h5>
+                                                            <!-- Tool reviews -->
+                                                            <div class="d-flex justify-content-center small text-warning mb-2">
+                                                                <div class="bi bi-star-fill"></div>
+                                                                <div class="bi bi-star-fill"></div>
+                                                                <div class="bi bi-star-fill"></div>
+                                                                <div class="bi bi-star-fill"></div>
+                                                                <div class="bi bi-star-fill"></div>
+                                                            </div>
+                                                            <!-- Tool disponibility -->
+                                                            <h6 class="fst-italic mt-3">Availability</h6>
+                                                                ${value.availabalityStart}<br>
+                                                                -----<br>
+                                                                ${value.availabalityEnd}
+                                                                <!-- Tool location -->
+                                                            <h6 class="fst-italic mt-2">Location</h6>
+                                                                ${value.location}
+                                                        </div>
+                                                    </div>
+                                                    <!-- Tool actions -->
+                                                    <div class="card-footer p-2 pt-0 border-top-0 bg-transparent">
+                                                        <form method="post" role="form" novalidate>
+                                                            {% csrf_token %}
+                                                            <div class="text-center">
+                                                                <button class="btn btn-outline-warning" type="submit" name="toolDetails" value="${value.id}" id="viewDetails">View details<i
+                                                                        class="bi bi-gear ms-2"></i>
+                                                                </button>
+                                                                {% if ${value.author.username} != request.user.username and ${value.match} == False %}
+                                                                <button class="btn btn-outline-danger mt-2" type="submit" name="addTool" value="${value.id}" id="addTool">Add to your Bag<i
+                                                                        class="bi bi-heart ms-2"></i>
+                                                                </button>
+                                                                {% elif ${value.author.username} != request.user.username and ${value.match} == True %}
+                                                                <button class="btn btn-danger mt-2" type="submit" name="removeTool" value="${value.id}">Remove from your Bag<i
+                                                                        class="bi bi-x-octagon ms-2"></i>
+                                                                </button>
+                                                                {% elif ${value.author.username} == request.user.username %}
+                                                                <button class="btn btn-danger mt-2" type="submit" name="supprTool" value="${value.id}">Remove from your<br>Personal
+                                                                    Tools<i class="bi bi-x-octagon ms-2"></i>
+                                                                </button>
+                                                                {% endif %}
+                                                            </div>
+                                                            <!-- Tool deposit -->
+                                                            {% if ${value.deposit} == True %}
+                                                            <h6 class="mt-4">He has a deposit</h6>
+                                                            {% else %}
+                                                            <h6 class="mt-4">There is no deposit</h6>
+                                                            {% endif %}
+                                                            <!-- Tool publisher -->
+                                                            <h6 class="mt-3 fw-bolder">Published by :
+                                                                {% if ${value.author.username} != request.user.username %}
+                                                                <button type="submit" name="authorProfile" value="${value.author.id}" class="btn btn-link" 
+                                                                    style="text-decoration: none; padding: 0; margin: 0; position: relative; bottom: 2px;">${value.author}
+                                                                </button>
+                                                                {% else %}
+                                                                <button type="submit" name="authorProfile" value="${value.author.id}" class="btn btn-link"
+                                                                    style="text-decoration: none; padding: 0; margin: 0; position: relative; bottom: 2px;">You
+                                                                </button>
+                                                                {% endif %}
+                                                            </h6>
+                                                        </form>
+                                                    </div>
+                                                </div>
+                                            </div>`
+                                        })
+                                $('#result').html(html);
+                                // for (let i = 0; i < response.data['tools'].length; i++) {
+                                    // $("#toolName").html(response.data['tools'][i]['name'])
                                     // result.innerHTML += '<h5 class="fw-bolder" style="text-transform: capitalize;">' + response.data['tools'][i]['name'] + '</h5>'
-                                    console.log(response.data['tools'][i])
-                                }
+                                    // console.log(response.data['tools'][i])
+                                // }
                             }).catch(function (error) {
                                 console.log(error)
                             })
@@ -242,7 +330,7 @@
                 {% endfor %}
             </div>
             <div class="container px-4 px-lg-5 mt-5">
-                <div class="row ps-4 ps-md-0 gx-4 gx-lg-5 row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-xl-4">
+                <div class="row ps-4 ps-md-0 gx-4 gx-lg-5 row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-xl-4" id="cardSection">
                     {% if tools|length >= 4 %}
                         {% for tool in tools %}
                         <div class="col col-sm-6 col-md-4 col-xl-3 mb-5" name="toolCard">

@@ -411,17 +411,13 @@ class alphabeticA_Z(LoginRequiredMixin, View):
 
         toolsObjects = []
         for toolObject in range(len(toolsIDNameList)):
-            toolsObjects.append(blogModels.Blog.objects.filter(id=toolsIDNameList[toolObject]['id']))
+            toolsObjects.append(blogModels.Blog.objects.filter(id=toolsIDNameList[toolObject]['id']).values())
 
         toolsSortedBy = []
         for tool in range(len(toolsObjects)):
             toolsSortedBy.append(toolsObjects[tool][0])
 
-        resp = {
-            'tools': toolsSortedBy,
-            'status': "success"
-        }
-        return JsonResponse({'resp': list(resp)})
+        return JsonResponse({'tools': list(toolsSortedBy)})
         
 
 class memberProfile(LoginRequiredMixin, View):

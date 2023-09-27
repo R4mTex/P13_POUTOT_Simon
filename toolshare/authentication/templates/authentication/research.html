@@ -192,11 +192,14 @@
                             tools.append("tools", document.getElementById("tools").value)
                             tools.append("csrfmiddlewaretoken", "{{ csrf_token }}")
                             axios.post('sorted-by-alphabetic-from-A-to-Z/', tools)
-                            .then(function (resp) {
-                                console.log(resp.data['resp'][0])
-                                result.innerHTML = resp.data
-                            }).catch(function (err) {
-                                console.log(err)
+                            .then(function (response) {
+                                for (let i = 0; i < response.data['tools'].length; i++) {
+                                    $("#toolName").html(response.data['tools'][i]['name'])
+                                    // result.innerHTML += '<h5 class="fw-bolder" style="text-transform: capitalize;">' + response.data['tools'][i]['name'] + '</h5>'
+                                    console.log(response.data['tools'][i])
+                                }
+                            }).catch(function (error) {
+                                console.log(error)
                             })
                         })
                     </script>
@@ -262,7 +265,7 @@
                                 <div class="card-body p-4">
                                     <div class="text-center">
                                         <!-- Tool name -->
-                                        <h5 class="fw-bolder" style="text-transform: capitalize;">{{ tool.name }}</h5>
+                                        <h5 class="fw-bolder" style="text-transform: capitalize;" id="toolName">{{ tool.name }}</h5>
                                         <!-- Tool reviews -->
                                         <div class="d-flex justify-content-center small text-warning mb-2">
                                             <div class="bi bi-star-fill"></div>

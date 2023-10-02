@@ -43,25 +43,27 @@
         <div class="row flex-lg-nowrap">
             <div class="col mb-3">
                 <div class="card shadow">
-                    <div class="card-body">
+                    <div class="card-body p-5">
                         <div class="e-profile">
-                            <h1>Contract</h1>
+                            <h1 class="pb-1">Contract</h1>
                             <h5 class="text-muted">Borrowing Conditions</h5>
-                            <ul class="text-muted">
-                                <li>Commit to respecting the equipment</li>
-                                <li>Commit to returning the equipment clean and with a full tank</li>
-                                <li>Commit to notifying the owner in case of equipment failure during use</li>
-                                <li>Commit not to lend/sublet/sell the equipment</li>
-                                <li>Commit to being the sole user of the equipment</li>
-                                <li>Commit to using the equipment only on a personal construction site</li>
-                                <li>Commit to using the equipment only for its intended purpose</li>
-                                <li>Commit to respecting deadlines</li>
-                                <li>Commit to wearing the necessary safety equipment while using the equipment</li>
-                                <li>Commit to reimbursing for equipment damage or loss</li>
-                                <li>Commit not to file a complaint in case of accidents caused by human error</li>
-                            </ul>
-                            <p>In case of non-compliance with these conditions, a penalty or legal action will be applied.</p>
-                            <p class="text-muted">Hello, the user "<span class="fw-bold"><a
+                            <div class="text-muted">
+                                <ul>
+                                    <li>Commit to respecting the equipment</li>
+                                    <li>Commit to returning the equipment clean and with a full tank</li>
+                                    <li>Commit to notifying the owner in case of equipment failure during use</li>
+                                    <li>Commit not to lend/sublet/sell the equipment</li>
+                                    <li>Commit to being the sole user of the equipment</li>
+                                    <li>Commit to using the equipment only on a personal construction site</li>
+                                    <li>Commit to using the equipment only for its intended purpose</li>
+                                    <li>Commit to respecting deadlines</li>
+                                    <li>Commit to wearing the necessary safety equipment while using the equipment</li>
+                                    <li>Commit to reimbursing for equipment damage or loss</li>
+                                    <li>Commit not to file a complaint in case of accidents caused by human error</li>
+                                </ul>
+                                <p>In case of non-compliance with these conditions, a penalty or legal action will be applied.</p>
+                            </div>
+                            <p class="text-muted pt-4">Hello, the user "<span class="fw-bold"><a
                                         href="{% url 'member-profile' user.id applicantInfo.applicant.id %}" target="_blank"
                                         style="color: #6c757d;">{{ applicantInfo.applicant }}</a></span>" wishes to borrow your tool "<span
                                     class="fw-bold"><a href="{% url 'tool-details' user.id tool.id %}" target="_blank" style="color: #6c757d;">{{ tool.name }}</a></span>" from <span class="fw-bold">{{ applicantInfo.startOfUse }}</span> to <span
@@ -69,13 +71,9 @@
                             <p class="text-muted">Their consent:<br>I, the undersigned: <span class="fw-bold">{{ applicantInfo.applicantName }}</span> have <span class="fw-bold">{{ applicantInfo.applicantApproval }}</span> the terms of borrowing on <span
                                     class="fw-bold">{{ applicantInfo.requestDate }}</span>.</p>
                             <img src="{{ applicantInfo.applicantSignature|signature_base64 }}" alt="applicantSignature" style="border: 1px solid black; opacity: 0.5;"/>
-                            <form action="" method="post" novalidate>
-                                {% csrf_token %}
-                                {% if form.errors %}
-                                {{ form.errors }}
-                                {% endif %}
-                                <h5 style="margin-left: 690px;">Lending Conditions</h5>
-                                <ul style="margin-left: 698px;">
+                            <h5 style="margin-left: 50%;">Lending Conditions</h5>
+                            <div style="margin-left: 50%;">
+                                <ul>
                                     <li>Commit to lending the equipment in good condition, clean, and with a full tank</li>
                                     <li>Commit to respecting deadlines</li>
                                     <li>Commit to returning the deposit if the equipment's integrity is maintained</li>
@@ -83,7 +81,13 @@
                                     <li>Commit to explaining the equipment's operation</li>
                                     <li>Commit to being honest about the equipment's condition during handover</li>
                                 </ul>
-                                <p class="text-end">In case of non-compliance with these conditions, a penalty or legal action will be applied.</p>
+                            </div>
+                            <p class="text-end">In case of non-compliance with these conditions, a penalty or legal action will be applied.</p>
+                            <form class="pt-5" method="post" novalidate>
+                                {% csrf_token %}
+                                {% if form.errors %}
+                                {{ form.errors }}
+                                {% endif %}
                                 <p class="text-end">I, the undersigned:{% render_field form.supplierName name="supplierName" placeholder=user.fullname %}
                                     have {% render_field form.supplierApproval name="supplierApproval" placeholder="Read and approved" %} the terms of lending on {% render_field form.approvalDate name="approvalDate" type="date" %}
                                     at {% render_field form.supplierPostalAddress name="supplierPostalAddress" placeholder=user.postalAddress %}.
@@ -95,7 +99,7 @@
                                         {{ formSignature.signature }}
                                     </div>
                                 </div>
-                                <p class="text-center"><button class="btn btn-outline-primary" type="submit" name="consent">Consent</button></p>
+                                <p class="text-center mt-5"><button class="btn btn-outline-primary" type="submit" name="consent">Consent</button></p>
                                 <p class="text-center"><button class="btn btn-outline-danger" type="submit" name="decline">Decline</button></p>
                             </form>
                         </div>

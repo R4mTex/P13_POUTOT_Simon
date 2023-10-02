@@ -38,34 +38,35 @@
         <div class="row flex-lg-nowrap">
             <div class="col mb-3">
                 <div class="card shadow">
-                    <div class="card-body">
+                    <div class="card-body p-5">
                         <div class="e-profile">
-                            <h1>Contract</h1>
+                            <h1 class="pb-1">Contract</h1>
                             <h5>Borrowing Conditions:</h5>
-                            <ul>
-                                <li>Commit to respecting the equipment</li>
-                                <li>Commit to returning the equipment clean and with a full tank</li>
-                                <li>Commit to notifying the owner in case of equipment failure during use</li>
-                                <li>Commit not to lend/sublet/sell the equipment</li>
-                                <li>Commit to being the sole user of the equipment</li>
-                                <li>Commit to using the equipment only on a personal construction site</li>
-                                <li>Commit to using the equipment only for its intended purpose</li>
-                                <li>Commit to respecting deadlines</li>
-                                <li>Commit to wearing the necessary safety equipment while using the equipment</li>
-                                <li>Commit to reimbursing for equipment damage or loss</li>
-                                <li>Commit not to file a complaint in case of accidents caused by human error</li>
-                            </ul>
-                            <p>In case of non-compliance with these conditions, a penalty or legal action will be applied.</p>
-                            <form action="" method="post">
+                            <div>
+                                <ul>
+                                    <li>Commit to respecting the equipment</li>
+                                    <li>Commit to returning the equipment clean and with a full tank</li>
+                                    <li>Commit to notifying the owner in case of equipment failure during use</li>
+                                    <li>Commit not to lend/sublet/sell the equipment</li>
+                                    <li>Commit to being the sole user of the equipment</li>
+                                    <li>Commit to using the equipment only on a personal construction site</li>
+                                    <li>Commit to using the equipment only for its intended purpose</li>
+                                    <li>Commit to respecting deadlines</li>
+                                    <li>Commit to wearing the necessary safety equipment while using the equipment</li>
+                                    <li>Commit to reimbursing for equipment damage or loss</li>
+                                    <li>Commit not to file a complaint in case of accidents caused by human error</li>
+                                </ul>
+                                <p>In case of non-compliance with these conditions, a penalty or legal action will be applied.</p>
+                            </div>
+                            <form class="pt-5" action="" method="post">
                                 {% csrf_token %}
                                 <div class="d-flex flex-column align-items-end">
                                     {% if form.errors %}
                                     {{ form.errors }}
                                     {% endif %}
-                                    <p class="me-1">(max : {{ tool.availabalityEnd }})</p>
                                     <p>Hello, I would like to borrow the tool "<a href="{% url 'tool-details' user.id tool.id %}" target="_blank"
                                             style="color: black;">{{ tool.name }}</a>" from {% render_field form.startOfUse name="startOfUse" type="date" %}
-                                        to {% render_field form.endOfUse name="endOfUse" type="date" %}.</p>
+                                        to <span class="d-inline-flex flex-column">{% render_field form.endOfUse name="endOfUse" type="date" %}<spam class="ms-2">(max : {{ tool.availabalityEnd }})</spam></span>.</p>
                                     <p>I, the undersigned: {% render_field form.applicantName name="applicantName" placeholder=user.fullname %}
                                         have {% render_field form.applicantApproval name="applicantApproval" placeholder="Read and approved" %} the terms of borrowing
                                         on {% render_field form.requestDate name="requestDate" type="date" %}
@@ -79,7 +80,7 @@
                                         {{ formSignature.signature }}
                                     </div>
                                 </div>
-                                <p class="text-center"><button class="btn btn-outline-primary" type="submit" name="sendContract">Send</button></p>
+                                <p class="text-center mt-5"><button class="btn btn-outline-primary" type="submit" name="sendContract">Send</button></p>
                             </form>
                         </div>
                     </div>

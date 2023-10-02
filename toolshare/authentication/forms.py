@@ -1,4 +1,4 @@
-from django.contrib.auth.forms import UserCreationForm, UserChangeForm, PasswordChangeForm
+from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth import get_user_model
 from django import forms
 from authentication.models import User
@@ -9,6 +9,20 @@ class SignupForm(UserCreationForm):
     class Meta(UserCreationForm.Meta):
         model = get_user_model()
         fields = ('fullname', 'username', 'email', 'phoneNumber', 'postalAddress', 'bio',)
+
+    """
+    def clean(self):
+        cleaned_data = super().clean()
+        fullname = cleaned_data.get('fullname')
+        username = cleaned_data.get('username')
+        email = cleaned_data.get('email')
+        phoneNumber = cleaned_data.get('phoneNumber')
+        postalAddress = cleaned_data.get('postalAddress')
+        bio = cleaned_data.get('bio')
+
+        if User.objects.filter(fullname=fullname).exists():
+            raise forms.ValidationError('Fullname already exists.')
+    """
 
 
 class LoginForm(forms.Form):

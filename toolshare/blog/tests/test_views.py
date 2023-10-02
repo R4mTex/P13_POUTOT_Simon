@@ -10,6 +10,7 @@ from datetime import date, timedelta
 
 client = Client()
 
+
 @pytest.mark.django_db
 def test_editTool_view_get():
     '''login requirement'''
@@ -18,7 +19,7 @@ def test_editTool_view_get():
                              password='',
                              )
     client.login(username='Test User', email='', password='')
-    path = reverse('edit-tool', kwargs={'userID':1})
+    path = reverse('edit-tool', kwargs={'userID': 1})
     response = client.get(path)
     assert response.status_code == 200
     assertTemplateUsed(response, "blog/editTool.html")
@@ -32,7 +33,7 @@ def test_editTool_view_post():
                              password='',
                              )
     client.login(username='Test User', email='', password='')
-    path = reverse('edit-tool', kwargs={'userID':1})
+    path = reverse('edit-tool', kwargs={'userID': 1})
     responseEditTool = client.post(path, data={'name': [''],
                                                'image': [''],
                                                'category': [''],
@@ -86,13 +87,13 @@ def test_personalTools_view_get():
                         author=User.objects.get(id=1)
                         )
     client.login(username='Test User', email='', password='')
-    path = reverse('personal-tools', kwargs={'userID':1})
+    path = reverse('personal-tools', kwargs={'userID': 1})
     response = client.get(path)
     assert response.status_code == 200
     assertTemplateUsed(response, "blog/personalTools.html")
 
 
-@pytest.mark.django_db  
+@pytest.mark.django_db
 def test_personalTools_view_post():
     User.objects.create_user(username='Test User',
                              email='',
@@ -127,7 +128,7 @@ def test_personalTools_view_post():
                         author=User.objects.get(id=1)
                         )
     client.login(username='Test User', email='', password='')
-    path = reverse('personal-tools', kwargs={'userID':1})
+    path = reverse('personal-tools', kwargs={'userID': 1})
     responseToolDetails = client.post(path, data={'toolDetails': ['1']})
     assert responseToolDetails.status_code == 302
     assert responseToolDetails.url == '/user/1/tool/1/details/'
@@ -149,30 +150,27 @@ def test_memberTools_view_get():
                              password='',
                              )
     User.objects.create_user(username='Test User 2',
-                            email='test@test.com',
-                            password='',
-                            fullname='TestTest',
-                            phoneNumber='0000000000',
-                            )
+                             email='test@test.com',
+                             password='',
+                             fullname='TestTest',
+                             phoneNumber='0000000000',)
     client.login(username='Test User', email='', password='')
-    path = reverse('member-tools', kwargs={'userID':1, 'memberID':2})
+    path = reverse('member-tools', kwargs={'userID': 1, 'memberID': 2})
     response = client.get(path)
     assert response.status_code == 200
     assertTemplateUsed(response, "blog/personalTools.html")
 
 
-@pytest.mark.django_db  
+@pytest.mark.django_db
 def test_memberTools_view_post():
     User.objects.create_user(username='Test User',
                              email='',
-                             password='',
-                             )
+                             password='',)
     User.objects.create_user(username='Test User 2',
-                            email='test@test.com',
-                            password='',
-                            fullname='TestTest',
-                            phoneNumber='0000000000',
-                            )
+                             email='test@test.com',
+                             password='',
+                             fullname='TestTest',
+                             phoneNumber='0000000000',)
     Blog.objects.create(name='Test Blog',
                         category='Other',
                         location='La Barrie 46500 GRAMAT',
@@ -180,10 +178,9 @@ def test_memberTools_view_post():
                         availabalityStart='2023-09-12',
                         availabalityEnd='2023-09-13',
                         deposit='True',
-                        author=User.objects.get(id=1)
-                        )
+                        author=User.objects.get(id=1))
     client.login(username='Test User', email='', password='')
-    path = reverse('member-tools', kwargs={'userID':1, 'memberID':2})
+    path = reverse('member-tools', kwargs={'userID': 1, 'memberID': 2})
     responseToolDetails = client.post(path, data={'toolDetails': ['1']})
     assert responseToolDetails.status_code == 302
     assert responseToolDetails.url == '/user/1/tool/1/details/'
@@ -217,7 +214,7 @@ def test_toolDetails_view_get():
                         author=User.objects.get(id=1)
                         )
     client.login(username='Test User', email='', password='')
-    path = reverse('tool-details', kwargs={'userID':1, 'toolID':1})
+    path = reverse('tool-details', kwargs={'userID': 1, 'toolID': 1})
     response = client.get(path)
     assert response.status_code == 200
     assertTemplateUsed(response, "blog/toolDetails.html")
@@ -239,7 +236,7 @@ def test_toolDetails_view_post():
                         author=User.objects.get(id=1)
                         )
     client.login(username='Test User', email='', password='')
-    path = reverse('tool-details', kwargs={'userID':1, 'toolID':1})
+    path = reverse('tool-details', kwargs={'userID': 1, 'toolID': 1})
     responseAddTool = client.post(path, data={'addTool': ['1']})
     assert responseAddTool.status_code == 200
     assertTemplateUsed(responseAddTool, "blog/toolDetails.html")
@@ -273,7 +270,7 @@ def test_borrowRequestForm_view_get():
                         author=User.objects.get(id=1)
                         )
     client.login(username='Test User', email='', password='')
-    path = reverse('borrow-request-form', kwargs={'userID':1, 'toolID':1})
+    path = reverse('borrow-request-form', kwargs={'userID': 1, 'toolID': 1})
     response = client.get(path)
     assert response.status_code == 200
     assertTemplateUsed(response, "blog/borrowRequestForm.html")
@@ -297,12 +294,12 @@ def test_borrowRequestForm_view_post():
                         author=User.objects.get(id=1)
                         )
     client.login(username='Test User', email='', password='')
-    path = reverse('borrow-request-form', kwargs={'userID':1, 'toolID':1})
-    
+    path = reverse('borrow-request-form', kwargs={'userID': 1, 'toolID': 1})
+
     response = client.post(path, data={'startOfUse': [date.today()],
                                        'initial-startOfUse': [date.today()],
                                        'endOfUse': [date.today() + timedelta(days=1)],
-                                       'applicantName': ['TestTest'], 
+                                       'applicantName': ['TestTest'],
                                        'applicantApproval': ['Read and Approved'],
                                        'requestDate': [date.today()],
                                        'initial-requestDate': [date.today()],
@@ -338,11 +335,9 @@ def test_consentToBorrowForm_view_get():
                         author=User.objects.get(id=2)
                         )
     SignatureModel.objects.create(user=User.objects.get(id=1),
-                                 signature='[{"x":[178,172,165,156,145,133,121,112,102,96,92,97,103,116,131,146,169,185,202,220,234,245,254,261,266,268,268,267,262,256,247,238,229,218,208,198,188,181,177,177,176,176,178,183,187,194,201,208,213,219,211,201,189,174,154,135,114,100,86,75,67,62,60,60,60,60,61,62,64],"y":[59,56,56,54,54,54,53,51,50,48,46,39,34,28,22,19,14,13,11,11,12,16,20,26,32,37,44,50,56,61,67,71,74,77,78,78,78,77,75,70,64,56,48,39,32,23,16,9,5,0,1,5,9,15,23,31,41,51,62,75,88,100,108,118,125,131,136,141,145]}]',
-                                 )
+                                  signature='[{"x":[178,172,165,156,145,133,121,112,102,96,92,97,103,116,131,146,169,185,202,220,234,245,254,261,266,268,268,267,262,256,247,238,229,218,208,198,188,181,177,177,176,176,178,183,187,194,201,208,213,219,211,201,189,174,154,135,114,100,86,75,67,62,60,60,60,60,61,62,64],"y":[59,56,56,54,54,54,53,51,50,48,46,39,34,28,22,19,14,13,11,11,12,16,20,26,32,37,44,50,56,61,67,71,74,77,78,78,78,77,75,70,64,56,48,39,32,23,16,9,5,0,1,5,9,15,23,31,41,51,62,75,88,100,108,118,125,131,136,141,145]}]',)
     SignatureModel.objects.create(user=User.objects.get(id=2),
-                                 signature='[{"x":[179,172,165,156,145,133,121,112,102,96,92,97,103,116,131,146,169,185,202,220,234,245,254,261,266,268,268,267,262,256,247,238,229,218,208,198,188,181,177,177,176,176,178,183,187,194,201,208,213,219,211,201,189,174,154,135,114,100,86,75,67,62,60,60,60,60,61,62,64],"y":[59,56,56,54,54,54,53,51,50,48,46,39,34,28,22,19,14,13,11,11,12,16,20,26,32,37,44,50,56,61,67,71,74,77,78,78,78,77,75,70,64,56,48,39,32,23,16,9,5,0,1,5,9,15,23,31,41,51,62,75,88,100,108,118,125,131,136,141,145]}]',
-                                 )
+                                  signature='[{"x":[179,172,165,156,145,133,121,112,102,96,92,97,103,116,131,146,169,185,202,220,234,245,254,261,266,268,268,267,262,256,247,238,229,218,208,198,188,181,177,177,176,176,178,183,187,194,201,208,213,219,211,201,189,174,154,135,114,100,86,75,67,62,60,60,60,60,61,62,64],"y":[59,56,56,54,54,54,53,51,50,48,46,39,34,28,22,19,14,13,11,11,12,16,20,26,32,37,44,50,56,61,67,71,74,77,78,78,78,77,75,70,64,56,48,39,32,23,16,9,5,0,1,5,9,15,23,31,41,51,62,75,88,100,108,118,125,131,136,141,145]}]',)
     Contract.objects.create(applicant=User.objects.get(id=1),
                             supplier=User.objects.get(id=2),
                             applicantName='TestTest',
@@ -360,7 +355,7 @@ def test_consentToBorrowForm_view_get():
                             supplierSignature=SignatureModel.objects.get(id=2),
                             )
     client.login(username='Test User', email='', password='')
-    path = reverse('consent-to-borrow-form', kwargs={'userID':1, 'contractID':1})
+    path = reverse('consent-to-borrow-form', kwargs={'userID': 1, 'contractID': 1})
     response = client.get(path)
     assert response.status_code == 200
     assertTemplateUsed(response, "blog/consentToBorrowForm.html")
@@ -388,14 +383,11 @@ def test_consentToBorrowForm_view_post():
                         availabalityStart=date.today(),
                         availabalityEnd=date.today() + timedelta(days=1),
                         deposit='True',
-                        author=User.objects.get(id=2)
-                        )
+                        author=User.objects.get(id=2))
     SignatureModel.objects.create(user=User.objects.get(id=1),
-                                 signature='[{"x":[178,172,165,156,145,133,121,112,102,96,92,97,103,116,131,146,169,185,202,220,234,245,254,261,266,268,268,267,262,256,247,238,229,218,208,198,188,181,177,177,176,176,178,183,187,194,201,208,213,219,211,201,189,174,154,135,114,100,86,75,67,62,60,60,60,60,61,62,64],"y":[59,56,56,54,54,54,53,51,50,48,46,39,34,28,22,19,14,13,11,11,12,16,20,26,32,37,44,50,56,61,67,71,74,77,78,78,78,77,75,70,64,56,48,39,32,23,16,9,5,0,1,5,9,15,23,31,41,51,62,75,88,100,108,118,125,131,136,141,145]}]',
-                                 )
+                                  signature='[{"x":[178,172,165,156,145,133,121,112,102,96,92,97,103,116,131,146,169,185,202,220,234,245,254,261,266,268,268,267,262,256,247,238,229,218,208,198,188,181,177,177,176,176,178,183,187,194,201,208,213,219,211,201,189,174,154,135,114,100,86,75,67,62,60,60,60,60,61,62,64],"y":[59,56,56,54,54,54,53,51,50,48,46,39,34,28,22,19,14,13,11,11,12,16,20,26,32,37,44,50,56,61,67,71,74,77,78,78,78,77,75,70,64,56,48,39,32,23,16,9,5,0,1,5,9,15,23,31,41,51,62,75,88,100,108,118,125,131,136,141,145]}]',)
     SignatureModel.objects.create(user=User.objects.get(id=2),
-                                 signature='[{"x":[179,172,165,156,145,133,121,112,102,96,92,97,103,116,131,146,169,185,202,220,234,245,254,261,266,268,268,267,262,256,247,238,229,218,208,198,188,181,177,177,176,176,178,183,187,194,201,208,213,219,211,201,189,174,154,135,114,100,86,75,67,62,60,60,60,60,61,62,64],"y":[59,56,56,54,54,54,53,51,50,48,46,39,34,28,22,19,14,13,11,11,12,16,20,26,32,37,44,50,56,61,67,71,74,77,78,78,78,77,75,70,64,56,48,39,32,23,16,9,5,0,1,5,9,15,23,31,41,51,62,75,88,100,108,118,125,131,136,141,145]}]',
-                                 )
+                                  signature='[{"x":[179,172,165,156,145,133,121,112,102,96,92,97,103,116,131,146,169,185,202,220,234,245,254,261,266,268,268,267,262,256,247,238,229,218,208,198,188,181,177,177,176,176,178,183,187,194,201,208,213,219,211,201,189,174,154,135,114,100,86,75,67,62,60,60,60,60,61,62,64],"y":[59,56,56,54,54,54,53,51,50,48,46,39,34,28,22,19,14,13,11,11,12,16,20,26,32,37,44,50,56,61,67,71,74,77,78,78,78,77,75,70,64,56,48,39,32,23,16,9,5,0,1,5,9,15,23,31,41,51,62,75,88,100,108,118,125,131,136,141,145]}]',)
     Contract.objects.create(applicant=User.objects.get(id=1),
                             supplier=User.objects.get(id=2),
                             applicantName='TestTest',
@@ -413,7 +405,7 @@ def test_consentToBorrowForm_view_post():
                             supplierSignature=SignatureModel.objects.get(id=2),
                             )
     client.login(username='Test User 2', email='test@test.com', password='')
-    path = reverse('consent-to-borrow-form', kwargs={'userID':2, 'contractID':1})
+    path = reverse('consent-to-borrow-form', kwargs={'userID': 2, 'contractID': 1})
     response = client.post(path, data={'supplierName': ['Test2Test2'],
                                        'supplierApproval': ['Read and Approved'],
                                        'approvalDate': [date.today()],
@@ -446,14 +438,11 @@ def test_consentToBorrowConfirmation_view_get():
                         availabalityStart=date.today(),
                         availabalityEnd=date.today() + timedelta(days=1),
                         deposit='True',
-                        author=User.objects.get(id=2)
-                        )
+                        author=User.objects.get(id=2))
     SignatureModel.objects.create(user=User.objects.get(id=1),
-                                 signature='[{"x":[178,172,165,156,145,133,121,112,102,96,92,97,103,116,131,146,169,185,202,220,234,245,254,261,266,268,268,267,262,256,247,238,229,218,208,198,188,181,177,177,176,176,178,183,187,194,201,208,213,219,211,201,189,174,154,135,114,100,86,75,67,62,60,60,60,60,61,62,64],"y":[59,56,56,54,54,54,53,51,50,48,46,39,34,28,22,19,14,13,11,11,12,16,20,26,32,37,44,50,56,61,67,71,74,77,78,78,78,77,75,70,64,56,48,39,32,23,16,9,5,0,1,5,9,15,23,31,41,51,62,75,88,100,108,118,125,131,136,141,145]}]',
-                                 )
+                                  signature='[{"x":[178,172,165,156,145,133,121,112,102,96,92,97,103,116,131,146,169,185,202,220,234,245,254,261,266,268,268,267,262,256,247,238,229,218,208,198,188,181,177,177,176,176,178,183,187,194,201,208,213,219,211,201,189,174,154,135,114,100,86,75,67,62,60,60,60,60,61,62,64],"y":[59,56,56,54,54,54,53,51,50,48,46,39,34,28,22,19,14,13,11,11,12,16,20,26,32,37,44,50,56,61,67,71,74,77,78,78,78,77,75,70,64,56,48,39,32,23,16,9,5,0,1,5,9,15,23,31,41,51,62,75,88,100,108,118,125,131,136,141,145]}]',)
     SignatureModel.objects.create(user=User.objects.get(id=2),
-                                 signature='[{"x":[179,172,165,156,145,133,121,112,102,96,92,97,103,116,131,146,169,185,202,220,234,245,254,261,266,268,268,267,262,256,247,238,229,218,208,198,188,181,177,177,176,176,178,183,187,194,201,208,213,219,211,201,189,174,154,135,114,100,86,75,67,62,60,60,60,60,61,62,64],"y":[59,56,56,54,54,54,53,51,50,48,46,39,34,28,22,19,14,13,11,11,12,16,20,26,32,37,44,50,56,61,67,71,74,77,78,78,78,77,75,70,64,56,48,39,32,23,16,9,5,0,1,5,9,15,23,31,41,51,62,75,88,100,108,118,125,131,136,141,145]}]',
-                                 )
+                                  signature='[{"x":[179,172,165,156,145,133,121,112,102,96,92,97,103,116,131,146,169,185,202,220,234,245,254,261,266,268,268,267,262,256,247,238,229,218,208,198,188,181,177,177,176,176,178,183,187,194,201,208,213,219,211,201,189,174,154,135,114,100,86,75,67,62,60,60,60,60,61,62,64],"y":[59,56,56,54,54,54,53,51,50,48,46,39,34,28,22,19,14,13,11,11,12,16,20,26,32,37,44,50,56,61,67,71,74,77,78,78,78,77,75,70,64,56,48,39,32,23,16,9,5,0,1,5,9,15,23,31,41,51,62,75,88,100,108,118,125,131,136,141,145]}]',)
     Contract.objects.create(applicant=User.objects.get(id=1),
                             supplier=User.objects.get(id=2),
                             applicantName='TestTest',
@@ -471,7 +460,7 @@ def test_consentToBorrowConfirmation_view_get():
                             supplierSignature=SignatureModel.objects.get(id=2),
                             )
     client.login(username='Test User', email='', password='')
-    path = reverse('consent-to-borrow-confirmation', kwargs={'userID':1, 'contractID':1})
+    path = reverse('consent-to-borrow-confirmation', kwargs={'userID': 1, 'contractID': 1})
     response = client.get(path)
     assert response.status_code == 200
     assertTemplateUsed(response, "blog/consentToBorrowConfirmation.html")
@@ -499,14 +488,11 @@ def test_borrowContractPDF_view_get():
                         availabalityStart=date.today(),
                         availabalityEnd=date.today() + timedelta(days=1),
                         deposit='True',
-                        author=User.objects.get(id=2)
-                        )
+                        author=User.objects.get(id=2))
     SignatureModel.objects.create(user=User.objects.get(id=1),
-                                 signature='[{"x":[178,172,165,156,145,133,121,112,102,96,92,97,103,116,131,146,169,185,202,220,234,245,254,261,266,268,268,267,262,256,247,238,229,218,208,198,188,181,177,177,176,176,178,183,187,194,201,208,213,219,211,201,189,174,154,135,114,100,86,75,67,62,60,60,60,60,61,62,64],"y":[59,56,56,54,54,54,53,51,50,48,46,39,34,28,22,19,14,13,11,11,12,16,20,26,32,37,44,50,56,61,67,71,74,77,78,78,78,77,75,70,64,56,48,39,32,23,16,9,5,0,1,5,9,15,23,31,41,51,62,75,88,100,108,118,125,131,136,141,145]}]',
-                                 )
+                                  signature='[{"x":[178,172,165,156,145,133,121,112,102,96,92,97,103,116,131,146,169,185,202,220,234,245,254,261,266,268,268,267,262,256,247,238,229,218,208,198,188,181,177,177,176,176,178,183,187,194,201,208,213,219,211,201,189,174,154,135,114,100,86,75,67,62,60,60,60,60,61,62,64],"y":[59,56,56,54,54,54,53,51,50,48,46,39,34,28,22,19,14,13,11,11,12,16,20,26,32,37,44,50,56,61,67,71,74,77,78,78,78,77,75,70,64,56,48,39,32,23,16,9,5,0,1,5,9,15,23,31,41,51,62,75,88,100,108,118,125,131,136,141,145]}]',)
     SignatureModel.objects.create(user=User.objects.get(id=2),
-                                 signature='[{"x":[179,172,165,156,145,133,121,112,102,96,92,97,103,116,131,146,169,185,202,220,234,245,254,261,266,268,268,267,262,256,247,238,229,218,208,198,188,181,177,177,176,176,178,183,187,194,201,208,213,219,211,201,189,174,154,135,114,100,86,75,67,62,60,60,60,60,61,62,64],"y":[59,56,56,54,54,54,53,51,50,48,46,39,34,28,22,19,14,13,11,11,12,16,20,26,32,37,44,50,56,61,67,71,74,77,78,78,78,77,75,70,64,56,48,39,32,23,16,9,5,0,1,5,9,15,23,31,41,51,62,75,88,100,108,118,125,131,136,141,145]}]',
-                                 )
+                                  signature='[{"x":[179,172,165,156,145,133,121,112,102,96,92,97,103,116,131,146,169,185,202,220,234,245,254,261,266,268,268,267,262,256,247,238,229,218,208,198,188,181,177,177,176,176,178,183,187,194,201,208,213,219,211,201,189,174,154,135,114,100,86,75,67,62,60,60,60,60,61,62,64],"y":[59,56,56,54,54,54,53,51,50,48,46,39,34,28,22,19,14,13,11,11,12,16,20,26,32,37,44,50,56,61,67,71,74,77,78,78,78,77,75,70,64,56,48,39,32,23,16,9,5,0,1,5,9,15,23,31,41,51,62,75,88,100,108,118,125,131,136,141,145]}]',)
     Contract.objects.create(applicant=User.objects.get(id=1),
                             supplier=User.objects.get(id=2),
                             applicantName='TestTest',
@@ -524,7 +510,7 @@ def test_borrowContractPDF_view_get():
                             supplierSignature=SignatureModel.objects.get(id=2),
                             )
     client.login(username='Test User', email='', password='')
-    path = reverse('borrowContract', kwargs={'userID':1, 'contractID':1})
+    path = reverse('borrowContract', kwargs={'userID': 1, 'contractID': 1})
     response = client.get(path)
     assert response.status_code == 200
     assertTemplateUsed(response, "blog/borrowContract.html")

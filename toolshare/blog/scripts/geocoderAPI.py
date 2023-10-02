@@ -41,9 +41,7 @@ class Geocoder:
                 'status': dataJson['status'],
                 'lat': lat,
                 'lng': lng,
-                'placeID': placeID
-                }
+                'placeID': placeID}
         else:
             return {
-                'status': dataJson['status'],
-                }
+                'status': dataJson['status'], }

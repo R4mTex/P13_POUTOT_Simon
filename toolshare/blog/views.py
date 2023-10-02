@@ -18,7 +18,7 @@ from blog.pdf import html2pdf
 class editTool(LoginRequiredMixin, View):
     template_name = 'blog/editTool.html'
 
-    def get (self, request, userID):
+    def get(self, request, userID):
         blog_form = forms.BlogForm()
         user = authModels.User.objects.get(id=userID)
 
@@ -27,8 +27,8 @@ class editTool(LoginRequiredMixin, View):
             'user': user,
         }
         return render(request, 'blog/editTool.html', context=context)
-    
-    def post (self, request, userID):
+
+    def post(self, request, userID):
         blog_form = forms.BlogForm(request.POST, request.FILES)
         user = authModels.User.objects.get(id=userID)
 
@@ -52,7 +52,6 @@ class personalTools(LoginRequiredMixin, View):
     def get(self, request, userID):
         user = authModels.User.objects.get(id=userID)
         personalTools = blogModels.Blog.objects.filter(author=user.id)
-        contracts = blogModels.Contract.objects.all()
 
         pathPersonalToolsUser = "/user/"+str(userID)+"/personal-tools/"
         pathPersonalToolsMember = ""
@@ -74,7 +73,7 @@ class personalTools(LoginRequiredMixin, View):
             'pathPersonalToolsMember': pathPersonalToolsMember,
         }
         return render(request, self.template_name, context=context)
-    
+
     def post(self, request, userID):
         if "supprTool" in request.POST:
             toolID = int(request.POST.get("supprTool"))
@@ -124,15 +123,13 @@ class personalTools(LoginRequiredMixin, View):
                     'longName': queryLocation['longName'],
                     'lat': queryLocation['lat'],
                     'lng': queryLocation['lng'],
-                    'placeID': queryLocation['placeID'],
-                    }
+                    'placeID': queryLocation['placeID'], }
             elif queryLocation['status'] != 'OK':
                 data = {
-                    'status': queryLocation['status'],
-                    }
+                    'status': queryLocation['status'], }
             request.session['data'] = data
             return redirect(reverse('tool-details', kwargs={'userID': userID, 'toolID': toolID}))
-        
+
 
 class memberTools(LoginRequiredMixin, View):
     template_name = 'blog/personalTools.html'
@@ -185,12 +182,10 @@ class memberTools(LoginRequiredMixin, View):
                     'longName': queryLocation['longName'],
                     'lat': queryLocation['lat'],
                     'lng': queryLocation['lng'],
-                    'placeID': queryLocation['placeID'],
-                    }
+                    'placeID': queryLocation['placeID'], }
             elif queryLocation['status'] != 'OK':
                 data = {
-                    'status': queryLocation['status'],
-                    }
+                    'status': queryLocation['status'], }
             request.session['data'] = data
             return redirect(reverse('tool-details', kwargs={'userID': userID, 'toolID': toolID}))
         elif "addTool" in request.POST:
@@ -230,7 +225,7 @@ class memberTools(LoginRequiredMixin, View):
             reverseToolsList = []
             for tool in reversed(range(len(tools))):
                 reverseToolsList.append(tools[tool])
-            
+
             context = {
                 'member': member,
                 'tools': reverseToolsList,
@@ -252,7 +247,7 @@ class memberTools(LoginRequiredMixin, View):
                     userFavorites[favorite].blog.save()
                     blogModels.Favorite.objects.filter(id=userFavorites[favorite].id).delete()
                     messages.info(request, "Removed from your Bag")
-            
+
             tools = blogModels.Blog.objects.filter(author=member)
             favorites = blogModels.Favorite.objects.all()
 
@@ -270,7 +265,7 @@ class memberTools(LoginRequiredMixin, View):
             reverseToolsList = []
             for tool in reversed(range(len(tools))):
                 reverseToolsList.append(tools[tool])
-            
+
             context = {
                 'member': member,
                 'tools': reverseToolsList,
@@ -279,7 +274,7 @@ class memberTools(LoginRequiredMixin, View):
         elif "authorProfile" in request.POST:
             authorID = int(request.POST.get("authorProfile"))
             return redirect(reverse('member-profile', kwargs={'userID': userID, 'memberID': authorID}))
-    
+
 
 class toolDetails(LoginRequiredMixin, View):
     template_name = "blog/toolDetails.html"
@@ -297,7 +292,7 @@ class toolDetails(LoginRequiredMixin, View):
             'favoriteUsers': favoriteUsers,
         }
         return render(request, self.template_name, context=context)
-    
+
     def post(self, request, userID, toolID):
         if "addTool" in request.POST:
             toolID = int(request.POST.get("addTool"))
@@ -394,7 +389,7 @@ class borrowRequestForm(LoginRequiredMixin, View):
             'formSignature': formSignature,
         }
         return render(request, self.template_name, context=context)
-    
+
     def post(self, request, userID, toolID):
         user = authModels.User.objects.get(id=userID)
         member = blogModels.Blog.objects.get(id=toolID).author
@@ -466,7 +461,7 @@ class borrowRequestForm(LoginRequiredMixin, View):
                     newJSignatureModel.user = user
                     newJSignatureModel.signature = formSignature.cleaned_data.get('signature')
                     newJSignatureModel.save()
-                
+
                 newContract = blogModels.Contract()
                 newContract.applicant = user
                 newContract.supplier = member
@@ -479,7 +474,7 @@ class borrowRequestForm(LoginRequiredMixin, View):
                 newContract.startOfUse = form.cleaned_data.get('startOfUse')
                 newContract.endOfUse = form.cleaned_data.get('endOfUse')
                 newContract.save()
-                
+
                 contracts = blogModels.Contract.objects.all()
 
                 contractsID = []
@@ -510,7 +505,7 @@ class borrowRequestForm(LoginRequiredMixin, View):
                 'formSignature': formSignature,
             }
             return render(request, self.template_name, context=context)
-        
+
 
 class borrowRequestConfirmation(LoginRequiredMixin, View):
     template_name = 'blog/borrowRequestConfirmation.html'
@@ -546,7 +541,7 @@ class consentToBorrowForm(LoginRequiredMixin, View):
             'applicantInfo': applicantInfo,
         }
         return render(request, self.template_name, context=context)
-    
+
     def post(self, request, userID, contractID):
         user = authModels.User.objects.get(id=userID)
         contract = blogModels.Contract.objects.get(id=contractID)
@@ -637,7 +632,7 @@ class consentToBorrowForm(LoginRequiredMixin, View):
                         newJSignatureModel.user = user
                         newJSignatureModel.signature = formSignature.cleaned_data.get('signature')
                         newJSignatureModel.save()
-                    
+
                     contract = blogModels.Contract.objects.get(id=contractID)
                     contract.suppliertName = user.fullname
                     contract.supplierApproval = form.cleaned_data.get('supplierApproval')
@@ -710,7 +705,8 @@ class consentToBorrowConfirmation(LoginRequiredMixin, View):
                 'exists': False,
             }
             return render(request, self.template_name, context=context)
-    
+
+
 class borrowContractPDF(LoginRequiredMixin, View):
     template_name = 'blog/borrowContract.html'
 

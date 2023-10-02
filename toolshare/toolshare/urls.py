@@ -25,20 +25,20 @@ from django.conf.urls.static import static
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    ### Home / About / Contact / Publisher ###
+    # Home / About / Contact / Publisher
     path('', authView.Home.as_view(template_name='authentication/home.html'), name='home'),
     path('user/<int:userID>/contract/<int:contractID>/pdf/', blogView.borrowContractPDF.as_view(template_name='blog/borrowContract.html'), name='borrowContract'),
     path('user/<int:userID>/about/', authView.About.as_view(template_name='authentication/about.html'), name='about'),
     path('user/<int:userID>/contact/', authView.Contact.as_view(template_name='authentication/contact.html'), name='contact'),
     path('user/<int:userID>/contact/success/', authView.Contact.as_view(template_name='authentication/contactSuccess.html'), name='contact-success'),
     path('user/<int:userID>/publisher/', authView.Publisher.as_view(template_name='authentication/publisher.html'), name='publisher'),
-    ### Research ###
+    # Research
     path('user/<int:userID>/research/', authView.Research.as_view(template_name='authentication/research.html'), name='research'),
     path('user/<int:userID>/research/all-tools/', authView.Research.as_view(template_name='authentication/research.html'), name='research-all-tools'),
     path('user/<int:userID>/research/all-equipments/', authView.Research.as_view(template_name='authentication/research.html'), name='research-all-equipments'),
     path('user/<int:userID>/research/most-popular/', authView.Research.as_view(template_name='authentication/research.html'), name='research-most-popular'),
     path('user/<int:userID>/research/best-rated/', authView.Research.as_view(template_name='authentication/research.html'), name='research-best-rated'),
-    ### /Research ###
+    # /Research
     path('user/<int:userID>/favorites/', authView.Favorites.as_view(template_name='authentication/favorites.html'), name='favorites'),
     path('user/<int:userID>/profile/', authView.Profile.as_view(template_name='authentication/profile.html'), name='profile'),
     path('user/<int:userID>/member/<int:memberID>/member-profile/', authView.memberProfile.as_view(template_name='authentication/profile.html'), name='member-profile'),
@@ -55,13 +55,13 @@ urlpatterns = [
 
     # Login / Logout / Change Password Urls
     path('login/', auth_views.LoginView.as_view(template_name='registration/login.html',
-                                                redirect_authenticated_user=True),
-                                                name='login'),
+         redirect_authenticated_user=True),
+         name='login'),
     path('logout/', auth_views.LogoutView.as_view(), name='logout'),
     path('change-password/', auth_views.PasswordChangeView.as_view(template_name='registration/password_change_form.html'),
-                                                                   name='password_change'),
+         name='password_change'),
     path('change-password-done/', auth_views.PasswordChangeDoneView.as_view(template_name='registration/password_change_done.html'),
-                                                                            name='password_change_done'),
+         name='password_change_done'),
 
     # Reset Password Urls
     path('password_reset/', auth_views.PasswordResetView.as_view(), name='password_reset'),

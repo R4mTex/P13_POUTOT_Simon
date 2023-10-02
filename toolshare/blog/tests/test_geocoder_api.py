@@ -90,12 +90,12 @@ def test_date_request(mock_requests_get):
                                             "types": [
                                                 "locality",
                                                 "political"
-                                                ]
+                                            ]
                                         }
-                                    ]
-                                }
-                            }
-                        )
+                                                ]
+                                                        }
+                                 }
+                                                )
     assert sut.dataRequest() == {'longName': 'Paris',
-                                            'status': 'OK', 'lat': 48.856614, 'lng': 2.3522219,
-                                            'placeID': ['ChIJD7fiBh9u5kcRYJSMaMOCCwQ']}
+                                 'status': 'OK', 'lat': 48.856614, 'lng': 2.3522219,
+                                 'placeID': ['ChIJD7fiBh9u5kcRYJSMaMOCCwQ']}

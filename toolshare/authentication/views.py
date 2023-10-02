@@ -13,8 +13,6 @@ from blog.scripts.parser import Parser
 from blog.scripts.geocoderApi import Geocoder
 from django.core.mail import EmailMessage
 from datetime import date
-from django.http import JsonResponse, HttpResponse
-import re
 
 
 # Create your views here.
@@ -24,11 +22,13 @@ class Home(LoginRequiredMixin, View):
     def get(self, request):
         return render(request, self.template_name)
 
+
 class About(LoginRequiredMixin, View):
     template_name = 'authentication/about.html'
 
     def get(self, request, userID):
         return render(request, self.template_name)
+
 
 class Contact(LoginRequiredMixin, View):
     template_name = 'authentication/contact.html'
@@ -41,7 +41,7 @@ class Contact(LoginRequiredMixin, View):
             'form': form,
         }
         return render(request, self.template_name, context=context)
-    
+
     def post(self, request, userID):
         user = authModels.User.objects.get(id=userID)
         form = self.form_class(request.POST)
@@ -59,17 +59,19 @@ class Contact(LoginRequiredMixin, View):
             return redirect(reverse('contact-success', kwargs={'userID': userID}))
         else:
             form = self.form_class()
-        
+
             context = {
                 'form': form,
             }
             return render(request, self.template_name, context=context)
+
 
 class Publisher(LoginRequiredMixin, View):
     template_name = 'authentication/publisher.html'
 
     def get(self, request, userID):
         return render(request, self.template_name)
+
 
 class Research(LoginRequiredMixin, View):
     template_name = 'authentication/research.html'
@@ -106,7 +108,7 @@ class Research(LoginRequiredMixin, View):
         }
 
         return render(request, self.template_name, context=context)
-    
+
     def post(self, request, userID):
         if "allTools" in request.POST:
             allTools = blogModels.Blog.objects.exclude(category="Equipment")
@@ -126,7 +128,7 @@ class Research(LoginRequiredMixin, View):
             reverseToolsList = []
             for tool in reversed(range(len(allTools))):
                 reverseToolsList.append(allTools[tool])
-            
+
             context = {
                 'tools': reverseToolsList,
             }
@@ -149,7 +151,7 @@ class Research(LoginRequiredMixin, View):
             reverseToolsList = []
             for tool in reversed(range(len(allEquipments))):
                 reverseToolsList.append(allEquipments[tool])
-            
+
             context = {
                 'tools': reverseToolsList,
             }
@@ -214,12 +216,10 @@ class Research(LoginRequiredMixin, View):
                     'longName': queryLocation['longName'],
                     'lat': queryLocation['lat'],
                     'lng': queryLocation['lng'],
-                    'placeID': queryLocation['placeID'],
-                    }
+                    'placeID': queryLocation['placeID'], }
             elif queryLocation['status'] != 'OK':
                 data = {
-                    'status': queryLocation['status'],
-                    }
+                    'status': queryLocation['status'], }
             request.session['data'] = data
             return redirect(reverse('tool-details', kwargs={'userID': userID, 'toolID': toolID}))
         elif "addTool" in request.POST:
@@ -280,7 +280,7 @@ class Research(LoginRequiredMixin, View):
                     userFavorites[favorite].blog.save()
                     blogModels.Favorite.objects.filter(id=userFavorites[favorite].id).delete()
                     messages.info(request, "Removed from your Bag")
-            
+
             tools = blogModels.Blog.objects.all()
             favorites = blogModels.Favorite.objects.all()
 
@@ -299,7 +299,7 @@ class Research(LoginRequiredMixin, View):
             reverseToolsList = []
             for tool in reversed(range(len(tools))):
                 reverseToolsList.append(tools[tool])
-            
+
             context = {
                 'tools': reverseToolsList,
             }
@@ -322,7 +322,7 @@ class Research(LoginRequiredMixin, View):
 
             tools = blogModels.Blog.objects.all()
             favorites = blogModels.Favorite.objects.all()
-    
+
             for favorite in range(len(favorites)):
                 for tool in range(len(tools)):
                     if tools[tool].id == favorites[favorite].blog.id and request.user.username == favorites[favorite].user.username:
@@ -337,7 +337,7 @@ class Research(LoginRequiredMixin, View):
             reverseToolsList = []
             for tool in reversed(range(len(tools))):
                 reverseToolsList.append(tools[tool])
-            
+
             context = {
                 'tools': reverseToolsList,
             }
@@ -356,7 +356,7 @@ class memberProfile(LoginRequiredMixin, View):
     def get(self, request, userID, memberID):
         user = authModels.User.objects.get(id=userID)
         member = authModels.User.objects.get(id=memberID)
-  
+
         tools = blogModels.Blog.objects.all()
         contracts = blogModels.Contract.objects.all()
 
@@ -408,7 +408,7 @@ class memberProfile(LoginRequiredMixin, View):
             'pathInfoMember': pathInfoMember,
         }
         return render(request, self.template_name, context=context)
-    
+
     def post(self, request, userID, memberID):
         if "toolDetails" in request.POST:
             toolID = int(request.POST.get("toolDetails"))
@@ -425,12 +425,10 @@ class memberProfile(LoginRequiredMixin, View):
                     'longName': queryLocation['longName'],
                     'lat': queryLocation['lat'],
                     'lng': queryLocation['lng'],
-                    'placeID': queryLocation['placeID'],
-                    }
+                    'placeID': queryLocation['placeID'], }
             elif queryLocation['status'] != 'OK':
                 data = {
-                    'status': queryLocation['status'],
-                    }
+                    'status': queryLocation['status'], }
             request.session['data'] = data
             return redirect(reverse('tool-details', kwargs={'userID': userID, 'toolID': toolID}))
         elif "toolDetailsContract" in request.POST:
@@ -448,17 +446,15 @@ class memberProfile(LoginRequiredMixin, View):
                     'longName': queryLocation['longName'],
                     'lat': queryLocation['lat'],
                     'lng': queryLocation['lng'],
-                    'placeID': queryLocation['placeID'],
-                    }
+                    'placeID': queryLocation['placeID'], }
             elif queryLocation['status'] != 'OK':
                 data = {
-                    'status': queryLocation['status'],
-                    }
+                    'status': queryLocation['status'], }
             request.session['data'] = data
             return redirect(reverse('tool-details', kwargs={'userID': userID, 'toolID': toolID}))
         elif "showPersonalTools" in request.POST:
             return redirect(reverse('member-tools', kwargs={'userID': userID, 'memberID': memberID}))
-        
+
 
 class Favorites(LoginRequiredMixin, View):
     template_name = 'authentication/favorites.html'
@@ -487,12 +483,12 @@ class Favorites(LoginRequiredMixin, View):
         reverseFavoritesList = []
         for tool in reversed(range(len(favorites))):
             reverseFavoritesList.append(favorites[tool])
-        
+
         context = {
             'tools': reverseFavoritesList,
         }
         return render(request, self.template_name, context=context)
-    
+
     def post(self, request, userID):
         if "toolDetails" in request.POST:
             toolID = int(request.POST.get("toolDetails"))
@@ -509,12 +505,10 @@ class Favorites(LoginRequiredMixin, View):
                     'longName': queryLocation['longName'],
                     'lat': queryLocation['lat'],
                     'lng': queryLocation['lng'],
-                    'placeID': queryLocation['placeID'],
-                    }
+                    'placeID': queryLocation['placeID'], }
             elif queryLocation['status'] != 'OK':
                 data = {
-                    'status': queryLocation['status'],
-                    }
+                    'status': queryLocation['status'], }
             request.session['data'] = data
             return redirect(reverse('tool-details', kwargs={'userID': userID, 'toolID': toolID}))
         elif "removeTool" in request.POST:
@@ -532,7 +526,7 @@ class Favorites(LoginRequiredMixin, View):
                     userFavorites[favorite].blog.save()
                     blogModels.Favorite.objects.filter(id=userFavorites[favorite].id).delete()
                     messages.info(request, "Removed from your Bag")
-            
+
             userFavorites = blogModels.Favorite.objects.filter(user=userID)
 
             favorites = []
@@ -548,12 +542,12 @@ class Favorites(LoginRequiredMixin, View):
             reverseFavoritesList = []
             for tool in reversed(range(len(favorites))):
                 reverseFavoritesList.append(favorites[tool])
-            
+
             context = {
                 'tools': reverseFavoritesList,
             }
             return render(request, self.template_name, context=context)
-        
+
 
 class Profile(LoginRequiredMixin, View):
     template_name = 'authentication/profile.html'
@@ -577,7 +571,7 @@ class Profile(LoginRequiredMixin, View):
 
         userApplicantContractStructure = []
         for contract in range(len(userApplicantContracts)):
-            if userApplicantContracts[contract].supplierSignature == None:
+            if userApplicantContracts[contract].supplierSignature is None:
                 break
             else:
                 structure = {
@@ -616,7 +610,7 @@ class Profile(LoginRequiredMixin, View):
             'pathInfoMember': pathInfoMember,
         }
         return render(request, self.template_name, context=context)
-    
+
     def post(self, request, userID):
         if "toolDetails" in request.POST:
             toolID = int(request.POST.get("toolDetails"))
@@ -633,12 +627,10 @@ class Profile(LoginRequiredMixin, View):
                     'longName': queryLocation['longName'],
                     'lat': queryLocation['lat'],
                     'lng': queryLocation['lng'],
-                    'placeID': queryLocation['placeID'],
-                    }
+                    'placeID': queryLocation['placeID'], }
             elif queryLocation['status'] != 'OK':
                 data = {
-                    'status': queryLocation['status'],
-                    }
+                    'status': queryLocation['status'], }
             request.session['data'] = data
             return redirect(reverse('tool-details', kwargs={'userID': userID, 'toolID': toolID}))
         elif "toolDetailsContract" in request.POST:
@@ -656,12 +648,10 @@ class Profile(LoginRequiredMixin, View):
                     'longName': queryLocation['longName'],
                     'lat': queryLocation['lat'],
                     'lng': queryLocation['lng'],
-                    'placeID': queryLocation['placeID'],
-                    }
+                    'placeID': queryLocation['placeID'], }
             elif queryLocation['status'] != 'OK':
                 data = {
-                    'status': queryLocation['status'],
-                    }
+                    'status': queryLocation['status'], }
             request.session['data'] = data
             return redirect(reverse('tool-details', kwargs={'userID': userID, 'toolID': toolID}))
         elif "showPersonalTools" in request.POST:
@@ -698,7 +688,7 @@ class editProfile(LoginRequiredMixin, View):
                 else:
                     user.profilePicture.delete()
                     form_picture.save()
-                
+
                 user = authModels.User.objects.get(id=userID)
                 form_picture = self.form_picture()
                 form_profile = self.form_profile(instance=request.user)
@@ -785,7 +775,7 @@ class editProfile(LoginRequiredMixin, View):
                     'form_password': form_password,
                 }
                 return render(request, self.template_name, context=context)
-         
+
 
 class Registration(View):
     template_name = 'authentication/registration.html'

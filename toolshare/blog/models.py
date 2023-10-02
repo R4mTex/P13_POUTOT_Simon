@@ -1,7 +1,7 @@
 from django.conf import settings
 from django.db import models
 from datetime import date, timedelta
-from django.core.validators import MinValueValidator, MaxValueValidator
+from django.core.validators import MinValueValidator
 from jsignature.fields import JSignatureField
 
 
@@ -45,13 +45,13 @@ class Favorite(models.Model):
 
     def __str__(self):
         return f'{self.user}'
-    
+
 
 class SignatureModel(models.Model):
     user = models.ForeignKey(settings.AUTH_USER_MODEL, related_name='user_signature', on_delete=models.CASCADE)
     signature = JSignatureField()
 
-    
+
 class Contract(models.Model):
     applicant = models.ForeignKey(settings.AUTH_USER_MODEL, related_name='applicant', on_delete=models.CASCADE)
     supplier = models.ForeignKey(settings.AUTH_USER_MODEL, related_name='supplier', on_delete=models.CASCADE, null=True)
@@ -62,8 +62,8 @@ class Contract(models.Model):
     supplierApproval = models.CharField(max_length=63, null=True)
     applicantPostalAddress = models.CharField(max_length=127)
     supplierPostalAddress = models.CharField(max_length=127, null=True)
-    applicantSignature =  models.ForeignKey(SignatureModel, related_name='applicant_signature', on_delete=models.CASCADE)
-    supplierSignature =  models.ForeignKey(SignatureModel, related_name='supplier_signature', on_delete=models.CASCADE, null=True)
+    applicantSignature = models.ForeignKey(SignatureModel, related_name='applicant_signature', on_delete=models.CASCADE)
+    supplierSignature = models.ForeignKey(SignatureModel, related_name='supplier_signature', on_delete=models.CASCADE, null=True)
     requestDate = models.DateField(default=date.today,)
     approvalDate = models.DateField(default=date.today, null=True)
     startOfUse = models.DateField(default=date.today, validators=[MinValueValidator(limit_value=date.today)])

@@ -3,6 +3,7 @@ from django.contrib.auth.models import AbstractUser
 from phonenumber_field.modelfields import PhoneNumberField
 from blog.models import Blog
 
+
 # Create your models here.
 class User(AbstractUser):
     fullname = models.fields.CharField(max_length=256, unique=True,)
@@ -17,4 +18,3 @@ class User(AbstractUser):
 
     def __str__(self):
         return f'{self.username}'
-    

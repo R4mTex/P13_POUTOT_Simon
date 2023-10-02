@@ -199,43 +199,6 @@ class Research(LoginRequiredMixin, View):
                 'tools': mostPopularTools,
             }
             return render(request, self.template_name, context=context)
-        elif "bestRated" in request.POST:
-            tools = blogModels.Blog.objects.all()
-            
-            scoreRate = []
-            for tool in range(len(tools)):
-                scoreRate.append(tools[tool].rating)
-
-            scoreRate = list(set(scoreRate))
-            
-            scoreRate.sort(reverse=True)
-
-            toolBestRated = []
-            for score in range(len(scoreRate)):
-                toolBestRated.append(blogModels.Blog.objects.filter(rating=scoreRate[score]))
-
-            bestTools = []
-            for query in range(len(toolBestRated)):
-                for blog in range(len(toolBestRated[query])):
-                    bestTools.append(toolBestRated[query][blog])
-
-            favorites = blogModels.Favorite.objects.all()
-
-            for favorite in range(len(favorites)):
-                for tool in range(len(bestTools)):
-                    if bestTools[tool].id == favorites[favorite].blog.id and request.user.username == favorites[favorite].user.username:
-                        bestTools[tool].match = True
-
-            for tool in range(len(bestTools)):
-                if bestTools[tool].availabalityStart <= date.today() <= bestTools[tool].availabalityEnd:
-                    bestTools[tool].availabality = True
-                else:
-                    bestTools[tool].availabality = False
-
-            context = {
-                'tools': bestTools,
-            }
-            return render(request, self.template_name, context=context)
         elif "toolDetails" in request.POST:
             toolID = int(request.POST.get("toolDetails"))
 
@@ -385,40 +348,7 @@ class Research(LoginRequiredMixin, View):
             else:
                 memberID = int(request.POST.get("authorProfile"))
                 return redirect(reverse('member-profile', kwargs={'userID': userID, 'memberID': memberID}))
-            
 
-class alphabeticA_Z(LoginRequiredMixin, View):
-    template_name = 'authentication/research.html'
-
-    def post(self, request, userID):
-        tools = request.POST.get('tools')
-
-        temp = re.findall(r'\d+', tools)
-        res = list(map(int, temp))
-        
-        toolsIDNameList = []
-        for number in range(len(res)):
-            toolsNameID = {
-                'id': blogModels.Blog.objects.get(id=res[number]).id,
-                'name': Parser.removeUpperCase(blogModels.Blog.objects.get(id=res[number]).name)           
-            }
-            toolsIDNameList.append(toolsNameID)
-
-        def get_names(toolsIDNameList):
-            return toolsIDNameList.get('name')
-
-        toolsIDNameList.sort(key=get_names, reverse=False)
-
-        toolsObjects = []
-        for toolObject in range(len(toolsIDNameList)):
-            toolsObjects.append(blogModels.Blog.objects.filter(id=toolsIDNameList[toolObject]['id']).values())
-
-        toolsSortedBy = []
-        for tool in range(len(toolsObjects)):
-            toolsSortedBy.append(toolsObjects[tool][0])
-
-        return JsonResponse({'tools': list(toolsSortedBy)})
-        
 
 class memberProfile(LoginRequiredMixin, View):
     template_name = "authentication/profile.html"

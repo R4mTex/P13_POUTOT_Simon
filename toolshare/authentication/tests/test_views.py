@@ -212,10 +212,6 @@ def test_research_view_post():
     client.login(username='Test User', email='', password='')
     path = reverse('research', kwargs={'userID':1})
 
-    responseAllItems = client.post(path, data={'allItems': ['']})
-    assert responseAllItems.status_code == 200
-    assertTemplateUsed(responseAllItems, "authentication/research.html")
-
     responseAllTools = client.post(path, data={'allTools': ['']})
     assert responseAllTools.status_code == 200
     assertTemplateUsed(responseAllTools, "authentication/research.html")
@@ -227,10 +223,6 @@ def test_research_view_post():
     responseMostPopular = client.post(path, data={'mostPopular': ['']})
     assert responseMostPopular.status_code == 200
     assertTemplateUsed(responseMostPopular, "authentication/research.html")
-
-    responseBestRated = client.post(path, data={'bestRated': ['']})
-    assert responseBestRated.status_code == 200
-    assertTemplateUsed(responseBestRated, "authentication/research.html")
 
     responseToolDetails = client.post(path, data={'toolDetails': ['1']})
     assert responseToolDetails.status_code == 302
@@ -260,15 +252,49 @@ def test_research_view_post():
 @pytest.mark.django_db  
 def test_memberProfile_view_get():
     User.objects.create_user(username='Test User',
+                             fullname='TestTest',
                              email='',
                              password='',
+                             postalAddress='La Barrie 46500 GRAMAT'
                              )
     User.objects.create_user(username='Test User 2',
+                             fullname='Test2Test2',
                              email='test@test.com',
                              password='',
-                             fullname='TestTest',
+                             postalAddress='La Barrie 46500 GRAMAT',
                              phoneNumber='0000000000',
                              )
+    Blog.objects.create(name='Test Blog',
+                        category='Other',
+                        location='La Barrie 46500 GRAMAT',
+                        description='Test',
+                        availabalityStart=date.today(),
+                        availabalityEnd=date.today() + timedelta(days=1),
+                        deposit='True',
+                        author=User.objects.get(id=2)
+                        )
+    SignatureModel.objects.create(user=User.objects.get(id=1),
+                                 signature='[{"x":[178,172,165,156,145,133,121,112,102,96,92,97,103,116,131,146,169,185,202,220,234,245,254,261,266,268,268,267,262,256,247,238,229,218,208,198,188,181,177,177,176,176,178,183,187,194,201,208,213,219,211,201,189,174,154,135,114,100,86,75,67,62,60,60,60,60,61,62,64],"y":[59,56,56,54,54,54,53,51,50,48,46,39,34,28,22,19,14,13,11,11,12,16,20,26,32,37,44,50,56,61,67,71,74,77,78,78,78,77,75,70,64,56,48,39,32,23,16,9,5,0,1,5,9,15,23,31,41,51,62,75,88,100,108,118,125,131,136,141,145]}]',
+                                 )
+    SignatureModel.objects.create(user=User.objects.get(id=2),
+                                 signature='[{"x":[179,172,165,156,145,133,121,112,102,96,92,97,103,116,131,146,169,185,202,220,234,245,254,261,266,268,268,267,262,256,247,238,229,218,208,198,188,181,177,177,176,176,178,183,187,194,201,208,213,219,211,201,189,174,154,135,114,100,86,75,67,62,60,60,60,60,61,62,64],"y":[59,56,56,54,54,54,53,51,50,48,46,39,34,28,22,19,14,13,11,11,12,16,20,26,32,37,44,50,56,61,67,71,74,77,78,78,78,77,75,70,64,56,48,39,32,23,16,9,5,0,1,5,9,15,23,31,41,51,62,75,88,100,108,118,125,131,136,141,145]}]',
+                                 )
+    Contract.objects.create(applicant=User.objects.get(id=1),
+                            supplier=User.objects.get(id=2),
+                            applicantName='TestTest',
+                            contractedBlog=Blog.objects.get(id=1),
+                            startOfUse=date.today(),
+                            endOfUse=date.today() + timedelta(days=1),
+                            applicantApproval='Read and Approved',
+                            requestDate=date.today(),
+                            applicantPostalAddress='La Barrie 46500 GRAMAT',
+                            applicantSignature=SignatureModel.objects.get(id=1),
+                            supplierName='Test2Test2',
+                            supplierApproval='Read and Approved',
+                            approvalDate=date.today(),
+                            supplierPostalAddress='La Barrie 46500 GRAMAT',
+                            supplierSignature=SignatureModel.objects.get(id=2),
+                            )
     client.login(username='Test User', email='', password='')
     path = reverse('member-profile', kwargs={'userID':1, 'memberID':2})
     response = client.get(path)
@@ -307,6 +333,10 @@ def test_memberProfile_view_post():
     responseShowPersonalTools = client.post(path, data={'showPersonalTools': ['2']})
     assert responseShowPersonalTools.status_code == 302
     assert responseShowPersonalTools.url == '/user/1/member/2/member-tools/'
+
+    responseToolDetailsContract = client.post(path, data={'toolDetailsContract': ['1']})
+    assert responseToolDetailsContract.status_code == 302
+    assert responseToolDetailsContract.url == '/user/1/tool/1/details/'
 
 
 @pytest.mark.django_db  

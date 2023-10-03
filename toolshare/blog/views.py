@@ -15,37 +15,6 @@ from django.template.loader import render_to_string
 from blog.pdf import html2pdf
 
 
-class editTool(LoginRequiredMixin, View):
-    template_name = 'blog/editTool.html'
-
-    def get(self, request, userID):
-        blog_form = forms.BlogForm()
-        user = authModels.User.objects.get(id=userID)
-
-        context = {
-            'blog_form': blog_form,
-            'user': user,
-        }
-        return render(request, 'blog/editTool.html', context=context)
-
-    def post(self, request, userID):
-        blog_form = forms.BlogForm(request.POST, request.FILES)
-        user = authModels.User.objects.get(id=userID)
-
-        if blog_form.is_valid():
-            blog = blog_form.save(commit=False)
-            blog.name = Parser.removeUpperCase(blog_form.cleaned_data.get('name'))
-            blog.author = request.user
-            blog.save()
-            return redirect(reverse('profile', kwargs={'userID': userID}))
-        else:
-            context = {
-                'blog_form': blog_form,
-                'user': user,
-            }
-            return render(request, self.template_name, context=context)
-
-
 class personalTools(LoginRequiredMixin, View):
     template_name = 'blog/personalTools.html'
 
@@ -129,6 +98,37 @@ class personalTools(LoginRequiredMixin, View):
                     'status': queryLocation['status'], }
             request.session['data'] = data
             return redirect(reverse('tool-details', kwargs={'userID': userID, 'toolID': toolID}))
+
+
+class editTool(LoginRequiredMixin, View):
+    template_name = 'blog/editTool.html'
+
+    def get(self, request, userID):
+        blog_form = forms.BlogForm()
+        user = authModels.User.objects.get(id=userID)
+
+        context = {
+            'blog_form': blog_form,
+            'user': user,
+        }
+        return render(request, 'blog/editTool.html', context=context)
+
+    def post(self, request, userID):
+        blog_form = forms.BlogForm(request.POST, request.FILES)
+        user = authModels.User.objects.get(id=userID)
+
+        if blog_form.is_valid():
+            blog = blog_form.save(commit=False)
+            blog.name = Parser.removeUpperCase(blog_form.cleaned_data.get('name'))
+            blog.author = request.user
+            blog.save()
+            return redirect(reverse('profile', kwargs={'userID': userID}))
+        else:
+            context = {
+                'blog_form': blog_form,
+                'user': user,
+            }
+            return render(request, self.template_name, context=context)
 
 
 class memberTools(LoginRequiredMixin, View):
@@ -401,7 +401,6 @@ class borrowRequestForm(LoginRequiredMixin, View):
             applicantLocation = Parser.scriptForParse(form.cleaned_data.get('applicantPostalAddress'))
             statusApplicantLocation = Geocoder(applicantLocation).geocoderApiRequest()
             if form.cleaned_data.get('startOfUse') > tool.availabalityEnd:
-                print("Here")
                 context = {
                     'form': form,
                     'user': user,
@@ -410,7 +409,6 @@ class borrowRequestForm(LoginRequiredMixin, View):
                 }
                 return render(request, self.template_name, context=context)
             elif form.cleaned_data.get('endOfUse') > tool.availabalityEnd:
-                print("Here 1")
                 context = {
                     'form': form,
                     'user': user,
@@ -419,7 +417,6 @@ class borrowRequestForm(LoginRequiredMixin, View):
                 }
                 return render(request, self.template_name, context=context)
             elif form.cleaned_data.get('applicantName') != user.fullname:
-                print("Here 1.1")
                 context = {
                     'form': form,
                     'user': user,
@@ -428,7 +425,6 @@ class borrowRequestForm(LoginRequiredMixin, View):
                 }
                 return render(request, self.template_name, context=context)
             elif Parser.scriptForParse(form.cleaned_data.get('applicantApproval')) != ['read', 'approved']:
-                print("Here 2")
                 context = {
                     'form': form,
                     'user': user,
@@ -437,7 +433,6 @@ class borrowRequestForm(LoginRequiredMixin, View):
                 }
                 return render(request, self.template_name, context=context)
             elif form.cleaned_data.get('requestDate') != date.today():
-                print("Here 3")
                 context = {
                     'form': form,
                     'user': user,
@@ -446,7 +441,6 @@ class borrowRequestForm(LoginRequiredMixin, View):
                 }
                 return render(request, self.template_name, context=context)
             elif statusApplicantLocation['status'] != "OK":
-                print("Here 4")
                 context = {
                     'form': form,
                     'user': user,
@@ -493,11 +487,8 @@ class borrowRequestForm(LoginRequiredMixin, View):
                 email.attach_alternative(htmlContent, "text/html")
 
                 email.send()
-
                 return redirect(reverse('borrow-request-confirmation', kwargs={'userID': userID, 'toolID': toolID}))
         else:
-            print("Here 6")
-            print(form.errors)
             context = {
                 'form': form,
                 'user': user,
@@ -554,7 +545,6 @@ class consentToBorrowForm(LoginRequiredMixin, View):
                 supplierLocation = Parser.scriptForParse(form.cleaned_data.get('supplierPostalAddress'))
                 statusSupplierLocation = Geocoder(supplierLocation).geocoderApiRequest()
                 if form.cleaned_data.get('supplierName') != user.fullname:
-                    print("Here 1")
                     applicantInfo = {
                         'applicant': contract.applicant,
                         'applicantName': contract.applicantName,
@@ -572,7 +562,6 @@ class consentToBorrowForm(LoginRequiredMixin, View):
                     }
                     return render(request, self.template_name, context=context)
                 elif Parser.scriptForParse(form.cleaned_data.get('supplierApproval')) != ['read', 'approved']:
-                    print("Here 2")
                     applicantInfo = {
                         'applicant': contract.applicant,
                         'applicantName': contract.applicantName,
@@ -590,7 +579,6 @@ class consentToBorrowForm(LoginRequiredMixin, View):
                     }
                     return render(request, self.template_name, context=context)
                 elif form.cleaned_data.get('approvalDate') != date.today():
-                    print("Here 3")
                     applicantInfo = {
                         'applicant': contract.applicant,
                         'applicantName': contract.applicantName,
@@ -625,7 +613,6 @@ class consentToBorrowForm(LoginRequiredMixin, View):
                     }
                     return render(request, self.template_name, context=context)
                 else:
-                    print("Here 5")
                     signature = formSignature.cleaned_data.get('signature')
                     if signature:
                         newJSignatureModel = blogModels.SignatureModel()
@@ -657,7 +644,6 @@ class consentToBorrowForm(LoginRequiredMixin, View):
                     email.attach_alternative(htmlContent, "text/html")
 
                     email.send()
-
                     return redirect(reverse('consent-to-borrow-confirmation', kwargs={'userID': userID, 'contractID': contractID}))
             else:
                 applicantInfo = {
@@ -734,5 +720,4 @@ class borrowContractPDF(LoginRequiredMixin, View):
             'supplierSignature': contract.supplierSignature,
         }
         pdf = html2pdf(self.template_name, context_dict={'contractInfo': contractInfo, 'user': user})
-
         return HttpResponse(pdf, content_type="application/pdf")

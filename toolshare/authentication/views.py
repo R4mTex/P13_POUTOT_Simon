@@ -23,54 +23,379 @@ class Home(LoginRequiredMixin, View):
         return render(request, self.template_name)
 
 
-class About(LoginRequiredMixin, View):
-    template_name = 'authentication/about.html'
+class Registration(View):
+    template_name = 'authentication/registration.html'
+    form_class = forms.SignupForm
 
-    def get(self, request, userID):
-        return render(request, self.template_name)
-
-
-class Contact(LoginRequiredMixin, View):
-    template_name = 'authentication/contact.html'
-    form_class = forms.ContactForm
-
-    def get(self, request, userID):
+    def get(self, request):
         form = self.form_class()
-
+        acceptedConditions = False
         context = {
             'form': form,
+            'acceptedConditions': acceptedConditions,
+        }
+        return render(request, self.template_name, context=context)
+
+    def post(self, request):
+        form = self.form_class()
+        if 'fullname' in request.POST:
+            form = self.form_class(request.POST)
+            if form.is_valid():
+                user = form.save()
+                # auto-login user
+                login(request, user)
+                return redirect(settings.LOGIN_REDIRECT_URL)
+            context = {
+                'form': form,
+            }
+            return render(request, self.template_name, context=context)
+        elif 'accept' in request.POST:
+            acceptedConditions = True
+            context = {
+                'form': form,
+                'acceptedConditions': acceptedConditions,
+            }
+            return render(request, self.template_name, context=context)
+        acceptedConditions = False
+        context = {
+            'form': form,
+            'acceptedConditions': acceptedConditions,
+        }
+        return render(request, self.template_name, context=context)
+
+
+class Profile(LoginRequiredMixin, View):
+    template_name = 'authentication/profile.html'
+
+    def get(self, request, userID):
+        user = authModels.User.objects.get(id=userID)
+        personalTools = blogModels.Blog.objects.filter(author=user.id)
+
+        tools = blogModels.Blog.objects.all()
+        contracts = blogModels.Contract.objects.all()
+
+        for contract in range(len(contracts)):
+            for tool in range(len(tools)):
+                if contracts[contract].contractedBlog.id == tools[tool].id:
+                    if date.today() > contracts[contract].endOfUse:
+                        tools[tool].onContract = False
+                        tools[tool].save()
+
+        userApplicantContracts = blogModels.Contract.objects.filter(applicant=user)
+        userSupplierContracts = blogModels.Contract.objects.filter(supplier=user)
+
+        userApplicantContractStructure = []
+        for contract in range(len(userApplicantContracts)):
+            if userApplicantContracts[contract].supplierSignature is None:
+                break
+            else:
+                structure = {
+                    'applicant': user.username,
+                    'tool': userApplicantContracts[contract].contractedBlog,
+                    'supplier': userApplicantContracts[contract].supplier,
+                    'contractID': userApplicantContracts[contract].id
+                }
+                userApplicantContractStructure.append(structure)
+
+        userSupplierContractStructure = []
+        for contract in range(len(userSupplierContracts)):
+            structure = {
+                'applicant': userSupplierContracts[contract].applicant,
+                'tool': userSupplierContracts[contract].contractedBlog,
+                'supplier': user.username,
+                'contractID': userSupplierContracts[contract].id
+            }
+            userSupplierContractStructure.append(structure)
+
+        pathInfoUser = "/user/"+str(userID)+"/profile/"
+        pathInfoMember = ""
+
+        reversePersonalToolList = []
+        for tool in reversed(range(len(personalTools))):
+            reversePersonalToolList.append(personalTools[tool])
+
+        reversePersonalToolList4 = reversePersonalToolList[0:4]
+
+        context = {
+            'user': user,
+            'tools': reversePersonalToolList4,
+            'userApplicantContract': userApplicantContractStructure,
+            'userSupplierContract': userSupplierContractStructure,
+            'pathInfoUser': pathInfoUser,
+            'pathInfoMember': pathInfoMember,
+        }
+        return render(request, self.template_name, context=context)
+
+    def post(self, request, userID):
+        if "toolDetails" in request.POST:
+            toolID = int(request.POST.get("toolDetails"))
+
+            tool = blogModels.Blog.objects.get(id=toolID)
+            toolLocationParsed = Parser.scriptForParse(tool.location)
+
+            geocoderRequest = Geocoder(toolLocationParsed).geocoderApiRequest()
+            queryLocation = Geocoder(geocoderRequest).dataRequest()
+
+            if queryLocation['status'] == 'OK':
+                data = {
+                    'status': queryLocation['status'],
+                    'longName': queryLocation['longName'],
+                    'lat': queryLocation['lat'],
+                    'lng': queryLocation['lng'],
+                    'placeID': queryLocation['placeID'], }
+            elif queryLocation['status'] != 'OK':
+                data = {
+                    'status': queryLocation['status'], }
+            request.session['data'] = data
+            return redirect(reverse('tool-details', kwargs={'userID': userID, 'toolID': toolID}))
+        elif "toolDetailsContract" in request.POST:
+            toolID = int(request.POST.get("toolDetailsContract"))
+
+            tool = blogModels.Blog.objects.get(id=toolID)
+            toolLocationParsed = Parser.scriptForParse(tool.location)
+
+            geocoderRequest = Geocoder(toolLocationParsed).geocoderApiRequest()
+            queryLocation = Geocoder(geocoderRequest).dataRequest()
+
+            if queryLocation['status'] == 'OK':
+                data = {
+                    'status': queryLocation['status'],
+                    'longName': queryLocation['longName'],
+                    'lat': queryLocation['lat'],
+                    'lng': queryLocation['lng'],
+                    'placeID': queryLocation['placeID'], }
+            elif queryLocation['status'] != 'OK':
+                data = {
+                    'status': queryLocation['status'], }
+            request.session['data'] = data
+            return redirect(reverse('tool-details', kwargs={'userID': userID, 'toolID': toolID}))
+        elif "showPersonalTools" in request.POST:
+            return redirect(reverse('personal-tools', kwargs={'userID': userID}))
+
+
+class editProfile(LoginRequiredMixin, View):
+    template_name = 'authentication/editProfile.html'
+    form_picture = forms.UploadProfilePictureForm
+    form_profile = forms.UpdateUserProfile
+    form_password = PasswordChangeForm
+
+    def get(self, request, userID):
+        user = authModels.User.objects.get(id=userID)
+        form_picture = self.form_picture()
+        form_profile = self.form_profile(instance=request.user)
+        form_password = self.form_password(user)
+
+        context = {
+            'user': user,
+            'form_picture': form_picture,
+            'form_profile': form_profile,
+            'form_password': form_password,
         }
         return render(request, self.template_name, context=context)
 
     def post(self, request, userID):
         user = authModels.User.objects.get(id=userID)
-        form = self.form_class(request.POST)
+        if 'profilePicture' in request.POST:
+            form_picture = self.form_picture(request.POST, request.FILES, instance=request.user)
+            if form_picture.is_valid():
+                if user.profilePicture == 'userProfilePicture/defaultProfilePicture.png' or user.profilePicture == form_picture.cleaned_data['profilePicture']:
+                    form_picture.save()
+                else:
+                    user.profilePicture.delete()
+                    form_picture.save()
 
-        name = user.fullname
-        emailFrom = user.email
+                user = authModels.User.objects.get(id=userID)
+                form_picture = self.form_picture()
+                form_profile = self.form_profile(instance=request.user)
+                form_password = self.form_password(user)
 
-        if form.is_valid():
-            subject = form.cleaned_data['subject']
-            message = "The user named " + name + " has sent you a message : \n" + form.cleaned_data['message'] + ".\nYou can reach him at this address : " + emailFrom
-            recipientList = [settings.EMAIL_HOST_USER,]
+                context = {
+                    'user': user,
+                    'form_picture': form_picture,
+                    'form_profile': form_profile,
+                    'form_password': form_password,
+                }
+                return render(request, self.template_name, context=context)
+            else:
+                user = authModels.User.objects.get(id=userID)
+                form_picture = self.form_picture()
+                form_profile = self.form_profile(instance=user)
+                form_password = self.form_password(user)
 
-            email = EmailMessage(subject, message, emailFrom, recipientList)
-            email.send()
-            return redirect(reverse('contact-success', kwargs={'userID': userID}))
-        else:
-            form = self.form_class()
+                context = {
+                    'user': user,
+                    'form_picture': form_picture,
+                    'form_profile': form_profile,
+                    'form_password': form_password,
+                }
+                return render(request, self.template_name, context=context)
+        elif 'updateUserProfile' in request.POST:
+            form_profile = self.form_profile(request.POST, instance=request.user)
+            if form_profile.is_valid():
+                form_profile.save()
 
-            context = {
-                'form': form,
+                user = authModels.User.objects.get(id=userID)
+                form_picture = self.form_picture()
+                form_profile = self.form_profile(instance=request.user)
+                form_password = self.form_password(user)
+
+                context = {
+                    'user': user,
+                    'form_picture': form_picture,
+                    'form_profile': form_profile,
+                    'form_password': form_password,
+                }
+                return render(request, self.template_name, context=context)
+            else:
+                user = authModels.User.objects.get(id=userID)
+                form_picture = self.form_picture()
+                form_profile = self.form_profile(instance=request.user)
+                form_password = self.form_password(user)
+
+                context = {
+                    'user': user,
+                    'form_picture': form_picture,
+                    'form_profile': form_profile,
+                    'form_password': form_password,
+                }
+                return render(request, self.template_name, context=context)
+        elif 'setNewPassword' in request.POST:
+            form = self.form_password(user=request.user, data=request.POST)
+            if form.is_valid():
+                form.save()
+                update_session_auth_hash(request, form.user)
+
+                user = authModels.User.objects.get(id=userID)
+                form_picture = self.form_picture()
+                form_profile = self.form_profile(instance=request.user)
+                form_password = self.form_password(user)
+
+                context = {
+                    'user': user,
+                    'form_picture': form_picture,
+                    'form_profile': form_profile,
+                    'form_password': form_password,
+                }
+                return render(request, self.template_name, context=context)
+            else:
+                user = authModels.User.objects.get(id=userID)
+                form_picture = self.form_picture()
+                form_profile = self.form_profile(instance=request.user)
+                form_password = self.form_password(user)
+
+                context = {
+                    'user': user,
+                    'form_picture': form_picture,
+                    'form_profile': form_profile,
+                    'form_password': form_password,
+                }
+                return render(request, self.template_name, context=context)
+
+
+class memberProfile(LoginRequiredMixin, View):
+    template_name = "authentication/profile.html"
+
+    def get(self, request, userID, memberID):
+        user = authModels.User.objects.get(id=userID)
+        member = authModels.User.objects.get(id=memberID)
+
+        tools = blogModels.Blog.objects.all()
+        contracts = blogModels.Contract.objects.all()
+
+        for contract in range(len(contracts)):
+            for tool in range(len(tools)):
+                if contracts[contract].contractedBlog.id == tools[tool].id:
+                    if date.today() > contracts[contract].endOfUse:
+                        tools[tool].onContract = False
+                        tools[tool].save()
+
+        personalTools = blogModels.Blog.objects.filter(author=member.id)
+        userApplicantContracts = blogModels.Contract.objects.filter(applicant=member)
+        userSupplierContracts = blogModels.Contract.objects.filter(supplier=member)
+
+        userApplicantContractStructure = []
+        for contract in range(len(userApplicantContracts)):
+            structure = {
+                'applicant': member.username,
+                'tool': userApplicantContracts[contract].contractedBlog,
+                'supplier': userApplicantContracts[contract].supplier
             }
-            return render(request, self.template_name, context=context)
+            userApplicantContractStructure.append(structure)
 
+        userSupplierContractStructure = []
+        for contract in range(len(userSupplierContracts)):
+            structure = {
+                'applicant': userSupplierContracts[contract].applicant,
+                'tool': userSupplierContracts[contract].contractedBlog,
+                'supplier': member.username,
+            }
+            userSupplierContractStructure.append(structure)
 
-class Publisher(LoginRequiredMixin, View):
-    template_name = 'authentication/publisher.html'
+        reversePersonalToolList = []
+        for tool in reversed(range(len(personalTools))):
+            reversePersonalToolList.append(personalTools[tool])
 
-    def get(self, request, userID):
-        return render(request, self.template_name)
+        reversePersonalToolList4 = reversePersonalToolList[0:4]
+
+        pathInfoUser = ""
+        pathInfoMember = "/user/"+str(userID)+"/member/"+str(memberID)+"/member-profile/"
+
+        context = {
+            'user': user,
+            'member': member,
+            'tools': reversePersonalToolList4,
+            'userApplicantContract': userApplicantContractStructure,
+            'userSupplierContract': userSupplierContractStructure,
+            'pathInfoUser': pathInfoUser,
+            'pathInfoMember': pathInfoMember,
+        }
+        return render(request, self.template_name, context=context)
+
+    def post(self, request, userID, memberID):
+        if "toolDetails" in request.POST:
+            toolID = int(request.POST.get("toolDetails"))
+
+            tool = blogModels.Blog.objects.get(id=toolID)
+            toolLocationParsed = Parser.scriptForParse(tool.location)
+
+            geocoderRequest = Geocoder(toolLocationParsed).geocoderApiRequest()
+            queryLocation = Geocoder(geocoderRequest).dataRequest()
+
+            if queryLocation['status'] == 'OK':
+                data = {
+                    'status': queryLocation['status'],
+                    'longName': queryLocation['longName'],
+                    'lat': queryLocation['lat'],
+                    'lng': queryLocation['lng'],
+                    'placeID': queryLocation['placeID'], }
+            elif queryLocation['status'] != 'OK':
+                data = {
+                    'status': queryLocation['status'], }
+            request.session['data'] = data
+            return redirect(reverse('tool-details', kwargs={'userID': userID, 'toolID': toolID}))
+        elif "toolDetailsContract" in request.POST:
+            toolID = int(request.POST.get("toolDetailsContract"))
+
+            tool = blogModels.Blog.objects.get(id=toolID)
+            toolLocationParsed = Parser.scriptForParse(tool.location)
+
+            geocoderRequest = Geocoder(toolLocationParsed).geocoderApiRequest()
+            queryLocation = Geocoder(geocoderRequest).dataRequest()
+
+            if queryLocation['status'] == 'OK':
+                data = {
+                    'status': queryLocation['status'],
+                    'longName': queryLocation['longName'],
+                    'lat': queryLocation['lat'],
+                    'lng': queryLocation['lng'],
+                    'placeID': queryLocation['placeID'], }
+            elif queryLocation['status'] != 'OK':
+                data = {
+                    'status': queryLocation['status'], }
+            request.session['data'] = data
+            return redirect(reverse('tool-details', kwargs={'userID': userID, 'toolID': toolID}))
+        elif "showPersonalTools" in request.POST:
+            return redirect(reverse('member-tools', kwargs={'userID': userID, 'memberID': memberID}))
 
 
 class Research(LoginRequiredMixin, View):
@@ -106,7 +431,6 @@ class Research(LoginRequiredMixin, View):
         context = {
             'tools': reverseToolsList,
         }
-
         return render(request, self.template_name, context=context)
 
     def post(self, request, userID):
@@ -350,112 +674,6 @@ class Research(LoginRequiredMixin, View):
                 return redirect(reverse('member-profile', kwargs={'userID': userID, 'memberID': memberID}))
 
 
-class memberProfile(LoginRequiredMixin, View):
-    template_name = "authentication/profile.html"
-
-    def get(self, request, userID, memberID):
-        user = authModels.User.objects.get(id=userID)
-        member = authModels.User.objects.get(id=memberID)
-
-        tools = blogModels.Blog.objects.all()
-        contracts = blogModels.Contract.objects.all()
-
-        for contract in range(len(contracts)):
-            for tool in range(len(tools)):
-                if contracts[contract].contractedBlog.id == tools[tool].id:
-                    if date.today() > contracts[contract].endOfUse:
-                        tools[tool].onContract = False
-                        tools[tool].save()
-
-        personalTools = blogModels.Blog.objects.filter(author=member.id)
-        userApplicantContracts = blogModels.Contract.objects.filter(applicant=member)
-        userSupplierContracts = blogModels.Contract.objects.filter(supplier=member)
-
-        userApplicantContractStructure = []
-        for contract in range(len(userApplicantContracts)):
-            structure = {
-                'applicant': member.username,
-                'tool': userApplicantContracts[contract].contractedBlog,
-                'supplier': userApplicantContracts[contract].supplier
-            }
-            userApplicantContractStructure.append(structure)
-
-        userSupplierContractStructure = []
-        for contract in range(len(userSupplierContracts)):
-            structure = {
-                'applicant': userSupplierContracts[contract].applicant,
-                'tool': userSupplierContracts[contract].contractedBlog,
-                'supplier': member.username,
-            }
-            userSupplierContractStructure.append(structure)
-
-        reversePersonalToolList = []
-        for tool in reversed(range(len(personalTools))):
-            reversePersonalToolList.append(personalTools[tool])
-
-        reversePersonalToolList4 = reversePersonalToolList[0:4]
-
-        pathInfoUser = ""
-        pathInfoMember = "/user/"+str(userID)+"/member/"+str(memberID)+"/member-profile/"
-
-        context = {
-            'user': user,
-            'member': member,
-            'tools': reversePersonalToolList4,
-            'userApplicantContract': userApplicantContractStructure,
-            'userSupplierContract': userSupplierContractStructure,
-            'pathInfoUser': pathInfoUser,
-            'pathInfoMember': pathInfoMember,
-        }
-        return render(request, self.template_name, context=context)
-
-    def post(self, request, userID, memberID):
-        if "toolDetails" in request.POST:
-            toolID = int(request.POST.get("toolDetails"))
-
-            tool = blogModels.Blog.objects.get(id=toolID)
-            toolLocationParsed = Parser.scriptForParse(tool.location)
-
-            geocoderRequest = Geocoder(toolLocationParsed).geocoderApiRequest()
-            queryLocation = Geocoder(geocoderRequest).dataRequest()
-
-            if queryLocation['status'] == 'OK':
-                data = {
-                    'status': queryLocation['status'],
-                    'longName': queryLocation['longName'],
-                    'lat': queryLocation['lat'],
-                    'lng': queryLocation['lng'],
-                    'placeID': queryLocation['placeID'], }
-            elif queryLocation['status'] != 'OK':
-                data = {
-                    'status': queryLocation['status'], }
-            request.session['data'] = data
-            return redirect(reverse('tool-details', kwargs={'userID': userID, 'toolID': toolID}))
-        elif "toolDetailsContract" in request.POST:
-            toolID = int(request.POST.get("toolDetailsContract"))
-
-            tool = blogModels.Blog.objects.get(id=toolID)
-            toolLocationParsed = Parser.scriptForParse(tool.location)
-
-            geocoderRequest = Geocoder(toolLocationParsed).geocoderApiRequest()
-            queryLocation = Geocoder(geocoderRequest).dataRequest()
-
-            if queryLocation['status'] == 'OK':
-                data = {
-                    'status': queryLocation['status'],
-                    'longName': queryLocation['longName'],
-                    'lat': queryLocation['lat'],
-                    'lng': queryLocation['lng'],
-                    'placeID': queryLocation['placeID'], }
-            elif queryLocation['status'] != 'OK':
-                data = {
-                    'status': queryLocation['status'], }
-            request.session['data'] = data
-            return redirect(reverse('tool-details', kwargs={'userID': userID, 'toolID': toolID}))
-        elif "showPersonalTools" in request.POST:
-            return redirect(reverse('member-tools', kwargs={'userID': userID, 'memberID': memberID}))
-
-
 class Favorites(LoginRequiredMixin, View):
     template_name = 'authentication/favorites.html'
 
@@ -549,270 +767,51 @@ class Favorites(LoginRequiredMixin, View):
             return render(request, self.template_name, context=context)
 
 
-class Profile(LoginRequiredMixin, View):
-    template_name = 'authentication/profile.html'
+class About(LoginRequiredMixin, View):
+    template_name = 'authentication/about.html'
 
     def get(self, request, userID):
-        user = authModels.User.objects.get(id=userID)
-        personalTools = blogModels.Blog.objects.filter(author=user.id)
-
-        tools = blogModels.Blog.objects.all()
-        contracts = blogModels.Contract.objects.all()
-
-        for contract in range(len(contracts)):
-            for tool in range(len(tools)):
-                if contracts[contract].contractedBlog.id == tools[tool].id:
-                    if date.today() > contracts[contract].endOfUse:
-                        tools[tool].onContract = False
-                        tools[tool].save()
-
-        userApplicantContracts = blogModels.Contract.objects.filter(applicant=user)
-        userSupplierContracts = blogModels.Contract.objects.filter(supplier=user)
-
-        userApplicantContractStructure = []
-        for contract in range(len(userApplicantContracts)):
-            if userApplicantContracts[contract].supplierSignature is None:
-                break
-            else:
-                structure = {
-                    'applicant': user.username,
-                    'tool': userApplicantContracts[contract].contractedBlog,
-                    'supplier': userApplicantContracts[contract].supplier,
-                    'contractID': userApplicantContracts[contract].id
-                }
-                userApplicantContractStructure.append(structure)
-
-        userSupplierContractStructure = []
-        for contract in range(len(userSupplierContracts)):
-            structure = {
-                'applicant': userSupplierContracts[contract].applicant,
-                'tool': userSupplierContracts[contract].contractedBlog,
-                'supplier': user.username,
-                'contractID': userSupplierContracts[contract].id
-            }
-            userSupplierContractStructure.append(structure)
-
-        pathInfoUser = "/user/"+str(userID)+"/profile/"
-        pathInfoMember = ""
-
-        reversePersonalToolList = []
-        for tool in reversed(range(len(personalTools))):
-            reversePersonalToolList.append(personalTools[tool])
-
-        reversePersonalToolList4 = reversePersonalToolList[0:4]
-
-        context = {
-            'user': user,
-            'tools': reversePersonalToolList4,
-            'userApplicantContract': userApplicantContractStructure,
-            'userSupplierContract': userSupplierContractStructure,
-            'pathInfoUser': pathInfoUser,
-            'pathInfoMember': pathInfoMember,
-        }
-        return render(request, self.template_name, context=context)
-
-    def post(self, request, userID):
-        if "toolDetails" in request.POST:
-            toolID = int(request.POST.get("toolDetails"))
-
-            tool = blogModels.Blog.objects.get(id=toolID)
-            toolLocationParsed = Parser.scriptForParse(tool.location)
-
-            geocoderRequest = Geocoder(toolLocationParsed).geocoderApiRequest()
-            queryLocation = Geocoder(geocoderRequest).dataRequest()
-
-            if queryLocation['status'] == 'OK':
-                data = {
-                    'status': queryLocation['status'],
-                    'longName': queryLocation['longName'],
-                    'lat': queryLocation['lat'],
-                    'lng': queryLocation['lng'],
-                    'placeID': queryLocation['placeID'], }
-            elif queryLocation['status'] != 'OK':
-                data = {
-                    'status': queryLocation['status'], }
-            request.session['data'] = data
-            return redirect(reverse('tool-details', kwargs={'userID': userID, 'toolID': toolID}))
-        elif "toolDetailsContract" in request.POST:
-            toolID = int(request.POST.get("toolDetailsContract"))
-
-            tool = blogModels.Blog.objects.get(id=toolID)
-            toolLocationParsed = Parser.scriptForParse(tool.location)
-
-            geocoderRequest = Geocoder(toolLocationParsed).geocoderApiRequest()
-            queryLocation = Geocoder(geocoderRequest).dataRequest()
-
-            if queryLocation['status'] == 'OK':
-                data = {
-                    'status': queryLocation['status'],
-                    'longName': queryLocation['longName'],
-                    'lat': queryLocation['lat'],
-                    'lng': queryLocation['lng'],
-                    'placeID': queryLocation['placeID'], }
-            elif queryLocation['status'] != 'OK':
-                data = {
-                    'status': queryLocation['status'], }
-            request.session['data'] = data
-            return redirect(reverse('tool-details', kwargs={'userID': userID, 'toolID': toolID}))
-        elif "showPersonalTools" in request.POST:
-            return redirect(reverse('personal-tools', kwargs={'userID': userID}))
+        return render(request, self.template_name)
 
 
-class editProfile(LoginRequiredMixin, View):
-    template_name = 'authentication/editProfile.html'
-    form_picture = forms.UploadProfilePictureForm
-    form_profile = forms.UpdateUserProfile
-    form_password = PasswordChangeForm
+class Contact(LoginRequiredMixin, View):
+    template_name = 'authentication/contact.html'
+    form_class = forms.ContactForm
 
     def get(self, request, userID):
-        user = authModels.User.objects.get(id=userID)
-        form_picture = self.form_picture()
-        form_profile = self.form_profile(instance=request.user)
-        form_password = self.form_password(user)
+        form = self.form_class()
 
         context = {
-            'user': user,
-            'form_picture': form_picture,
-            'form_profile': form_profile,
-            'form_password': form_password,
+            'form': form,
         }
         return render(request, self.template_name, context=context)
 
     def post(self, request, userID):
         user = authModels.User.objects.get(id=userID)
-        if 'profilePicture' in request.POST:
-            form_picture = self.form_picture(request.POST, request.FILES, instance=request.user)
-            if form_picture.is_valid():
-                if user.profilePicture == 'userProfilePicture/defaultProfilePicture.png' or user.profilePicture == form_picture.cleaned_data['profilePicture']:
-                    form_picture.save()
-                else:
-                    user.profilePicture.delete()
-                    form_picture.save()
+        form = self.form_class(request.POST)
 
-                user = authModels.User.objects.get(id=userID)
-                form_picture = self.form_picture()
-                form_profile = self.form_profile(instance=request.user)
-                form_password = self.form_password(user)
+        name = user.fullname
+        emailFrom = user.email
 
-                context = {
-                    'user': user,
-                    'form_picture': form_picture,
-                    'form_profile': form_profile,
-                    'form_password': form_password,
-                }
-                return render(request, self.template_name, context=context)
-            else:
-                user = authModels.User.objects.get(id=userID)
-                form_picture = self.form_picture()
-                form_profile = self.form_profile(instance=user)
-                form_password = self.form_password(user)
+        if form.is_valid():
+            subject = form.cleaned_data['subject']
+            message = "The user named " + name + " has sent you a message : \n" + form.cleaned_data['message'] + ".\nYou can reach him at this address : " + emailFrom
+            recipientList = [settings.EMAIL_HOST_USER,]
 
-                context = {
-                    'user': user,
-                    'form_picture': form_picture,
-                    'form_profile': form_profile,
-                    'form_password': form_password,
-                }
-                return render(request, self.template_name, context=context)
-        elif 'updateUserProfile' in request.POST:
-            form_profile = self.form_profile(request.POST, instance=request.user)
-            if form_profile.is_valid():
-                form_profile.save()
+            email = EmailMessage(subject, message, emailFrom, recipientList)
+            email.send()
+            return redirect(reverse('contact-success', kwargs={'userID': userID}))
+        else:
+            form = self.form_class()
 
-                user = authModels.User.objects.get(id=userID)
-                form_picture = self.form_picture()
-                form_profile = self.form_profile(instance=request.user)
-                form_password = self.form_password(user)
-
-                context = {
-                    'user': user,
-                    'form_picture': form_picture,
-                    'form_profile': form_profile,
-                    'form_password': form_password,
-                }
-                return render(request, self.template_name, context=context)
-            else:
-                user = authModels.User.objects.get(id=userID)
-                form_picture = self.form_picture()
-                form_profile = self.form_profile(instance=request.user)
-                form_password = self.form_password(user)
-
-                context = {
-                    'user': user,
-                    'form_picture': form_picture,
-                    'form_profile': form_profile,
-                    'form_password': form_password,
-                }
-                return render(request, self.template_name, context=context)
-        elif 'setNewPassword' in request.POST:
-            form = self.form_password(user=request.user, data=request.POST)
-            if form.is_valid():
-                form.save()
-                update_session_auth_hash(request, form.user)
-
-                user = authModels.User.objects.get(id=userID)
-                form_picture = self.form_picture()
-                form_profile = self.form_profile(instance=request.user)
-                form_password = self.form_password(user)
-
-                context = {
-                    'user': user,
-                    'form_picture': form_picture,
-                    'form_profile': form_profile,
-                    'form_password': form_password,
-                }
-                return render(request, self.template_name, context=context)
-            else:
-                user = authModels.User.objects.get(id=userID)
-                form_picture = self.form_picture()
-                form_profile = self.form_profile(instance=request.user)
-                form_password = self.form_password(user)
-
-                context = {
-                    'user': user,
-                    'form_picture': form_picture,
-                    'form_profile': form_profile,
-                    'form_password': form_password,
-                }
-                return render(request, self.template_name, context=context)
-
-
-class Registration(View):
-    template_name = 'authentication/registration.html'
-    form_class = forms.SignupForm
-
-    def get(self, request):
-        form = self.form_class()
-        acceptedConditions = False
-        context = {
-            'form': form,
-            'acceptedConditions': acceptedConditions,
-        }
-        return render(request, self.template_name, context=context)
-
-    def post(self, request):
-        form = self.form_class()
-        if 'fullname' in request.POST:
-            form = self.form_class(request.POST)
-            if form.is_valid():
-                user = form.save()
-                # auto-login user
-                login(request, user)
-                return redirect(settings.LOGIN_REDIRECT_URL)
             context = {
                 'form': form,
             }
             return render(request, self.template_name, context=context)
-        elif 'accept' in request.POST:
-            acceptedConditions = True
-            context = {
-                'form': form,
-                'acceptedConditions': acceptedConditions,
-            }
-            return render(request, self.template_name, context=context)
-        acceptedConditions = False
-        context = {
-            'form': form,
-            'acceptedConditions': acceptedConditions,
-        }
-        return render(request, self.template_name, context=context)
+
+
+class Publisher(LoginRequiredMixin, View):
+    template_name = 'authentication/publisher.html'
+
+    def get(self, request, userID):
+        return render(request, self.template_name)

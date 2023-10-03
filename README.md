@@ -47,6 +47,7 @@ For the program to function correctly, it is essential to install the provided l
 Once the console is located in the program's root folder, you can install them using the following command :
 
 ```pip install -r requirements.txt --use-pep517```
+
 (cela peut prendre quelques minutes)
 
 ### Initialization
@@ -82,6 +83,7 @@ Puis executez ces dernières commandes :
 1. ```python manage.py makemigrations```
 2. ```python manage.py migrate```
 2. ```python manage.py createsuperuser```
+
 (follow the instructions displayed in the command console)
 
 Now, if the commands mentioned above have been executed successfully, you can run the following command :

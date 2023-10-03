@@ -8,9 +8,9 @@ These instructions will guide you on how to get a copy of my project and test it
 
 ### Prerequisites
 
-Since the program is written in Python, it needs to be installed on your computer. You can download it from this link : [Télecharger Python](https://www.python.org/downloads/)
+Since the program is written in Python, it needs to be installed on your computer. You can download it from this link : [Télecharger Python](https://www.python.org/downloads/) (CTRL + click)
 
-You will also need a valid API Key for using [Google Maps](https://developers.google.com/maps/get-started?hl=fr#create-project).
+You will also need a valid API Key for using [Google Maps](https://developers.google.com/maps/get-started?hl=fr#create-project). (CTRL + click)
 
 ### Installation
 
@@ -40,7 +40,7 @@ mac/linux :
 
 ```source env/bin/activate```
 
-To learn more about virtual environments, you can refer to the documentation here : [Documentation Python](https://docs.python.org/3/library/venv.html)
+To learn more about virtual environments, you can refer to the documentation here : [Documentation Python](https://docs.python.org/3/library/venv.html) (CTRL + click)
 
 For the program to function correctly, it is essential to install the provided libraries. These are listed in the requirements.txt document.
 
@@ -56,7 +56,7 @@ Navigate to this folder :
 
 ```cd toolshare```
 
-Générez une key secret sur ce site : [Generate Secret Key](https://djecrety.ir)
+Générez une key secret sur ce site : [Generate Secret Key](https://djecrety.ir) (CTRL + click)
 
 Récuperez la valeur affichée pour la placer dans ce fichier :
 
@@ -76,7 +76,7 @@ Make sure to replace "GOOGLE_MAPS_API_KEY" value by yours in the same file locat
 
 (remplacez "env('GOOGLE_MAPS_API_KEY')" par votre key entre quotes)
 
-Toujours dans le même fichier, configurez le serveur SMTP (en bas du fichier) en suivant cette documentation : [Documentation SMTP](https://docs.djangoproject.com/en/4.2/topics/email/)
+Toujours dans le même fichier, configurez le serveur SMTP (en bas du fichier) en suivant cette documentation : [Documentation SMTP](https://docs.djangoproject.com/en/4.2/topics/email/) (CTRL + click)
 
 Puis executez ces dernières commandes :
 
@@ -99,7 +99,7 @@ Good luck !
 
 ## Built with
 
-[VisualStudioCode](https://code.visualstudio.com/) - Text Editor
+[VisualStudioCode](https://code.visualstudio.com/) (CTRL + click) - Text Editor
 
 ## Author
 

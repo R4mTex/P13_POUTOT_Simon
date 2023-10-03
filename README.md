@@ -20,7 +20,7 @@ First, retrieve my project with this command :
 
 then navigate to this folder :
 
-```cd ToolShare-web-app```
+```cd P13_POUTOT_Simon```
 
 To avoid interfering with other projects, it is recommended to run this one in a virtual environment. Here are the main commands for :
 
@@ -50,14 +50,38 @@ Once the console is located in the program's root folder, you can install them u
 
 ### Initialization
 
-Execute these commands in sequence :
+Navigate to this folder :
 
-1. ```python manage.py migrate```
-2. ```python manage.py createsuperuser``` (follow the instructions displayed in the command console)
+```cd toolshare```
 
-Make sure to replace "GOOGLE_MAPS_API_KEY" in the file "geocoderApi.py" located here : 
+And execute this command :
 
-```ToolShare-web-app\toolshare\blog\scripts\geocoderApi.py```
+1. ```python manage.py secretKey```
+
+Récuperez la valeur affiché pour le placer dans ce fichier :
+
+```ToolShare-web-app\toolshare\toolshare\settings.py```
+
+à cet emplacement :
+
+```SECRET_KEY = env('SECRET_KEY')```
+
+(remplacez "env('SECRET_KEY')" par votre valeur entre quotes)
+
+De plus, juste en dessous, changez la valeur de DEBUG par ```True```.
+
+Make sure to replace "GOOGLE_MAPS_API_KEY" value by yours in the same file located here :
+
+```GOOGLE_MAPS_API_KEY = env('GOOGLE_MAPS_API_KEY')```
+
+(remplacez "env('GOOGLE_MAPS_API_KEY')" par votre key entre quotes)
+
+Toujours dans le même fichier, configurez le serveur SMTP (en bas du fichier) en suivant cette documentation : [Documentation SMTP](https://docs.djangoproject.com/en/4.2/topics/email/)
+
+Puis executez ces dernières commandes :
+
+2. ```python manage.py migrate```
+3. ```python manage.py createsuperuser``` (follow the instructions displayed in the command console)
 
 Now, if the commands mentioned above have been executed successfully, you can run the following command :
 

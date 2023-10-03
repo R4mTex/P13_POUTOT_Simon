@@ -10,20 +10,6 @@ class SignupForm(UserCreationForm):
         model = get_user_model()
         fields = ('fullname', 'username', 'email', 'phoneNumber', 'postalAddress', 'bio',)
 
-    """
-    def clean(self):
-        cleaned_data = super().clean()
-        fullname = cleaned_data.get('fullname')
-        username = cleaned_data.get('username')
-        email = cleaned_data.get('email')
-        phoneNumber = cleaned_data.get('phoneNumber')
-        postalAddress = cleaned_data.get('postalAddress')
-        bio = cleaned_data.get('bio')
-
-        if User.objects.filter(fullname=fullname).exists():
-            raise forms.ValidationError('Fullname already exists.')
-    """
-
 
 class LoginForm(forms.Form):
     username = forms.CharField(max_length=63)

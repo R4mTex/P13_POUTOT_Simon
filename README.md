@@ -40,13 +40,14 @@ mac/linux :
 
 ```source env/bin/activate```
 
-To learn more about virtual environments, you can refer to the documentation here : [Documentation Python](https://docs.python.org/fr/3.6/tutorial/venv.html/)
+To learn more about virtual environments, you can refer to the documentation here : [Documentation Python](https://docs.python.org/3/library/venv.html)
 
 For the program to function correctly, it is essential to install the provided libraries. These are listed in the requirements.txt document.
 
 Once the console is located in the program's root folder, you can install them using the following command :
 
-```pip install -r requirements.txt --use-pep517``` (cela peut prendre quelques minutes)
+```pip install -r requirements.txt --use-pep517```
+(cela peut prendre quelques minutes)
 
 ### Initialization
 
@@ -78,8 +79,10 @@ Toujours dans le même fichier, configurez le serveur SMTP (en bas du fichier) e
 
 Puis executez ces dernières commandes :
 
-1. ```python manage.py migrate```
-2. ```python manage.py createsuperuser``` (follow the instructions displayed in the command console)
+1. ```python manage.py makemigrations```
+2. ```python manage.py migrate```
+2. ```python manage.py createsuperuser```
+(follow the instructions displayed in the command console)
 
 Now, if the commands mentioned above have been executed successfully, you can run the following command :
 

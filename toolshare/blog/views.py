@@ -6,7 +6,7 @@ from . import forms
 from authentication import models as authModels
 from blog import models as blogModels
 from blog.scripts.parser import Parser
-from blog.scripts.geocoderApi import Geocoder
+from blog.scripts.geocoderAPI import Geocoder
 from django.contrib import messages
 from django.conf import settings
 from django.core.mail import EmailMultiAlternatives, EmailMessage

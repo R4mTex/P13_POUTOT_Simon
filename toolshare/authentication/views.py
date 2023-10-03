@@ -10,7 +10,7 @@ from django.contrib.auth.forms import PasswordChangeForm
 from django.urls import reverse
 from django.contrib import messages
 from blog.scripts.parser import Parser
-from blog.scripts.geocoderApi import Geocoder
+from blog.scripts.geocoderAPI import Geocoder
 from django.core.mail import EmailMessage
 from datetime import date
 

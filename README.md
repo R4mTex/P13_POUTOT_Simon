@@ -46,7 +46,7 @@ For the program to function correctly, it is essential to install the provided l
 
 Once the console is located in the program's root folder, you can install them using the following command :
 
-```pip install -r requirements.txt --use-pep517```
+```pip install -r requirements.txt --use-pep517``` (cela peut prendre quelques minutes)
 
 ### Initialization
 
@@ -54,11 +54,9 @@ Navigate to this folder :
 
 ```cd toolshare```
 
-And execute this command :
+Générer une key secret sur ce site : [Generate Secret Key](https://djecrety.ir)
 
-1. ```python manage.py secretKey```
-
-Récuperez la valeur affiché pour le placer dans ce fichier :
+Récuperez la valeur affichée pour la placer dans ce fichier :
 
 ```ToolShare-web-app\toolshare\toolshare\settings.py```
 
@@ -68,7 +66,7 @@ Récuperez la valeur affiché pour le placer dans ce fichier :
 
 (remplacez "env('SECRET_KEY')" par votre valeur entre quotes)
 
-De plus, juste en dessous, changez la valeur de DEBUG par ```True```.
+De plus, juste en dessous, changez la valeur de ```DEBUG``` par ```True```.
 
 Make sure to replace "GOOGLE_MAPS_API_KEY" value by yours in the same file located here :
 

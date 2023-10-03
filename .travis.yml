@@ -1,0 +1,20 @@
+language: python
+python:
+  - '3.9'
+
+branches:
+  only:
+    - main
+
+before_script:
+  - python -m venv env
+  - source env/bin/activate
+  - pip install -r requirements.txt --use-pep517 
+  - cd toolshare
+  - python manage.py collectstatic
+
+services:
+    - postgresql
+
+script:
+  - pytest

@@ -54,7 +54,7 @@ Navigate to this folder :
 
 ```cd toolshare```
 
-Générer une key secret sur ce site : [Generate Secret Key](https://djecrety.ir)
+Générez une key secret sur ce site : [Generate Secret Key](https://djecrety.ir)
 
 Récuperez la valeur affichée pour la placer dans ce fichier :
 
@@ -78,8 +78,8 @@ Toujours dans le même fichier, configurez le serveur SMTP (en bas du fichier) e
 
 Puis executez ces dernières commandes :
 
-2. ```python manage.py migrate```
-3. ```python manage.py createsuperuser``` (follow the instructions displayed in the command console)
+1. ```python manage.py migrate```
+2. ```python manage.py createsuperuser``` (follow the instructions displayed in the command console)
 
 Now, if the commands mentioned above have been executed successfully, you can run the following command :
 

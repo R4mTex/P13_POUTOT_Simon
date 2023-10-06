@@ -67,11 +67,6 @@
                     </li>
                 </ul>
                 <!-- Work to do about phone format -->
-                <form class="py-sm-1 p-lg-0 me-auto form" role="form" action="{% url 'research' user.id %}">
-                    <input class="ps-2 py-1" type="search" name="search" id="searchBar" value=""
-                        placeholder="Do your research." size="30"
-                        style="background-color: rgb(214, 214, 214); border-radius: 4%;">
-                </form>
                 <form class="py-sm-1 px-lg-1 d-flex" action="{% url 'favorites' user.id %}">
                     <button class="btn btn-outline-dark" type="submit">
                         <i class="bi bi-tools me-1"></i>

@@ -396,7 +396,7 @@ class memberProfile(LoginRequiredMixin, View):
             return redirect(reverse('tool-details', kwargs={'userID': userID, 'toolID': toolID}))
         elif "showPersonalTools" in request.POST:
             return redirect(reverse('member-tools', kwargs={'userID': userID, 'memberID': memberID}))
-
+        
 
 class Research(LoginRequiredMixin, View):
     template_name = 'authentication/research.html'

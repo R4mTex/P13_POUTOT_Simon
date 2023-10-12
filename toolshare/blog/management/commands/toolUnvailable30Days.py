@@ -8,5 +8,5 @@ class Command(BaseCommand):
         tools = blogModels.Blog.objects.all()
 
         for tool in range(len(tools)):
-            if (tools[tool].availabalityEnd + timedelta(days=30)) == date.today():
+            if (tools[tool].availabalityEnd + timedelta(days=30)) <= date.today():
                 tools[tool].delete()

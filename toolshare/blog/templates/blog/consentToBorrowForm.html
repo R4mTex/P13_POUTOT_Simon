@@ -71,37 +71,39 @@
                             <p class="text-muted">Their consent:<br>I, the undersigned: <span class="fw-bold">{{ applicantInfo.applicantName }}</span> have <span class="fw-bold">{{ applicantInfo.applicantApproval }}</span> the terms of borrowing on <span
                                     class="fw-bold">{{ applicantInfo.requestDate }}</span>.</p>
                             <img src="{{ applicantInfo.applicantSignature|signature_base64 }}" alt="applicantSignature" style="border: 1px solid black; opacity: 0.5;"/>
-                            <h5 style="margin-left: 50%;">Lending Conditions</h5>
-                            <div style="margin-left: 50%;">
-                                <ul>
-                                    <li>Commit to lending the equipment in good condition, clean, and with a full tank</li>
-                                    <li>Commit to respecting deadlines</li>
-                                    <li>Commit to returning the deposit if the equipment's integrity is maintained</li>
-                                    <li>Commit to informing the borrower if the equipment has been modified</li>
-                                    <li>Commit to explaining the equipment's operation</li>
-                                    <li>Commit to being honest about the equipment's condition during handover</li>
-                                </ul>
-                            </div>
-                            <p class="text-end">In case of non-compliance with these conditions, a penalty or legal action will be applied.</p>
-                            <form class="pt-5" method="post" novalidate>
-                                {% csrf_token %}
-                                {% if form.errors %}
-                                {{ form.errors }}
-                                {% endif %}
-                                <p class="text-end">I, the undersigned:{% render_field form.supplierName name="supplierName" placeholder=user.fullname %}
-                                    have {% render_field form.supplierApproval name="supplierApproval" placeholder="Read and approved" %} the terms of lending on {% render_field form.approvalDate name="approvalDate" type="date" %}
-                                    at {% render_field form.supplierPostalAddress name="supplierPostalAddress" placeholder=user.postalAddress %}.
-                                </p>
+                            <div class="pt-5 mt-5 pt-lg-0 mt-lg-0">
+                                <h5 class="text-md-end">Lending Conditions</h5>
                                 <div class="d-flex justify-content-end">
-                                    <div class="d-flex flex-column">
-                                        <label class="form-label fw-bold mt-3" for="id_signature">Signature :</label>
-                                        {{ formSignature.media }}
-                                        {{ formSignature.signature }}
-                                    </div>
+                                    <ul class="d-flex flex-column align-items-start">
+                                        <li>Commit to lending the equipment in good condition, clean, and with a full tank</li>
+                                        <li>Commit to respecting deadlines</li>
+                                        <li>Commit to returning the deposit if the equipment's integrity is maintained</li>
+                                        <li>Commit to informing the borrower if the equipment has been modified</li>
+                                        <li>Commit to explaining the equipment's operation</li>
+                                        <li>Commit to being honest about the equipment's condition during handover</li>
+                                    </ul>
                                 </div>
-                                <p class="text-center mt-5"><button class="btn btn-outline-primary" type="submit" name="consent">Consent</button></p>
-                                <p class="text-center"><button class="btn btn-outline-danger" type="submit" name="decline">Decline</button></p>
-                            </form>
+                                <p class="text-lg-end">In case of non-compliance with these conditions, a penalty or legal action will be applied.</p>
+                                <form class="pt-5" method="post" novalidate>
+                                    {% csrf_token %}
+                                    {% if form.errors %}
+                                    {{ form.errors }}
+                                    {% endif %}
+                                    <p class="text-md-end">I, the undersigned:{% render_field form.supplierName name="supplierName" placeholder=user.fullname %}
+                                        have {% render_field form.supplierApproval name="supplierApproval" placeholder="Read and approved" %} the terms of lending on {% render_field form.approvalDate name="approvalDate" type="date" %}
+                                        at {% render_field form.supplierPostalAddress name="supplierPostalAddress" placeholder=user.postalAddress %}.
+                                    </p>
+                                    <div class="d-flex justify-content-center justify-content-md-end">
+                                        <div class="d-flex flex-column">
+                                            <label class="form-label fw-bold mt-3" for="id_signature">Signature :</label>
+                                            {{ formSignature.media }}
+                                            {{ formSignature.signature }}
+                                        </div>
+                                    </div>
+                                    <p class="text-center mt-5"><button class="btn btn-outline-primary" type="submit" name="consent">Consent</button></p>
+                                    <p class="text-center"><button class="btn btn-outline-danger" type="submit" name="decline">Decline</button></p>
+                                </form>
+                            </div>
                         </div>
                     </div>
                 </div>

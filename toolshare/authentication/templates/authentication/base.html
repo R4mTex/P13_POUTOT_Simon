@@ -5,7 +5,7 @@
 
 <head>
     <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+    <meta name="viewport" content="height=device-height, width=device-width, initial-scale=1, shrink-to-fit=no" />
     <meta name="description" content="Application for sharing tools and equipements" />
     <meta name="author" content="POUTOT Simon" />
     <title>ToolShare</title>
@@ -67,19 +67,19 @@
                     </li>
                 </ul>
                 <!-- Work to do about phone format -->
-                <form class="py-sm-1 px-lg-1 d-flex" action="{% url 'favorites' user.id %}">
+                <form class="py-1 py-lg-0 px-lg-1" action="{% url 'favorites' user.id %}">
                     <button class="btn btn-outline-dark" type="submit">
                         <i class="bi bi-tools me-1"></i>
                         Bag
                     </button>
                 </form>
-                <form class="py-sm-1 px-lg-1 d-flex" action="{% url 'profile' user.id %}">
+                <form class="py-1 py-lg-0 px-lg-1" action="{% url 'profile' user.id %}">
                     <button class="btn btn-outline-dark" type="submit">
                         <i class="bi bi-person-circle me-1"></i>
                         Profile
                     </button>
                 </form>
-                <form class="py-sm-1 px-lg-1 d-flex" action="{% url 'logout' %}">
+                <form class="py-1 py-lg-0 px-lg-1" action="{% url 'logout' %}">
                     <button class="btn btn-outline-dark" type="submit">
                         <i class="bi bi-power me-1" style="color:rgb(182, 0, 0)"></i>
                         Logout
@@ -118,19 +118,19 @@
                     </li>
                 </ul>
                 <!-- Work to do about phone format -->
-                <form class="py-sm-1 px-lg-1  d-flex" action="">
+                <form class="py-1 py-lg-0 px-lg-1" action="">
                     <button class="btn btn-outline-dark" type="submit">
                         <i class="bi bi-tools me-1"></i>
                         Bag
                     </button>
                 </form>
-                <form class="py-sm-1 px-lg-1 d-flex" action="">
+                <form class="py-1 py-lg-0 px-lg-1" action="">
                     <button class="btn btn-outline-dark" type="submit">
                         <i class="bi bi-person-circle me-1"></i>
                         Profile
                     </button>
                 </form>
-                <form class="py-sm-1 px-lg-1 d-flex" action="{% url 'login' %}">
+                <form class="py-1 py-lg-0 px-lg-1" action="{% url 'login' %}">
                     <button class="btn btn-outline-dark" type="submit">
                         <i class="bi bi-power me-1" style="color:green"></i>
                         Login

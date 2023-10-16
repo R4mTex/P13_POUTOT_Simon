@@ -76,11 +76,11 @@
                 {% endif %}
                 {% endfor %}
             </div>
-            <div class="container px-4 px-lg-5 mt-5">
-                <div class="row ps-4 ps-md-0 gx-4 gx-lg-5 row-cols-2 row-cols-sm-2 row-cols-md-3 row-cols-xl-4 justify-content-center">
+            <div class="container">
+                <div class="row gx-md-4 gx-lg-5 justify-content-center">
                     {% if tools|length >= 4 %}
                         {% for tool in tools %}
-                        <div class="col col-sm-6 col-md-4 col-xl-3 mb-5" name="toolCard">
+                        <div class="col-12 col-sm-6 col-md-4 col-xl-3 py-2 py-sm-4" name="toolCard">
                             <div class="card gradient-custom-card h-100 shadow">
                                 <!-- Available/Unavailable badge -->
                                 {% if tool.availabality == True and tool.onContract == False %}
@@ -115,44 +115,48 @@
                                 <div class="card-footer p-2 pt-0 border-top-0 bg-transparent">
                                     <form method="post" role="form" novalidate>
                                         {% csrf_token %}
-                                        <div class="text-center">
-                                            <button class="btn btn-outline-warning" type="submit" name="toolDetails" value="{{ tool.id }}" id="viewDetails">View details<i
-                                                    class="bi bi-gear ms-2"></i>
-                                            </button>
-                                            {% if tool.author.username != request.user.username and tool.match == False %}
-                                            <button class="btn btn-outline-danger mt-2" type="submit" name="addTool" value="{{ tool.id }}" id="addTool">Add to your Bag<i
-                                                    class="bi bi-heart ms-2"></i>
-                                            </button>
-                                            {% elif tool.author.username != request.user.username and tool.match == True %}
-                                            <button class="btn btn-danger mt-2" type="submit" name="removeTool" value="{{ tool.id }}">Remove from your Bag<i
-                                                    class="bi bi-x-octagon ms-2"></i>
-                                            </button>
-                                            {% elif tool.author.username == request.user.username and tool.onContract == False %}
-                                            <button class="btn btn-danger mt-2" type="submit" name="supprTool" value="{{ tool.id }}">Remove from your<br>Personal
-                                                Tools<i class="bi bi-x-octagon ms-2"></i>
-                                            </button>
-                                            {% elif tool.author.username == request.user.username and tool.onContract == True %}
-                                            <div class='mt-3 text-muted fst-italic'>He's on contract</div>
-                                            {% endif %}
+                                        <div class="d-flex justify-content-center">
+                                            <div class="d-inline-flex flex-column">
+                                                <button class="btn btn-outline-warning" type="submit" name="toolDetails" value="{{ tool.id }}" id="viewDetails">View details<i
+                                                        class="bi bi-gear ms-2"></i>
+                                                </button>
+                                                {% if tool.author.username != request.user.username and tool.match == False %}
+                                                <button class="btn btn-outline-danger mt-2" type="submit" name="addTool" value="{{ tool.id }}" id="addTool">Add to your Bag<i
+                                                        class="bi bi-heart ms-2"></i>
+                                                </button>
+                                                {% elif tool.author.username != request.user.username and tool.match == True %}
+                                                <button class="btn btn-danger mt-2" type="submit" name="removeTool" value="{{ tool.id }}">Remove from your Bag<i
+                                                        class="bi bi-x-octagon ms-2"></i>
+                                                </button>
+                                                {% elif tool.author.username == request.user.username and tool.onContract == False %}
+                                                <button class="btn btn-danger mt-2" type="submit" name="supprTool" value="{{ tool.id }}">Remove from your<br>Personal
+                                                    Tools<i class="bi bi-x-octagon ms-2"></i>
+                                                </button>
+                                                {% elif tool.author.username == request.user.username and tool.onContract == True %}
+                                                <div class='mt-3 text-muted fst-italic'>He's on contract</div>
+                                                {% endif %}
+                                            </div>
                                         </div>
-                                        <!-- Tool deposit -->
-                                        {% if tool.deposit == True %}
-                                        <h6 class="mt-4">He has a deposit</h6>
-                                        {% else %}
-                                        <h6 class="mt-4">There is no deposit</h6>
-                                        {% endif %}
-                                        <!-- Tool publisher -->
-                                        <h6 class="mt-3 fw-bolder">Published by :
-                                            {% if tool.author.username != request.user.username %}
-                                            <button type="submit" name="authorProfile" value="{{ tool.author.id }}" class="btn btn-link" 
-                                                style="text-decoration: none; padding: 0; margin: 0; position: relative; bottom: 2px;">{{ tool.author }}
-                                            </button>
+                                        <div class="ps-1">
+                                            <!-- Tool deposit -->
+                                            {% if tool.deposit == True %}
+                                            <h6 class="mt-4">He has a deposit</h6>
                                             {% else %}
-                                            <button type="submit" name="authorProfile" value="{{ tool.author.id }}" class="btn btn-link"
-                                                style="text-decoration: none; padding: 0; margin: 0; position: relative; bottom: 2px;">You
-                                            </button>
+                                            <h6 class="mt-4">There is no deposit</h6>
                                             {% endif %}
-                                        </h6>
+                                            <!-- Tool publisher -->
+                                            <h6 class="mt-3 fw-bolder">Published by :
+                                                {% if tool.author.username != request.user.username %}
+                                                <button type="submit" name="authorProfile" value="{{ tool.author.id }}" class="btn btn-link"
+                                                    style="text-decoration: none; padding: 0; margin: 0; position: relative; bottom: 2px;">{{ tool.author }}
+                                                </button>
+                                                {% else %}
+                                                <button type="submit" name="authorProfile" value="{{ tool.author.id }}" class="btn btn-link"
+                                                    style="text-decoration: none; padding: 0; margin: 0; position: relative; bottom: 2px;">You
+                                                </button>
+                                                {% endif %}
+                                            </h6>
+                                        </div>
                                     </form>
                                 </div>
                             </div>
@@ -160,7 +164,7 @@
                         {% endfor %}
                     {% elif tools|length == 3 %}
                         {% for tool in tools %}
-                        <div class="col col-sm-6 col-md-4 col-xl-3 mb-5" name="toolCard">
+                        <div class="col-12 col-sm-6 col-md-4 col-xl-3 py-2 py-sm-4" name="toolCard">
                             <div class="card gradient-custom-card h-100 shadow">
                                 <!-- Available/Unavailable badge -->
                                 {% if tool.availabality == True and tool.onContract == False %}
@@ -215,24 +219,26 @@
                                             <div class='mt-3 text-muted fst-italic'>He's on contract</div>
                                             {% endif %}
                                         </div>
-                                        <!-- Tool deposit -->
-                                        {% if tool.deposit == True %}
-                                        <h6 class="mt-4">He has a deposit</h6>
-                                        {% else %}
-                                        <h6 class="mt-4">There is no deposit</h6>
-                                        {% endif %}
-                                        <!-- Tool publisher -->
-                                        <h6 class="mt-3 fw-bolder">Published by :
-                                            {% if tool.author.username != request.user.username %}
-                                            <button type="submit" name="authorProfile" value="{{ tool.author.id }}" class="btn btn-link"
-                                                style="text-decoration: none; padding: 0; margin: 0; position: relative; bottom: 2px;">{{ tool.author }}
-                                            </button>
+                                        <div class="ps-1">
+                                            <!-- Tool deposit -->
+                                            {% if tool.deposit == True %}
+                                            <h6 class="mt-4">He has a deposit</h6>
                                             {% else %}
-                                            <button type="submit" name="authorProfile" value="{{ tool.author.id }}" class="btn btn-link"
-                                                style="text-decoration: none; padding: 0; margin: 0; position: relative; bottom: 2px;">You
-                                            </button>
+                                            <h6 class="mt-4">There is no deposit</h6>
                                             {% endif %}
-                                        </h6>
+                                            <!-- Tool publisher -->
+                                            <h6 class="mt-3 fw-bolder">Published by :
+                                                {% if tool.author.username != request.user.username %}
+                                                <button type="submit" name="authorProfile" value="{{ tool.author.id }}" class="btn btn-link"
+                                                    style="text-decoration: none; padding: 0; margin: 0; position: relative; bottom: 2px;">{{ tool.author }}
+                                                </button>
+                                                {% else %}
+                                                <button type="submit" name="authorProfile" value="{{ tool.author.id }}" class="btn btn-link"
+                                                    style="text-decoration: none; padding: 0; margin: 0; position: relative; bottom: 2px;">You
+                                                </button>
+                                                {% endif %}
+                                            </h6>
+                                        </div>
                                     </form>
                                 </div>
                             </div>
@@ -240,7 +246,7 @@
                         {% endfor %}
                     {% elif tools|length == 2 %}
                         {% for tool in tools %}
-                        <div class="col col-sm-6 col-md-4 col-xl-3 mb-5" name="toolCard">
+                        <div class="col-12 col-sm-6 col-md-4 col-xl-3 py-2 py-sm-4" name="toolCard">
                             <div class="card gradient-custom-card h-100 shadow">
                                 <!-- Available/Unavailable badge -->
                                 {% if tool.availabality == True and tool.onContract == False %}
@@ -295,24 +301,26 @@
                                             <div class='mt-3 text-muted fst-italic'>He's on contract</div>
                                             {% endif %}
                                         </div>
-                                        <!-- Tool deposit -->
-                                        {% if tool.deposit == True %}
-                                        <h6 class="mt-4">He has a deposit</h6>
-                                        {% else %}
-                                        <h6 class="mt-4">There is no deposit</h6>
-                                        {% endif %}
-                                        <!-- Tool publisher -->
-                                        <h6 class="mt-3 fw-bolder">Published by :
-                                            {% if tool.author.username != request.user.username %}
-                                            <button type="submit" name="authorProfile" value="{{ tool.author.id }}" class="btn btn-link"
-                                                style="text-decoration: none; padding: 0; margin: 0; position: relative; bottom: 2px;">{{ tool.author }}
-                                            </button>
+                                        <div class="ps-1">
+                                            <!-- Tool deposit -->
+                                            {% if tool.deposit == True %}
+                                            <h6 class="mt-4">He has a deposit</h6>
                                             {% else %}
-                                            <button type="submit" name="authorProfile" value="{{ tool.author.id }}" class="btn btn-link"
-                                                style="text-decoration: none; padding: 0; margin: 0; position: relative; bottom: 2px;">You
-                                            </button>
+                                            <h6 class="mt-4">There is no deposit</h6>
                                             {% endif %}
-                                        </h6>
+                                            <!-- Tool publisher -->
+                                            <h6 class="mt-3 fw-bolder">Published by :
+                                                {% if tool.author.username != request.user.username %}
+                                                <button type="submit" name="authorProfile" value="{{ tool.author.id }}" class="btn btn-link"
+                                                    style="text-decoration: none; padding: 0; margin: 0; position: relative; bottom: 2px;">{{ tool.author }}
+                                                </button>
+                                                {% else %}
+                                                <button type="submit" name="authorProfile" value="{{ tool.author.id }}" class="btn btn-link"
+                                                    style="text-decoration: none; padding: 0; margin: 0; position: relative; bottom: 2px;">You
+                                                </button>
+                                                {% endif %}
+                                            </h6>
+                                        </div>
                                     </form>
                                 </div>
                             </div>
@@ -320,7 +328,7 @@
                         {% endfor %}
                     {% else %}
                         {% for tool in tools %}
-                        <div class="col col-sm-6 col-md-4 col-xl-3 mb-5" name="toolCard">
+                        <div class="col-12 col-sm-6 col-md-4 col-xl-3 py-2 py-sm-4" name="toolCard">
                             <div class="card gradient-custom-card h-100 shadow">
                                 <!-- Available/Unavailable badge -->
                                 {% if tool.availabality == True and tool.onContract == False %}
@@ -375,24 +383,26 @@
                                             <div class='mt-3 text-muted fst-italic'>He's on contract</div>
                                             {% endif %}
                                         </div>
-                                        <!-- Tool deposit -->
-                                        {% if tool.deposit == True %}
-                                        <h6 class="mt-4">He has a deposit</h6>
-                                        {% else %}
-                                        <h6 class="mt-4">There is no deposit</h6>
-                                        {% endif %}
-                                        <!-- Tool publisher -->
-                                        <h6 class="mt-3 fw-bolder">Published by :
-                                            {% if tool.author.username != request.user.username %}
-                                            <button type="submit" name="authorProfile" value="{{ tool.author.id }}" class="btn btn-link"
-                                                style="text-decoration: none; padding: 0; margin: 0; position: relative; bottom: 2px;">{{ tool.author }}
-                                            </button>
+                                        <div class="ps-1">
+                                            <!-- Tool deposit -->
+                                            {% if tool.deposit == True %}
+                                            <h6 class="mt-4">He has a deposit</h6>
                                             {% else %}
-                                            <button type="submit" name="authorProfile" value="{{ tool.author.id }}" class="btn btn-link"
-                                                style="text-decoration: none; padding: 0; margin: 0; position: relative; bottom: 2px;">You
-                                            </button>
+                                            <h6 class="mt-4">There is no deposit</h6>
                                             {% endif %}
-                                        </h6>
+                                            <!-- Tool publisher -->
+                                            <h6 class="mt-3 fw-bolder">Published by :
+                                                {% if tool.author.username != request.user.username %}
+                                                <button type="submit" name="authorProfile" value="{{ tool.author.id }}" class="btn btn-link"
+                                                    style="text-decoration: none; padding: 0; margin: 0; position: relative; bottom: 2px;">{{ tool.author }}
+                                                </button>
+                                                {% else %}
+                                                <button type="submit" name="authorProfile" value="{{ tool.author.id }}" class="btn btn-link"
+                                                    style="text-decoration: none; padding: 0; margin: 0; position: relative; bottom: 2px;">You
+                                                </button>
+                                                {% endif %}
+                                            </h6>
+                                        </div>
                                     </form>
                                 </div>
                             </div>

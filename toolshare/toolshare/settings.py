@@ -144,7 +144,7 @@ USE_TZ = False
 # https://docs.djangoproject.com/en/4.2/howto/static-files/
 
 STATIC_URL = '/static/'
-STATIC_ROOT = BASE_DIR.joinpath('/static/')
+STATIC_ROOT = BASE_DIR.joinpath('static/')
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/4.2/ref/settings/#default-auto-field
@@ -160,6 +160,6 @@ EMAIL_HOST_USER = env('EMAIL_HOST_USER')
 EMAIL_HOST_PASSWORD = env('EMAIL_HOST_PASSWORD')
 
 MEDIA_URL = '/media/'
-MEDIA_ROOT = BASE_DIR.joinpath('/media/')
+MEDIA_ROOT = BASE_DIR.joinpath('media/')
 
 GOOGLE_MAPS_API_KEY = env('GOOGLE_MAPS_API_KEY')

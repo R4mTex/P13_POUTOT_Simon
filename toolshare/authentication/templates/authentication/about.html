@@ -4,7 +4,7 @@
 {% block content %}
 
 <style>
-    section {
+    .gradient-custom {
         /* fallback for old browsers */
         background: #E0DABC;
 
@@ -14,7 +14,9 @@
         /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
         background: linear-gradient(69.5deg, rgb(1, 179, 201) 2.3%, rgb(40, 48, 68) 97.6%);
     }
-
+    body {
+        height: 700px;
+    }
 </style>
 <!-- Header -->
 <header class="bg-dark py-5">
@@ -25,10 +27,11 @@
     </div>
 </header>
 <!-- about -->
-<section class="section py-5">
+
+<section class="gradient-custom py-5" style="min-height: 700px;">
     <div class="container">
-        <div class="row">
-            <div class="col-md-8 text-white-50">
+        <div class="d-flex flex-column flex-md-row">
+            <div class="col-12 col-md-8 text-white-50">
                 <p>Hello, after a few years studying computer science, I've come to realize my final project : "ToolShare".</p>
                 <p>The constraints were to create something community-oriented that would be useful around my home.</p>
                 <p>Living in the countryside, I've already been able to take part in a few jobsites requiring specific tools.
@@ -41,7 +44,7 @@
                 <p>I hope you enjoy the experience.</p>
                 <p>Best regards, Simon.</p>
             </div>
-            <div class="col-md-4 text-center drag-lg-top">
+            <div class="col-12 col-md-4 text-center drag-lg-top">
                 <div class="shadow-down mb-4">
                     <img src="/static/images/about/author.jpg" alt="author"
                         class="img-fluid w-100 rounded mt-5 mt-md-0" style="max-height: 250px; max-width: 200px;">
@@ -51,6 +54,7 @@
         </div>
     </div>
 </section>
+
 <!-- /about -->
 
 {% endblock %}

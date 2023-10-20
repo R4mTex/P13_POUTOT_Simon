@@ -1,4 +1,5 @@
 from . import *
+import psycopg2
 
 # SECURITY WARNING: keep the secret key used in Toolion secret!
 SECRET_KEY="django-insecure-lpxfa$ctf^n0+w7qlbo536ojr7ab!x@k_d#wc80vays9$5^jix"

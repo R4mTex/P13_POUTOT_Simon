@@ -11,7 +11,6 @@ before_script:
   - source env/bin/activate
   - pip install -r requirements.txt --use-pep517
   - cd toolshare
-  - python manage.py collectstatic
 
 env: DJANGO_SETTINGS_MODULE="toolshare.travis"
 

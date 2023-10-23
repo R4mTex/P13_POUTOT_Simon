@@ -23,12 +23,10 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/4.2/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in Toolion secret!
-# SECRET_KEY = env('SECRET_KEY')
-SECRET_KEY="django-insecure-lpxfa$ctf^n0+w7qlbo536ojr7ab!x@k_d#wc80vays9$5^jix"
+SECRET_KEY = env('SECRET_KEY')
 
 # SECURITY WARNING: don't run with debug turned on in Toolion!
-# DEBUG = env('DEBUG')
-DEBUG=True
+DEBUG = env('DEBUG')
 
 ALLOWED_HOSTS = []
 
@@ -155,18 +153,13 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 # SMTP
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
-# EMAIL_HOST = env('EMAIL_HOST')
+EMAIL_HOST = env('EMAIL_HOST')
 EMAIL_PORT = 587
 EMAIL_USE_TLS = True
-# EMAIL_HOST_USER = env('EMAIL_HOST_USER')
-# EMAIL_HOST_PASSWORD = env('EMAIL_HOST_PASSWORD')
-
-EMAIL_HOST="smtp.gmail.com"
-EMAIL_HOST_USER="founder.toolshare@gmail.com"
-EMAIL_HOST_PASSWORD="raaanxhaptucttlm"
+EMAIL_HOST_USER = env('EMAIL_HOST_USER')
+EMAIL_HOST_PASSWORD = env('EMAIL_HOST_PASSWORD')
 
 MEDIA_URL = '/media/'
 MEDIA_ROOT = BASE_DIR.joinpath('media/')
 
-# GOOGLE_MAPS_API_KEY = env('GOOGLE_MAPS_API_KEY')
-GOOGLE_MAPS_API_KEY="AIzaSyD1ckgetM8cnzdgwd1XpEetOhxghe5w82M"
+GOOGLE_MAPS_API_KEY = env('GOOGLE_MAPS_API_KEY')

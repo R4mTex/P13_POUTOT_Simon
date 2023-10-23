@@ -13,7 +13,7 @@ before_script:
   - cd toolshare
   - python manage.py collectstatic
 
-# env: DJANGO_SETTINGS_MODULE="toolshare.travis"
+env: DJANGO_SETTINGS_MODULE="toolshare.travis"
 
 services:
     - postgresql

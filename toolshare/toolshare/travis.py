@@ -1,5 +1,4 @@
 from toolshare.settings import *
-import psycopg2
 
 # SECURITY WARNING: keep the secret key used in Toolion secret!
 SECRET_KEY="django-insecure-lpxfa$ctf^n0+w7qlbo536ojr7ab!x@k_d#wc80vays9$5^jix"
@@ -9,13 +8,13 @@ DEBUG=True
 
 DATABASES = {
     'default': {
-         'ENGINE': 'django.db.backends.postgresql_psycopg2',
-         'NAME': 'toolshare_db',
-         'USER': 'simon',
-         'PASSWORD': 'Kundera1',
-         'HOST': 'localhost',
-         'PORT': '5432',
-    }
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': '',
+        'USER': 'postgres',
+        'PASSWORD': '',
+        'HOST': '',
+        'PORT': '',
+    },
 }
 
 # Reset Password Settings

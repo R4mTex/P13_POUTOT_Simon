@@ -6,6 +6,17 @@ branches:
   only:
     - main
 
+addons:
+  postgresql: '12'
+  apt:
+      packages:
+        - postgresql-12
+
+env: DJANGO_SETTINGS_MODULE=toolshare.travis
+
+services:
+    - postgresql
+
 before_script:
   - python -m venv env
   - source env/bin/activate
@@ -14,11 +25,6 @@ before_script:
   - psql -c 'create database toolshare_db;' -U postgres
   - python manage.py makemigrations
   - python manage.py migrate
-
-env: DJANGO_SETTINGS_MODULE=toolshare.travis
-
-services:
-    - postgresql
 
 script:
   - pytest

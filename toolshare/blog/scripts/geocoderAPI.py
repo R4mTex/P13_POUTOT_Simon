@@ -1,5 +1,5 @@
 import requests
-from toolshare.travis import GOOGLE_MAPS_API_KEY
+from toolshare.settings import GOOGLE_MAPS_API_KEY
 
 
 class Geocoder:

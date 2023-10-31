@@ -4,7 +4,7 @@ from toolshare.settings import *
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'postgresql',
+        'NAME': '',
         'USER': 'postgres',
         'PASSWORD': '',
         'HOST': '',

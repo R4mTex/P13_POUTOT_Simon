@@ -1,6 +1,6 @@
 language: python
 python:
-  - '4.1'
+  - '3.9'
 
 branches:
   only:

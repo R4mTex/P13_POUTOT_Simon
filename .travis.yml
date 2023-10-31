@@ -9,9 +9,12 @@ branches:
 before_script:
   - python -m venv env
   - source env/bin/activate
-  - psql -c 'create database travis_ci_test;' -U postgres
+  - psql -c 'create database toolshare_db;' -U postgres
   - pip install -r requirements.txt --use-pep517
   - cd toolshare
+
+env:
+  - DJANGO_SETTINGS_MODULE="toolshare.travis"
 
 services:
     - postgresql

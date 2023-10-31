@@ -14,7 +14,7 @@ before_script:
 
 env: 
   - DJANGO_SETTINGS_MODULE="toolshare.travis"
-  - secure : SECRET_KEY="django-insecure-lpxfa$ctf^n0+w7qlbo536ojr7ab!x@k_d#wc80vays9$5^jix"
+  - SECRET_KEY="django-insecure-lpxfa$ctf^n0+w7qlbo536ojr7ab!x@k_d#wc80vays9$5^jix"
 
 services:
     - postgresql

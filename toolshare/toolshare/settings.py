@@ -102,12 +102,12 @@ DATABASES = {
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
-        'NAME': '',
-        'USER': 'postgres',
-        'PASSWORD': '',
-        'HOST': '',
+        'NAME': 'pur_beurre_app',
+        'USER': 'admin',
+        'PASSWORD': 'Kundera1',
+        'HOST': 'localhost',
         'PORT': '',
-    },
+    }
 }
 
 # Password validation

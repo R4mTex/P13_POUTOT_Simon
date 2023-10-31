@@ -12,9 +12,6 @@ before_script:
   - pip install -r requirements.txt --use-pep517
   - cd toolshare
 
-env: 
-  - DJANGO_SETTINGS_MODULE="toolshare.travis"
-
 services:
     - postgresql
 

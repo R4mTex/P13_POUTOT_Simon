@@ -7,14 +7,10 @@ branches:
     - main
 
 before_script:
-  #- psql -c 'create database toolshare_db;' -U postgres
   - python -m venv env
   - source env/bin/activate
   - pip install -r requirements.txt --use-pep517
   - cd toolshare
-
-env:
-  - DJANGO_SETTINGS_MODULE="toolshare.travis"
 
 services:
     - postgresql

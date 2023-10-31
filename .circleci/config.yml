@@ -6,8 +6,6 @@ orbs:
 jobs:
   build_and_test: # this can be any name you choose
     executor: python/default
-    environment:
-      DJANGO_SETTINGS_MODULE: toolshare.toolshare.settings
     steps:
       - checkout
       - python/install-packages:

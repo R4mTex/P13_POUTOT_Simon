@@ -27,7 +27,8 @@ SECRET_KEY = "django-insecure-lpxfa$ctf^n0+w7qlbo536ojr7ab!x@k_d#wc80vays9$5^jix
 # SECRET_KEY = env('SECRET_KEY')
 
 # SECURITY WARNING: don't run with debug turned on in Toolion!
-DEBUG = env('DEBUG')
+DEBUG=True
+# DEBUG = env('DEBUG')
 
 ALLOWED_HOSTS = []
 

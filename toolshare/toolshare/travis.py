@@ -1,4 +1,4 @@
-from settings import *
+from toolshare.settings import *
 import psycopg2
 
 # SECURITY WARNING: keep the secret key used in Toolion secret!

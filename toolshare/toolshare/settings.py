@@ -23,12 +23,10 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/4.2/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in Toolion secret!
-SECRET_KEY = "django-insecure-lpxfa$ctf^n0+w7qlbo536ojr7ab!x@k_d#wc80vays9$5^jix"
-# SECRET_KEY = env('SECRET_KEY')
+SECRET_KEY = env('SECRET_KEY')
 
 # SECURITY WARNING: don't run with debug turned on in Toolion!
-DEBUG=True
-# DEBUG = env('DEBUG')
+DEBUG = env('DEBUG')
 
 ALLOWED_HOSTS = []
 

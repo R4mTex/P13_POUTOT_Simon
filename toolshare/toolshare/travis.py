@@ -1,26 +1,11 @@
-from . import *
+from settings import *
 import psycopg2
 
 # SECURITY WARNING: keep the secret key used in Toolion secret!
-SECRET_KEY="_0jm6arn^)d2b8m=c6cxng$xbs390xicml9n!klh9*p$3s@pey"
+SECRET_KEY="django-insecure-lpxfa$ctf^n0+w7qlbo536ojr7ab!x@k_d#wc80vays9$5^jix"
 
 # SECURITY WARNING: don't run with debug turned on in Toolion!
 DEBUG=True
-
-INSTALLED_APPS = [
-    'authentication',
-    'blog',
-    'widget_tweaks',
-    'phonenumber_field',
-    'jquery',
-    'jsignature',
-    'django.contrib.admin',
-    'django.contrib.auth',
-    'django.contrib.contenttypes',
-    'django.contrib.sessions',
-    'django.contrib.messages',
-    'django.contrib.staticfiles',
-]
 
 DATABASES = {
     'default': {

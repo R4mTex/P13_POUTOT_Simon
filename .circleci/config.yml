@@ -3,12 +3,11 @@ orbs:
   python: circleci/python@2.0.3
   heroku: circleci/heroku@1.2.6
 
-environment:
-  DJANGO_SETTINGS_MODULE: toolshare.settings
-
 jobs:
   build_and_test: # this can be any name you choose
     executor: python/default
+    environment:
+      DJANGO_SETTINGS_MODULE: toolshare.settings
     steps:
       - checkout
       - python/install-packages:

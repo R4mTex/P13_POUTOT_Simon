@@ -7,6 +7,21 @@ SECRET_KEY="django-insecure-lpxfa$ctf^n0+w7qlbo536ojr7ab!x@k_d#wc80vays9$5^jix"
 # SECURITY WARNING: don't run with debug turned on in Toolion!
 DEBUG=True
 
+INSTALLED_APPS = [
+    'authentication',
+    'blog',
+    'widget_tweaks',
+    'phonenumber_field',
+    'jquery',
+    'jsignature',
+    'django.contrib.admin',
+    'django.contrib.auth',
+    'django.contrib.contenttypes',
+    'django.contrib.sessions',
+    'django.contrib.messages',
+    'django.contrib.staticfiles',
+]
+
 DATABASES = {
     'default': {
          'ENGINE': 'django.db.backends.postgresql_psycopg2',

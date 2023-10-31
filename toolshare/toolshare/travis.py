@@ -10,9 +10,9 @@ DEBUG=True
 DATABASES = {
     'default': {
          'ENGINE': 'django.db.backends.postgresql_psycopg2',
-         'NAME': 'toolshare_db',
+         'NAME': 'postgresql',
          'USER': '',
-         'PASSWORD': 'Kundera1',
+         'PASSWORD': '',
          'HOST': 'localhost',
          'PORT': '5432',
     }

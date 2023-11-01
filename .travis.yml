@@ -15,6 +15,10 @@ addons:
       packages:
         - postgresql-13
 
+env:
+  global:
+    - PGPORT=5433
+
 env: DJANGO_SETTINGS_MODULE=toolshare.travis
 
 before_script:

@@ -103,7 +103,7 @@ def test_research_view_get():
                         availabalityStart=date.today(),
                         availabalityEnd=date.today() + timedelta(days=1),
                         deposit='True',
-                        author=User.objects.get(id=User.objects.all()[1])
+                        author=User.objects.all()[1]
                         )
     Blog.objects.create(name='Test Blog',
                         category='Other',
@@ -112,7 +112,7 @@ def test_research_view_get():
                         availabalityStart='2023-09-15',
                         availabalityEnd='2023-09-16',
                         deposit='True',
-                        author=User.objects.get(id=User.objects.all()[1])
+                        author=User.objects.all()[1]
                         )
     Favorite.objects.create(user=User.objects.get(id=1),
                             blog=Blog.objects.get(id=1))
@@ -269,7 +269,7 @@ def test_memberProfile_view_get():
                         availabalityStart=date.today(),
                         availabalityEnd=date.today() + timedelta(days=1),
                         deposit='True',
-                        author=User.objects.get(id=User.objects.all()[1])
+                        author=User.objects.all()[1]
                         )
     SignatureModel.objects.create(user=User.objects.get(id=1),
                                   signature='[{"x":[178,172,165,156,145,133,121,112,102,96,92,97,103,116,131,146,169,185,202,220,234,245,254,261,266,268,268,267,262,256,247,238,229,218,208,198,188,181,177,177,176,176,178,183,187,194,201,208,213,219,211,201,189,174,154,135,114,100,86,75,67,62,60,60,60,60,61,62,64],"y":[59,56,56,54,54,54,53,51,50,48,46,39,34,28,22,19,14,13,11,11,12,16,20,26,32,37,44,50,56,61,67,71,74,77,78,78,78,77,75,70,64,56,48,39,32,23,16,9,5,0,1,5,9,15,23,31,41,51,62,75,88,100,108,118,125,131,136,141,145]}]',)

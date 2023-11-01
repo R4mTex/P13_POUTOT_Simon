@@ -40,10 +40,17 @@ def test_about_view_get():
 
 @pytest.mark.django_db
 def test_contact_view_get():
+    print("0", User.objects.all())
     User.objects.create_user(username='Test User',
                              email='',
                              password='',
                              )
+    print("1", User.objects.all())
+    print("2", User.objects.all()[0])
+    print("3", User.objects.all()[0].id)
+    print("3", User.objects.all()[0].username)
+    print("3", User.objects.all()[0].email)
+    print("3", User.objects.all()[0].password)
     client.login(username='Test User', email='', password='')
     path = reverse('contact', kwargs={'userID': 1})
     response = client.get(path)
@@ -69,7 +76,7 @@ def test_contact_view_post():
                                        'message': ['Test']
                                        })
     assert response.status_code == 302
-    assert response.url == '/user/1/contact/success/'
+    assert response.url == '/user/'+ User.objects.all()[0].id +'/contact/success/'
 
     response = client.post(path, data={'subject': ['Test']
                                        })

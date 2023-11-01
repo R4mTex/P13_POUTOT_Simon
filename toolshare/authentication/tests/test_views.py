@@ -86,10 +86,10 @@ def test_publisher_view_get():
 
 @pytest.mark.django_db
 def test_research_view_get():
-    User.objects.create_user(username='Test User',
+    User.objects.create(username='Test User',
                              email='',
                              password='',)
-    User.objects.create_user(username='Test User 2',
+    User.objects.create(username='Test User 2',
                              fullname='Test2Test2',
                              email='test@test.com',
                              password='',

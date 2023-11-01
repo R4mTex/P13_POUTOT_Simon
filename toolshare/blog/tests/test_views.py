@@ -14,7 +14,7 @@ client = Client()
 @pytest.mark.django_db
 def test_editTool_view_get():
     '''login requirement'''
-    User.objects.create_user(username='postgres',
+    User.objects.create_user(username='Test User',
                              email='',
                              password='',
                              )

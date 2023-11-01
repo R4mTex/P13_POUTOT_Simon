@@ -76,7 +76,7 @@ def test_contact_view_post():
                                        'message': ['Test']
                                        })
     assert response.status_code == 302
-    assert response.url == '/user/'+ User.objects.all()[0].id +'/contact/success/'
+    assert response.url == '/user/'+ str(User.objects.all()[0].id) +'/contact/success/'
 
     response = client.post(path, data={'subject': ['Test']
                                        })

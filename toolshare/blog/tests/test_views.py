@@ -10,7 +10,6 @@ from datetime import date, timedelta
 
 client = Client()
 
-print(User.objects.all())
 
 @pytest.mark.django_db
 def test_editTool_view_get():

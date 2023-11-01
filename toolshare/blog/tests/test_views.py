@@ -19,7 +19,7 @@ def test_editTool_view_get():
                              password='',
                              )
     client.login(username='Test User', email='', password='')
-    path = reverse('edit-tool', kwargs={'userID': User.objects.all(0).id})
+    path = reverse('edit-tool', kwargs={'userID': User.objects.all()[0].id})
     response = client.get(path)
     assert response.status_code == 200
     assertTemplateUsed(response, "blog/editTool.html")
@@ -33,7 +33,7 @@ def test_editTool_view_post():
                              password='',
                              )
     client.login(username='Test User', email='', password='')
-    path = reverse('edit-tool', kwargs={'userID': User.objects.all(0).id})
+    path = reverse('edit-tool', kwargs={'userID': User.objects.all()[0].id})
     responseEditTool = client.post(path, data={'name': [''],
                                                'image': [''],
                                                'category': [''],
@@ -87,7 +87,7 @@ def test_personalTools_view_get():
                         author=User.objects.get(id=1)
                         )
     client.login(username='Test User', email='', password='')
-    path = reverse('personal-tools', kwargs={'userID': User.objects.all(0).id})
+    path = reverse('personal-tools', kwargs={'userID': User.objects.all()[0].id})
     response = client.get(path)
     assert response.status_code == 200
     assertTemplateUsed(response, "blog/personalTools.html")
@@ -128,7 +128,7 @@ def test_personalTools_view_post():
                         author=User.objects.get(id=1)
                         )
     client.login(username='Test User', email='', password='')
-    path = reverse('personal-tools', kwargs={'userID': User.objects.all(0).id})
+    path = reverse('personal-tools', kwargs={'userID': User.objects.all()[0].id})
     responseToolDetails = client.post(path, data={'toolDetails': ['1']})
     assert responseToolDetails.status_code == 302
     assert responseToolDetails.url == '/user/' + str(User.objects.all()[0].id) + '/tool/1/details/'

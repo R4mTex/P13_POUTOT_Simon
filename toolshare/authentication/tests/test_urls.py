@@ -10,7 +10,7 @@ def test_about_url():
                                email='',
                                password='',
                                )
-    path = reverse('about', kwargs={'userID': User.objects.all(0).id})
+    path = reverse('about', kwargs={'userID': User.objects.all()[0].id})
 
     assert path == "/user/1/about/"
     assert resolve(path).view_name == "about"

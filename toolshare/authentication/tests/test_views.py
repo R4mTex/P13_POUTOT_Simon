@@ -32,7 +32,7 @@ def test_about_view_get():
                              password='',
                              )
     client.login(username='Test User', email='', password='')
-    path = reverse('about', kwargs={'userID': User.objects.all(0).id})
+    path = reverse('about', kwargs={'userID': User.objects.all()[0].id})
     response = client.get(path)
     assert response.status_code == 200
     assertTemplateUsed(response, "authentication/about.html")
@@ -45,7 +45,7 @@ def test_contact_view_get():
                              password='',
                              )
     client.login(username='Test User', email='', password='')
-    path = reverse('contact', kwargs={'userID': User.objects.all(0).id})
+    path = reverse('contact', kwargs={'userID': User.objects.all()[0].id})
     response = client.get(path)
     assert response.status_code == 200
     assertTemplateUsed(response, "authentication/contact.html")
@@ -58,7 +58,7 @@ def test_contact_view_post():
                              password='',
                              )
     client.login(username='Test User', email='', password='')
-    path = reverse('contact', kwargs={'userID': User.objects.all(0).id})
+    path = reverse('contact', kwargs={'userID': User.objects.all()[0].id})
     response = client.post(path, data={'subject': ['Test'],
                                        'message': ['Test']
                                        })
@@ -78,7 +78,7 @@ def test_publisher_view_get():
                              password='',
                              )
     client.login(username='Test User', email='', password='')
-    path = reverse('publisher', kwargs={'userID': User.objects.all(0).id})
+    path = reverse('publisher', kwargs={'userID': User.objects.all()[0].id})
     response = client.get(path)
     assert response.status_code == 200
     assertTemplateUsed(response, "authentication/publisher.html")
@@ -153,7 +153,7 @@ def test_research_view_get():
                             supplierSignature=SignatureModel.objects.get(id=2),
                             )
     client.login(username='Test User', email='', password='')
-    path = reverse('research', kwargs={'userID': User.objects.all(0).id})
+    path = reverse('research', kwargs={'userID': User.objects.all()[0].id})
     response = client.get(path)
     assert response.status_code == 200
     assertTemplateUsed(response, "authentication/research.html")
@@ -208,7 +208,7 @@ def test_research_view_post():
     Favorite.objects.create(user=User.objects.get(id=1),
                             blog=Blog.objects.get(id=3))
     client.login(username='Test User', email='', password='')
-    path = reverse('research', kwargs={'userID': User.objects.all(0).id})
+    path = reverse('research', kwargs={'userID': User.objects.all()[0].id})
 
     responseAllTools = client.post(path, data={'allTools': ['']})
     assert responseAllTools.status_code == 200
@@ -342,7 +342,7 @@ def test_favorites_view_get():
                              password='',
                              )
     client.login(username='Test User', email='', password='')
-    path = reverse('favorites', kwargs={'userID': User.objects.all(0).id})
+    path = reverse('favorites', kwargs={'userID': User.objects.all()[0].id})
     response = client.get(path)
     assert response.status_code == 200
     assertTemplateUsed(response, "authentication/favorites.html")
@@ -364,7 +364,7 @@ def test_favorites_view_post():
                         author=User.objects.get(id=1)
                         )
     client.login(username='Test User', email='', password='')
-    path = reverse('favorites', kwargs={'userID': User.objects.all(0).id})
+    path = reverse('favorites', kwargs={'userID': User.objects.all()[0].id})
     responseToolDetails = client.post(path, data={'toolDetails': ['1']})
     assert responseToolDetails.status_code == 302
     assert responseToolDetails.url == '/user/' + str(User.objects.all()[0].id) + '/tool/1/details/'
@@ -381,7 +381,7 @@ def test_profile_view_get():
                              password='',
                              )
     client.login(username='Test User', email='', password='')
-    path = reverse('profile', kwargs={'userID': User.objects.all(0).id})
+    path = reverse('profile', kwargs={'userID': User.objects.all()[0].id})
     response = client.get(path)
     assert response.status_code == 200
     assertTemplateUsed(response, "authentication/profile.html")
@@ -403,7 +403,7 @@ def test_profile_view_post():
                         author=User.objects.get(id=1)
                         )
     client.login(username='Test User', email='', password='')
-    path = reverse('profile', kwargs={'userID': User.objects.all(0).id})
+    path = reverse('profile', kwargs={'userID': User.objects.all()[0].id})
     responseToolDetails = client.post(path, data={'toolDetails': ['1']})
     assert responseToolDetails.status_code == 302
     assert responseToolDetails.url == '/user/' + str(User.objects.all()[0].id) + '/tool/1/details/'
@@ -420,7 +420,7 @@ def test_editProfile_view_get():
                              password='',
                              )
     client.login(username='Test User', email='', password='')
-    path = reverse('edit-profile', kwargs={'userID': User.objects.all(0).id})
+    path = reverse('edit-profile', kwargs={'userID': User.objects.all()[0].id})
     response = client.get(path)
     assert response.status_code == 200
     assertTemplateUsed(response, "authentication/editProfile.html")
@@ -433,7 +433,7 @@ def test_editProfile_view_post():
                              password='',
                              )
     client.login(username='Test User', email='', password='')
-    path = reverse('edit-profile', kwargs={'userID': User.objects.all(0).id})
+    path = reverse('edit-profile', kwargs={'userID': User.objects.all()[0].id})
     responseProfilePicture = client.post(path, data={'profilePicture': ['', '']})
     assert responseProfilePicture.status_code == 200
     assertTemplateUsed(responseProfilePicture, "authentication/editProfile.html")

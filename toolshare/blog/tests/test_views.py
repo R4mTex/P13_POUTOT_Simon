@@ -25,6 +25,7 @@ def test_editTool_view_get():
     print("3", User.objects.all()[0].password)
     print("4", User.objects.get(id=0))
     print("5", User.objects.get(id=1))
+    print("6", client.login(username='Test User', email='', password=''))
     client.login(username='Test User', email='', password='')
     path = reverse('edit-tool', kwargs={'userID': 1})
     response = client.get(path)

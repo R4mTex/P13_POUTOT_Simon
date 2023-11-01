@@ -57,6 +57,12 @@ def test_contact_view_post():
                              email='',
                              password='',
                              )
+    print("1", User.objects.all())
+    print("2", User.objects.all()[0])
+    print("3", User.objects.all()[0].id)
+    print("3", User.objects.all()[0].username)
+    print("3", User.objects.all()[0].email)
+    print("3", User.objects.all()[0].password)
     client.login(username='Test User', email='', password='')
     path = reverse('contact', kwargs={'userID': 1})
     response = client.post(path, data={'subject': ['Test'],

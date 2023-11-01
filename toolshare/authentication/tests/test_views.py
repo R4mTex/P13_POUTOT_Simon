@@ -204,9 +204,9 @@ def test_research_view_post():
     Favorite.objects.create(user=User.objects.all()[0],
                             blog=Blog.objects.all()[0])
     Favorite.objects.create(user=User.objects.all()[0],
-                            blog=Blog.objects.get(id=2))
+                            blog=Blog.objects.all()[1])
     Favorite.objects.create(user=User.objects.all()[0],
-                            blog=Blog.objects.get(id=3))
+                            blog=Blog.objects.all()[2])
     client.login(username='Test User', email='', password='')
     path = reverse('research', kwargs={'userID': User.objects.all()[0].id})
 
@@ -292,7 +292,7 @@ def test_memberProfile_view_get():
                             supplierSignature=SignatureModel.objects.all()[1],
                             )
     client.login(username='Test User', email='', password='')
-    path = reverse('member-profile', kwargs={'userID': 1, 'memberID': 2})
+    path = reverse('member-profile', kwargs={'userID': User.objects.all()[0].id, 'memberID': User.objects.all()[1].id})
     response = client.get(path)
     assert response.status_code == 200
     assertTemplateUsed(response, "authentication/profile.html")
@@ -320,7 +320,7 @@ def test_memberProfile_view_post():
                         author=User.objects.all()[0]
                         )
     client.login(username='Test User', email='', password='')
-    path = reverse('member-profile', kwargs={'userID': 1, 'memberID': 2})
+    path = reverse('member-profile', kwargs={'userID': User.objects.all()[0].id, 'memberID': User.objects.all()[1].id})
 
     responseToolDetails = client.post(path, data={'toolDetails': ['1']})
     assert responseToolDetails.status_code == 302

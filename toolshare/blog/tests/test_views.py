@@ -155,7 +155,7 @@ def test_memberTools_view_get():
                              fullname='TestTest',
                              phoneNumber='0000000000',)
     client.login(username='Test User', email='', password='')
-    path = reverse('member-tools', kwargs={'userID': 1, 'memberID': 2})
+    path = reverse('member-tools', kwargs={'userID': User.objects.all()[0].id, 'memberID': User.objects.all()[1].id})
     response = client.get(path)
     assert response.status_code == 200
     assertTemplateUsed(response, "blog/personalTools.html")
@@ -180,7 +180,7 @@ def test_memberTools_view_post():
                         deposit='True',
                         author=User.objects.all()[0])
     client.login(username='Test User', email='', password='')
-    path = reverse('member-tools', kwargs={'userID': 1, 'memberID': 2})
+    path = reverse('member-tools', kwargs={'userID': User.objects.all()[0].id, 'memberID': User.objects.all()[1].id})
     responseToolDetails = client.post(path, data={'toolDetails': ['1']})
     assert responseToolDetails.status_code == 302
     assert responseToolDetails.url == '/user/' + str(User.objects.all()[0].id) + '/tool/1/details/'

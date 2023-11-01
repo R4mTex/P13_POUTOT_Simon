@@ -55,9 +55,9 @@ def test_contact_view_get():
 def test_contact_view_post():
     User.objects.create_user(username='Test User',
                              email='',
-                             password='',
+                             password='Test Password 1',
                              )
-    client.login(username='Test User', email='', password='')
+    client.login(username='Test User', email='', password='Test Password 1')
     path = reverse('contact', kwargs={'userID': 1})
     response = client.post(path, data={'subject': ['Test'],
                                        'message': ['Test']

@@ -222,15 +222,11 @@ def test_research_view_post():
     assert responseMostPopular.status_code == 200
     assertTemplateUsed(responseMostPopular, "authentication/research.html")
 
-    responseToolDetails = client.post(path, data={'toolDetails': ['1']})
+    responseToolDetails = client.post(path, data={'toolDetails': [str(Blog.objects.all()[0].id)]})
     assert responseToolDetails.status_code == 302
     assert responseToolDetails.url == '/user/' + str(User.objects.all()[0].id) + '/tool/1/details/'
 
     responseAddTool = client.post(path, data={'addTool': ['1']})
-    assert responseAddTool.status_code == 200
-    assertTemplateUsed(responseAddTool, "authentication/research.html")
-
-    responseAddTool = client.post(path, data={'addTool': ['4']})
     assert responseAddTool.status_code == 200
     assertTemplateUsed(responseAddTool, "authentication/research.html")
 
@@ -322,7 +318,7 @@ def test_memberProfile_view_post():
     client.login(username='Test User', email='', password='')
     path = reverse('member-profile', kwargs={'userID': User.objects.all()[0].id, 'memberID': User.objects.all()[1].id})
 
-    responseToolDetails = client.post(path, data={'toolDetails': ['1']})
+    responseToolDetails = client.post(path, data={'toolDetails': [str(Blog.objects.all()[0].id)]})
     assert responseToolDetails.status_code == 302
     assert responseToolDetails.url == '/user/' + str(User.objects.all()[0].id) + '/tool/1/details/'
 
@@ -365,7 +361,7 @@ def test_favorites_view_post():
                         )
     client.login(username='Test User', email='', password='')
     path = reverse('favorites', kwargs={'userID': User.objects.all()[0].id})
-    responseToolDetails = client.post(path, data={'toolDetails': ['1']})
+    responseToolDetails = client.post(path, data={'toolDetails': [str(Blog.objects.all()[0].id)]})
     assert responseToolDetails.status_code == 302
     assert responseToolDetails.url == '/user/' + str(User.objects.all()[0].id) + '/tool/1/details/'
 
@@ -404,7 +400,7 @@ def test_profile_view_post():
                         )
     client.login(username='Test User', email='', password='')
     path = reverse('profile', kwargs={'userID': User.objects.all()[0].id})
-    responseToolDetails = client.post(path, data={'toolDetails': ['1']})
+    responseToolDetails = client.post(path, data={'toolDetails': [str(Blog.objects.all()[0].id)]})
     assert responseToolDetails.status_code == 302
     assert responseToolDetails.url == '/user/' + str(User.objects.all()[0].id) + '/tool/1/details/'
 

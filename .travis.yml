@@ -15,17 +15,12 @@ addons:
       packages:
         - postgresql-13
 
-env:
-  DJANGO_SETTINGS_MODULE=toolshare.travis
-  global:
-    - PGPORT=5433
-
 before_script:
   - python -m venv env
   - source env/bin/activate
   - pip install -r requirements.txt --use-pep517
   - cd toolshare
-  #- psql -c 'create database toolshare_db;' -U postgres -p 5433
+  - psql -c 'create database toolshare_db;' -U postgres -p 5433
   - python manage.py makemigrations
   - python manage.py migrate
 

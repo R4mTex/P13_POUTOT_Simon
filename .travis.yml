@@ -6,16 +6,16 @@ branches:
   only:
     - main
 
-addons:
-  postgresql: '12'
-  apt:
-      packages:
-        - postgresql-12
-
-env: DJANGO_SETTINGS_MODULE=toolshare.travis
-
 services:
     - postgresql
+
+addons:
+  postgresql: '13'
+  apt:
+      packages:
+        - postgresql-13
+
+env: DJANGO_SETTINGS_MODULE=toolshare.travis
 
 before_script:
   - python -m venv env

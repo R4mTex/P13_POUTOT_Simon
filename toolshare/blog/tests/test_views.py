@@ -10,6 +10,7 @@ from datetime import date, timedelta
 
 client = Client()
 
+print(User.objects.all())
 
 @pytest.mark.django_db
 def test_editTool_view_get():
@@ -18,6 +19,7 @@ def test_editTool_view_get():
                              email='',
                              password='',
                              )
+    print(User.objects.all())
     client.login(username='Test User', email='', password='')
     path = reverse('edit-tool', kwargs={'userID': 1})
     response = client.get(path)

@@ -129,7 +129,7 @@ def test_personalTools_view_post():
                         )
     client.login(username='Test User', email='', password='')
     path = reverse('personal-tools', kwargs={'userID': User.objects.all()[0].id})
-    responseToolDetails = client.post(path, data={'toolDetails': [str(Blog.objects.all()[0].id)]})
+    responseToolDetails = client.post(path, data={'toolDetails': ['1']})
     assert responseToolDetails.status_code == 302
     assert responseToolDetails.url == '/user/' + str(User.objects.all()[0].id) + '/tool/1/details/'
 
@@ -181,7 +181,7 @@ def test_memberTools_view_post():
                         author=User.objects.all()[0])
     client.login(username='Test User', email='', password='')
     path = reverse('member-tools', kwargs={'userID': User.objects.all()[0].id, 'memberID': User.objects.all()[1].id})
-    responseToolDetails = client.post(path, data={'toolDetails': [str(Blog.objects.all()[0].id)]})
+    responseToolDetails = client.post(path, data={'toolDetails': ['1']})
     assert responseToolDetails.status_code == 302
     assert responseToolDetails.url == '/user/' + str(User.objects.all()[0].id) + '/tool/1/details/'
 

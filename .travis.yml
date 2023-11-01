@@ -21,11 +21,19 @@ env:
     - PGPORT=5433
 
 before_script:
+   # Use trust instead of peer authentication:
+  - >-
+    sudo sed -i
+    -e '/local.*peer/s/postgres/all/'
+    -e 's/peer\|md5/trust/g'
+    /etc/postgresql/13/main/pg_hba.conf
+  # Restart the PostgreSQL service:
+  - sudo service postgresql@13-main restart
   - python -m venv env
   - source env/bin/activate
   - pip install -r requirements.txt --use-pep517
   - cd toolshare
-  - psql -c 'create database toolshare_db;' -U postgres -p 5433
+  - sudo psql -p 5433 -U postgres -c 'create database toolshare_db;'
   - python manage.py makemigrations
   - python manage.py migrate
 

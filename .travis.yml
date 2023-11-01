@@ -20,7 +20,7 @@ env: DJANGO_SETTINGS_MODULE=toolshare.travis
 before_script:
   - python -m venv env
   - source env/bin/activate
-  #- pip install -r requirements.txt --use-pep517
+  - pip install -r requirements.txt --use-pep517
   - cd toolshare
   #- psql -c 'create database toolshare_db;' -U postgres
   - python manage.py makemigrations

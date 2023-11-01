@@ -32,7 +32,7 @@ def test_about_view_get():
                              password='',
                              )
     client.login(username='Test User', email='', password='')
-    path = reverse('about', kwargs={'userID': 1})
+    path = reverse('about', kwargs={'userID': User.objects.all(0).id})
     response = client.get(path)
     assert response.status_code == 200
     assertTemplateUsed(response, "authentication/about.html")
@@ -40,19 +40,12 @@ def test_about_view_get():
 
 @pytest.mark.django_db
 def test_contact_view_get():
-    print("0", User.objects.all())
     User.objects.create_user(username='Test User',
                              email='',
                              password='',
                              )
-    print("1", User.objects.all())
-    print("2", User.objects.all()[0])
-    print("3", User.objects.all()[0].id)
-    print("3", User.objects.all()[0].username)
-    print("3", User.objects.all()[0].email)
-    print("3", User.objects.all()[0].password)
     client.login(username='Test User', email='', password='')
-    path = reverse('contact', kwargs={'userID': 1})
+    path = reverse('contact', kwargs={'userID': User.objects.all(0).id})
     response = client.get(path)
     assert response.status_code == 200
     assertTemplateUsed(response, "authentication/contact.html")
@@ -64,19 +57,13 @@ def test_contact_view_post():
                              email='',
                              password='',
                              )
-    print("1", User.objects.all())
-    print("2", User.objects.all()[0])
-    print("3", User.objects.all()[0].id)
-    print("3", User.objects.all()[0].username)
-    print("3", User.objects.all()[0].email)
-    print("3", User.objects.all()[0].password)
     client.login(username='Test User', email='', password='')
-    path = reverse('contact', kwargs={'userID': User.objects.all()[0].id})
+    path = reverse('contact', kwargs={'userID': User.objects.all(0).id})
     response = client.post(path, data={'subject': ['Test'],
                                        'message': ['Test']
                                        })
     assert response.status_code == 302
-    assert response.url == '/user/'+ str(User.objects.all()[0].id) +'/contact/success/'
+    assert response.url == '/user/' + str(User.objects.all()[0].id) + '/contact/success/'
 
     response = client.post(path, data={'subject': ['Test']
                                        })
@@ -91,7 +78,7 @@ def test_publisher_view_get():
                              password='',
                              )
     client.login(username='Test User', email='', password='')
-    path = reverse('publisher', kwargs={'userID': 1})
+    path = reverse('publisher', kwargs={'userID': User.objects.all(0).id})
     response = client.get(path)
     assert response.status_code == 200
     assertTemplateUsed(response, "authentication/publisher.html")
@@ -116,7 +103,7 @@ def test_research_view_get():
                         availabalityStart=date.today(),
                         availabalityEnd=date.today() + timedelta(days=1),
                         deposit='True',
-                        author=User.objects.get(id=2)
+                        author=User.objects.get(id=User.objects.all()[1])
                         )
     Blog.objects.create(name='Test Blog',
                         category='Other',
@@ -125,7 +112,7 @@ def test_research_view_get():
                         availabalityStart='2023-09-15',
                         availabalityEnd='2023-09-16',
                         deposit='True',
-                        author=User.objects.get(id=2)
+                        author=User.objects.get(id=User.objects.all()[1])
                         )
     Favorite.objects.create(user=User.objects.get(id=1),
                             blog=Blog.objects.get(id=1))
@@ -166,7 +153,7 @@ def test_research_view_get():
                             supplierSignature=SignatureModel.objects.get(id=2),
                             )
     client.login(username='Test User', email='', password='')
-    path = reverse('research', kwargs={'userID': 1})
+    path = reverse('research', kwargs={'userID': User.objects.all(0).id})
     response = client.get(path)
     assert response.status_code == 200
     assertTemplateUsed(response, "authentication/research.html")
@@ -221,7 +208,7 @@ def test_research_view_post():
     Favorite.objects.create(user=User.objects.get(id=1),
                             blog=Blog.objects.get(id=3))
     client.login(username='Test User', email='', password='')
-    path = reverse('research', kwargs={'userID': 1})
+    path = reverse('research', kwargs={'userID': User.objects.all(0).id})
 
     responseAllTools = client.post(path, data={'allTools': ['']})
     assert responseAllTools.status_code == 200
@@ -237,7 +224,7 @@ def test_research_view_post():
 
     responseToolDetails = client.post(path, data={'toolDetails': ['1']})
     assert responseToolDetails.status_code == 302
-    assert responseToolDetails.url == '/user/1/tool/1/details/'
+    assert responseToolDetails.url == '/user/' + str(User.objects.all()[0].id) + '/tool/1/details/'
 
     responseAddTool = client.post(path, data={'addTool': ['1']})
     assert responseAddTool.status_code == 200
@@ -257,7 +244,7 @@ def test_research_view_post():
 
     responseAuthorProfile = client.post(path, data={'authorProfile': ['1']})
     assert responseAuthorProfile.status_code == 302
-    assert responseAuthorProfile.url == '/user/1/profile/'
+    assert responseAuthorProfile.url == '/user/' + str(User.objects.all()[0].id) + '/profile/'
 
 
 @pytest.mark.django_db
@@ -282,7 +269,7 @@ def test_memberProfile_view_get():
                         availabalityStart=date.today(),
                         availabalityEnd=date.today() + timedelta(days=1),
                         deposit='True',
-                        author=User.objects.get(id=2)
+                        author=User.objects.get(id=User.objects.all()[1])
                         )
     SignatureModel.objects.create(user=User.objects.get(id=1),
                                   signature='[{"x":[178,172,165,156,145,133,121,112,102,96,92,97,103,116,131,146,169,185,202,220,234,245,254,261,266,268,268,267,262,256,247,238,229,218,208,198,188,181,177,177,176,176,178,183,187,194,201,208,213,219,211,201,189,174,154,135,114,100,86,75,67,62,60,60,60,60,61,62,64],"y":[59,56,56,54,54,54,53,51,50,48,46,39,34,28,22,19,14,13,11,11,12,16,20,26,32,37,44,50,56,61,67,71,74,77,78,78,78,77,75,70,64,56,48,39,32,23,16,9,5,0,1,5,9,15,23,31,41,51,62,75,88,100,108,118,125,131,136,141,145]}]',)
@@ -337,15 +324,15 @@ def test_memberProfile_view_post():
 
     responseToolDetails = client.post(path, data={'toolDetails': ['1']})
     assert responseToolDetails.status_code == 302
-    assert responseToolDetails.url == '/user/1/tool/1/details/'
+    assert responseToolDetails.url == '/user/' + str(User.objects.all()[0].id) + '/tool/1/details/'
 
     responseShowPersonalTools = client.post(path, data={'showPersonalTools': ['2']})
     assert responseShowPersonalTools.status_code == 302
-    assert responseShowPersonalTools.url == '/user/1/member/2/member-tools/'
+    assert responseShowPersonalTools.url == '/user/' + str(User.objects.all()[0].id) + '/member/2/member-tools/'
 
     responseToolDetailsContract = client.post(path, data={'toolDetailsContract': ['1']})
     assert responseToolDetailsContract.status_code == 302
-    assert responseToolDetailsContract.url == '/user/1/tool/1/details/'
+    assert responseToolDetailsContract.url == '/user/' + str(User.objects.all()[0].id) + '/tool/1/details/'
 
 
 @pytest.mark.django_db
@@ -355,7 +342,7 @@ def test_favorites_view_get():
                              password='',
                              )
     client.login(username='Test User', email='', password='')
-    path = reverse('favorites', kwargs={'userID': 1})
+    path = reverse('favorites', kwargs={'userID': User.objects.all(0).id})
     response = client.get(path)
     assert response.status_code == 200
     assertTemplateUsed(response, "authentication/favorites.html")
@@ -377,10 +364,10 @@ def test_favorites_view_post():
                         author=User.objects.get(id=1)
                         )
     client.login(username='Test User', email='', password='')
-    path = reverse('favorites', kwargs={'userID': 1})
+    path = reverse('favorites', kwargs={'userID': User.objects.all(0).id})
     responseToolDetails = client.post(path, data={'toolDetails': ['1']})
     assert responseToolDetails.status_code == 302
-    assert responseToolDetails.url == '/user/1/tool/1/details/'
+    assert responseToolDetails.url == '/user/' + str(User.objects.all()[0].id) + '/tool/1/details/'
 
     responseRemoveTool = client.post(path, data={'removeTool': ['1']})
     assert responseRemoveTool.status_code == 200
@@ -394,7 +381,7 @@ def test_profile_view_get():
                              password='',
                              )
     client.login(username='Test User', email='', password='')
-    path = reverse('profile', kwargs={'userID': 1})
+    path = reverse('profile', kwargs={'userID': User.objects.all(0).id})
     response = client.get(path)
     assert response.status_code == 200
     assertTemplateUsed(response, "authentication/profile.html")
@@ -416,14 +403,14 @@ def test_profile_view_post():
                         author=User.objects.get(id=1)
                         )
     client.login(username='Test User', email='', password='')
-    path = reverse('profile', kwargs={'userID': 1})
+    path = reverse('profile', kwargs={'userID': User.objects.all(0).id})
     responseToolDetails = client.post(path, data={'toolDetails': ['1']})
     assert responseToolDetails.status_code == 302
-    assert responseToolDetails.url == '/user/1/tool/1/details/'
+    assert responseToolDetails.url == '/user/' + str(User.objects.all()[0].id) + '/tool/1/details/'
 
     responsePersonalTools = client.post(path, data={'showPersonalTools': ['1']})
     assert responsePersonalTools.status_code == 302
-    assert responsePersonalTools.url == '/user/1/personal-tools/'
+    assert responsePersonalTools.url == '/user/' + str(User.objects.all()[0].id) + '/personal-tools/'
 
 
 @pytest.mark.django_db
@@ -433,7 +420,7 @@ def test_editProfile_view_get():
                              password='',
                              )
     client.login(username='Test User', email='', password='')
-    path = reverse('edit-profile', kwargs={'userID': 1})
+    path = reverse('edit-profile', kwargs={'userID': User.objects.all(0).id})
     response = client.get(path)
     assert response.status_code == 200
     assertTemplateUsed(response, "authentication/editProfile.html")
@@ -446,7 +433,7 @@ def test_editProfile_view_post():
                              password='',
                              )
     client.login(username='Test User', email='', password='')
-    path = reverse('edit-profile', kwargs={'userID': 1})
+    path = reverse('edit-profile', kwargs={'userID': User.objects.all(0).id})
     responseProfilePicture = client.post(path, data={'profilePicture': ['', '']})
     assert responseProfilePicture.status_code == 200
     assertTemplateUsed(responseProfilePicture, "authentication/editProfile.html")

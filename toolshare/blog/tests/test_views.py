@@ -18,14 +18,8 @@ def test_editTool_view_get():
                              email='',
                              password='',
                              )
-    print("1", User.objects.all())
-    print("2", User.objects.all()[0])
-    print("3", User.objects.all()[0].id)
-    print("3", User.objects.all()[0].username)
-    print("3", User.objects.all()[0].email)
-    print("3", User.objects.all()[0].password)
     client.login(username='Test User', email='', password='')
-    path = reverse('edit-tool', kwargs={'userID': 1})
+    path = reverse('edit-tool', kwargs={'userID': User.objects.all(0).id})
     response = client.get(path)
     assert response.status_code == 200
     assertTemplateUsed(response, "blog/editTool.html")
@@ -39,7 +33,7 @@ def test_editTool_view_post():
                              password='',
                              )
     client.login(username='Test User', email='', password='')
-    path = reverse('edit-tool', kwargs={'userID': 1})
+    path = reverse('edit-tool', kwargs={'userID': User.objects.all(0).id})
     responseEditTool = client.post(path, data={'name': [''],
                                                'image': [''],
                                                'category': [''],
@@ -64,7 +58,7 @@ def test_editTool_view_post():
                                                'initial-availabalityEnd': [date.today() + timedelta(days=1)]
                                                })
     assert responseEditTool.status_code == 302
-    assert responseEditTool.url == '/user/1/profile/'
+    assert responseEditTool.url == '/user/' + str(User.objects.all()[0].id) + '/profile/'
 
 
 @pytest.mark.django_db
@@ -93,7 +87,7 @@ def test_personalTools_view_get():
                         author=User.objects.get(id=1)
                         )
     client.login(username='Test User', email='', password='')
-    path = reverse('personal-tools', kwargs={'userID': 1})
+    path = reverse('personal-tools', kwargs={'userID': User.objects.all(0).id})
     response = client.get(path)
     assert response.status_code == 200
     assertTemplateUsed(response, "blog/personalTools.html")
@@ -134,10 +128,10 @@ def test_personalTools_view_post():
                         author=User.objects.get(id=1)
                         )
     client.login(username='Test User', email='', password='')
-    path = reverse('personal-tools', kwargs={'userID': 1})
+    path = reverse('personal-tools', kwargs={'userID': User.objects.all(0).id})
     responseToolDetails = client.post(path, data={'toolDetails': ['1']})
     assert responseToolDetails.status_code == 302
-    assert responseToolDetails.url == '/user/1/tool/1/details/'
+    assert responseToolDetails.url == '/user/' + str(User.objects.all()[0].id) + '/tool/1/details/'
 
     responseSupprTool = client.post(path, data={'supprTool': ['1']})
     assert responseSupprTool.status_code == 200
@@ -189,7 +183,7 @@ def test_memberTools_view_post():
     path = reverse('member-tools', kwargs={'userID': 1, 'memberID': 2})
     responseToolDetails = client.post(path, data={'toolDetails': ['1']})
     assert responseToolDetails.status_code == 302
-    assert responseToolDetails.url == '/user/1/tool/1/details/'
+    assert responseToolDetails.url == '/user/' + str(User.objects.all()[0].id) + '/tool/1/details/'
 
     responseAddTool = client.post(path, data={'addTool': ['1']})
     assert responseAddTool.status_code == 200
@@ -201,7 +195,7 @@ def test_memberTools_view_post():
 
     responseAuthorProfile = client.post(path, data={'authorProfile': ['2']})
     assert responseAuthorProfile.status_code == 302
-    assert responseAuthorProfile.url == '/user/1/member/2/member-profile/'
+    assert responseAuthorProfile.url == '/user/' + str(User.objects.all()[0].id) + '/member/2/member-profile/'
 
 
 @pytest.mark.django_db
@@ -253,11 +247,11 @@ def test_toolDetails_view_post():
 
     responseBorrowRequest = client.post(path, data={'borrowRequest': ['1']})
     assert responseBorrowRequest.status_code == 302
-    assert responseBorrowRequest.url == '/user/1/tool/1/details/borrow-request-contract/'
+    assert responseBorrowRequest.url == '/user/' + str(User.objects.all()[0].id) + '/tool/1/details/borrow-request-contract/'
 
     responseSupprTool = client.post(path, data={'supprTool': ['1']})
     assert responseSupprTool.status_code == 302
-    assert responseSupprTool.url == '/user/1/research/'
+    assert responseSupprTool.url == '/user/' + str(User.objects.all()[0].id) + '/research/'
 
 
 @pytest.mark.django_db
@@ -313,7 +307,7 @@ def test_borrowRequestForm_view_post():
                                        'signature': ['[{"x":[178,172,165,156,145,133,121,112,102,96,92,97,103,116,131,146,169,185,202,220,234,245,254,261,266,268,268,267,262,256,247,238,229,218,208,198,188,181,177,177,176,176,178,183,187,194,201,208,213,219,211,201,189,174,154,135,114,100,86,75,67,62,60,60,60,60,61,62,64],"y":[59,56,56,54,54,54,53,51,50,48,46,39,34,28,22,19,14,13,11,11,12,16,20,26,32,37,44,50,56,61,67,71,74,77,78,78,78,77,75,70,64,56,48,39,32,23,16,9,5,0,1,5,9,15,23,31,41,51,62,75,88,100,108,118,125,131,136,141,145]}]'],
                                        'sendContract': ['']})
     assert response.status_code == 302
-    assert response.url == '/user/1/tool/1/details/borrow-request-confirmation/'
+    assert response.url == '/user/' + str(User.objects.all()[0].id) + '/tool/1/details/borrow-request-confirmation/'
 
 
 @pytest.mark.django_db
@@ -338,7 +332,7 @@ def test_consentToBorrowForm_view_get():
                         availabalityStart=date.today(),
                         availabalityEnd=date.today() + timedelta(days=1),
                         deposit='True',
-                        author=User.objects.get(id=2)
+                        author=User.objects.get(id=User.objects.all()[1])
                         )
     SignatureModel.objects.create(user=User.objects.get(id=1),
                                   signature='[{"x":[178,172,165,156,145,133,121,112,102,96,92,97,103,116,131,146,169,185,202,220,234,245,254,261,266,268,268,267,262,256,247,238,229,218,208,198,188,181,177,177,176,176,178,183,187,194,201,208,213,219,211,201,189,174,154,135,114,100,86,75,67,62,60,60,60,60,61,62,64],"y":[59,56,56,54,54,54,53,51,50,48,46,39,34,28,22,19,14,13,11,11,12,16,20,26,32,37,44,50,56,61,67,71,74,77,78,78,78,77,75,70,64,56,48,39,32,23,16,9,5,0,1,5,9,15,23,31,41,51,62,75,88,100,108,118,125,131,136,141,145]}]',)
@@ -389,7 +383,7 @@ def test_consentToBorrowForm_view_post():
                         availabalityStart=date.today(),
                         availabalityEnd=date.today() + timedelta(days=1),
                         deposit='True',
-                        author=User.objects.get(id=2))
+                        author=User.objects.get(id=User.objects.all()[1]))
     SignatureModel.objects.create(user=User.objects.get(id=1),
                                   signature='[{"x":[178,172,165,156,145,133,121,112,102,96,92,97,103,116,131,146,169,185,202,220,234,245,254,261,266,268,268,267,262,256,247,238,229,218,208,198,188,181,177,177,176,176,178,183,187,194,201,208,213,219,211,201,189,174,154,135,114,100,86,75,67,62,60,60,60,60,61,62,64],"y":[59,56,56,54,54,54,53,51,50,48,46,39,34,28,22,19,14,13,11,11,12,16,20,26,32,37,44,50,56,61,67,71,74,77,78,78,78,77,75,70,64,56,48,39,32,23,16,9,5,0,1,5,9,15,23,31,41,51,62,75,88,100,108,118,125,131,136,141,145]}]',)
     SignatureModel.objects.create(user=User.objects.get(id=2),
@@ -419,7 +413,7 @@ def test_consentToBorrowForm_view_post():
                                        'signature': ['[{"x":[180,172,165,156,145,133,121,112,102,96,92,97,103,116,131,146,169,185,202,220,234,245,254,261,266,268,268,267,262,256,247,238,229,218,208,198,188,181,177,177,176,176,178,183,187,194,201,208,213,219,211,201,189,174,154,135,114,100,86,75,67,62,60,60,60,60,61,62,64],"y":[59,56,56,54,54,54,53,51,50,48,46,39,34,28,22,19,14,13,11,11,12,16,20,26,32,37,44,50,56,61,67,71,74,77,78,78,78,77,75,70,64,56,48,39,32,23,16,9,5,0,1,5,9,15,23,31,41,51,62,75,88,100,108,118,125,131,136,141,145]}]'],
                                        'consent': ['']})
     assert response.status_code == 302
-    assert response.url == '/user/2/contract/1/consent-to-borrow-confirmation/'
+    assert response.url == '/user/' + str(User.objects.all()[1].id) + '/contract/1/consent-to-borrow-confirmation/'
 
 
 @pytest.mark.django_db
@@ -444,7 +438,7 @@ def test_consentToBorrowConfirmation_view_get():
                         availabalityStart=date.today(),
                         availabalityEnd=date.today() + timedelta(days=1),
                         deposit='True',
-                        author=User.objects.get(id=2))
+                        author=User.objects.get(id=User.objects.all()[1]))
     SignatureModel.objects.create(user=User.objects.get(id=1),
                                   signature='[{"x":[178,172,165,156,145,133,121,112,102,96,92,97,103,116,131,146,169,185,202,220,234,245,254,261,266,268,268,267,262,256,247,238,229,218,208,198,188,181,177,177,176,176,178,183,187,194,201,208,213,219,211,201,189,174,154,135,114,100,86,75,67,62,60,60,60,60,61,62,64],"y":[59,56,56,54,54,54,53,51,50,48,46,39,34,28,22,19,14,13,11,11,12,16,20,26,32,37,44,50,56,61,67,71,74,77,78,78,78,77,75,70,64,56,48,39,32,23,16,9,5,0,1,5,9,15,23,31,41,51,62,75,88,100,108,118,125,131,136,141,145]}]',)
     SignatureModel.objects.create(user=User.objects.get(id=2),
@@ -494,7 +488,7 @@ def test_borrowContractPDF_view_get():
                         availabalityStart=date.today(),
                         availabalityEnd=date.today() + timedelta(days=1),
                         deposit='True',
-                        author=User.objects.get(id=2))
+                        author=User.objects.get(id=User.objects.all()[1]))
     SignatureModel.objects.create(user=User.objects.get(id=1),
                                   signature='[{"x":[178,172,165,156,145,133,121,112,102,96,92,97,103,116,131,146,169,185,202,220,234,245,254,261,266,268,268,267,262,256,247,238,229,218,208,198,188,181,177,177,176,176,178,183,187,194,201,208,213,219,211,201,189,174,154,135,114,100,86,75,67,62,60,60,60,60,61,62,64],"y":[59,56,56,54,54,54,53,51,50,48,46,39,34,28,22,19,14,13,11,11,12,16,20,26,32,37,44,50,56,61,67,71,74,77,78,78,78,77,75,70,64,56,48,39,32,23,16,9,5,0,1,5,9,15,23,31,41,51,62,75,88,100,108,118,125,131,136,141,145]}]',)
     SignatureModel.objects.create(user=User.objects.get(id=2),

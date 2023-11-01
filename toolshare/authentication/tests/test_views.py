@@ -58,12 +58,12 @@ def test_contact_view_post():
                              password='',
                              )
     client.login(username='Test User', email='', password='')
-    path = reverse('contact', kwargs={'userID': 1})
+    path = reverse('contact', kwargs={'userID': 2})
     response = client.post(path, data={'subject': ['Test'],
                                        'message': ['Test']
                                        })
     assert response.status_code == 302
-    assert response.url == '/user/1/contact/success/'
+    assert response.url == '/user/2/contact/success/'
 
     response = client.post(path, data={'subject': ['Test']
                                        })
@@ -86,10 +86,10 @@ def test_publisher_view_get():
 
 @pytest.mark.django_db
 def test_research_view_get():
-    User.objects.create(username='Test User',
+    User.objects.create_user(username='Test User',
                              email='',
                              password='',)
-    User.objects.create(username='Test User 2',
+    User.objects.create_user(username='Test User 2',
                              fullname='Test2Test2',
                              email='test@test.com',
                              password='',

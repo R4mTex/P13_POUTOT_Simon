@@ -222,11 +222,6 @@ def test_research_view_post():
     assert responseMostPopular.status_code == 200
     assertTemplateUsed(responseMostPopular, "authentication/research.html")
 
-    print(len(Blog.objects.all()))
-    print(Blog.objects.all()[0].id)
-    print(Blog.objects.all()[1].id)
-    print(Blog.objects.all()[2].id)
-    print(Blog.objects.all()[3].id)
     responseToolDetails = client.post(path, data={'toolDetails': [Blog.objects.all()[0].id]})
     assert responseToolDetails.status_code == 302
     assert responseToolDetails.url == '/user/' + str(User.objects.all()[0].id) + '/tool/' + str(Blog.objects.all()[0].id) + '/details/'
@@ -243,7 +238,7 @@ def test_research_view_post():
     assert responseSupprTool.status_code == 200
     assertTemplateUsed(responseSupprTool, "authentication/research.html")
 
-    responseAuthorProfile = client.post(path, data={'authorProfile': [Blog.objects.all()[0].id]})
+    responseAuthorProfile = client.post(path, data={'authorProfile': [User.objects.all()[0].id]})
     assert responseAuthorProfile.status_code == 302
     assert responseAuthorProfile.url == '/user/' + str(User.objects.all()[0].id) + '/profile/'
 
@@ -325,15 +320,15 @@ def test_memberProfile_view_post():
 
     responseToolDetails = client.post(path, data={'toolDetails': [Blog.objects.all()[0].id]})
     assert responseToolDetails.status_code == 302
-    assert responseToolDetails.url == '/user/' + str(User.objects.all()[0].id) + '/tool/' + Blog.objects.all()[0].id + '/details/'
+    assert responseToolDetails.url == '/user/' + str(User.objects.all()[0].id) + '/tool/' + str(Blog.objects.all()[0].id) + '/details/'
 
     responseShowPersonalTools = client.post(path, data={'showPersonalTools': [User.objects.all()[1].id]})
     assert responseShowPersonalTools.status_code == 302
-    assert responseShowPersonalTools.url == '/user/' + str(User.objects.all()[0].id) + '/member/' + User.objects.all()[1].id + '/member-tools/'
+    assert responseShowPersonalTools.url == '/user/' + str(User.objects.all()[0].id) + '/member/' + str(User.objects.all()[1].id) + '/member-tools/'
 
     responseToolDetailsContract = client.post(path, data={'toolDetailsContract': [Blog.objects.all()[0].id]})
     assert responseToolDetailsContract.status_code == 302
-    assert responseToolDetailsContract.url == '/user/' + str(User.objects.all()[0].id) + '/tool/' + Blog.objects.all()[0].id + '/details/'
+    assert responseToolDetailsContract.url == '/user/' + str(User.objects.all()[0].id) + '/tool/' + str(Blog.objects.all()[0].id) + '/details/'
 
 
 @pytest.mark.django_db

@@ -1,4 +1,6 @@
 from blog.scripts.parser import Parser, ocStopWords, customStopWords
+import nltk
+nltk.download('punkt')
 from nltk.tokenize import word_tokenize
 
 

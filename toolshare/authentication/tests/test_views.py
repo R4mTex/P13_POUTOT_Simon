@@ -221,13 +221,12 @@ def test_research_view_post():
     responseMostPopular = client.post(path, data={'mostPopular': ['']})
     assert responseMostPopular.status_code == 200
     assertTemplateUsed(responseMostPopular, "authentication/research.html")
-    
-    test = Blog.objects.all()[0].id
-    print(test)
-    print(client.post(path, data={'toolDetails': test}))
-    responseToolDetails = client.post(path, data={'toolDetails': test})
+
+    print(len(Blog.objects.all()))
+    print(Blog.objects.all()[0].id)
+    responseToolDetails = client.post(path, data={'toolDetails': [Blog.objects.all()[0].id]})
     assert responseToolDetails.status_code == 302
-    assert responseToolDetails.url == '/user/' + str(User.objects.all()[0].id) + '/tool/1/details/'
+    assert responseToolDetails.url == '/user/' + str(User.objects.all()[0].id) + '/tool/' + str(Blog.objects.all()[0].id) + '/details/'
 
     responseAddTool = client.post(path, data={'addTool': ['1']})
     assert responseAddTool.status_code == 200

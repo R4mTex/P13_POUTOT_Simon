@@ -40,4 +40,4 @@ before_script:
   - python manage.py migrate
 
 script:
-  - pytest -s
+  - pytest

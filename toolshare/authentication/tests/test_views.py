@@ -224,23 +224,23 @@ def test_research_view_post():
 
     print(len(Blog.objects.all()))
     print(Blog.objects.all()[0].id)
-    responseToolDetails = client.post(path, data={'toolDetails': [Blog.objects.all()[0].id]})
+    responseToolDetails = client.post(path, data={'toolDetails': ['3']})
     assert responseToolDetails.status_code == 302
     assert responseToolDetails.url == '/user/' + str(User.objects.all()[0].id) + '/tool/' + str(Blog.objects.all()[0].id) + '/details/'
 
-    responseAddTool = client.post(path, data={'addTool': ['1']})
+    responseAddTool = client.post(path, data={'addTool': ['3']})
     assert responseAddTool.status_code == 200
     assertTemplateUsed(responseAddTool, "authentication/research.html")
 
-    responseRemoveTool = client.post(path, data={'removeTool': ['1']})
+    responseRemoveTool = client.post(path, data={'removeTool': ['3']})
     assert responseRemoveTool.status_code == 200
     assertTemplateUsed(responseRemoveTool, "authentication/research.html")
 
-    responseSupprTool = client.post(path, data={'supprTool': ['1']})
+    responseSupprTool = client.post(path, data={'supprTool': ['3']})
     assert responseSupprTool.status_code == 200
     assertTemplateUsed(responseSupprTool, "authentication/research.html")
 
-    responseAuthorProfile = client.post(path, data={'authorProfile': ['1']})
+    responseAuthorProfile = client.post(path, data={'authorProfile': ['3']})
     assert responseAuthorProfile.status_code == 302
     assert responseAuthorProfile.url == '/user/' + str(User.objects.all()[0].id) + '/profile/'
 

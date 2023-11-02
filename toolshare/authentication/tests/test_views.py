@@ -361,11 +361,11 @@ def test_favorites_view_post():
                         )
     client.login(username='Test User', email='', password='')
     path = reverse('favorites', kwargs={'userID': User.objects.all()[0].id})
-    responseToolDetails = client.post(path, data={'toolDetails': ['1']})
+    responseToolDetails = client.post(path, data={'toolDetails': [Blog.objects.all()[0].id]})
     assert responseToolDetails.status_code == 302
-    assert responseToolDetails.url == '/user/' + str(User.objects.all()[0].id) + '/tool/1/details/'
+    assert responseToolDetails.url == '/user/' + str(User.objects.all()[0].id) + '/tool/' + str(Blog.objects.all()[0].id) + '/details/'
 
-    responseRemoveTool = client.post(path, data={'removeTool': ['1']})
+    responseRemoveTool = client.post(path, data={'removeTool': [Blog.objects.all()[0].id]})
     assert responseRemoveTool.status_code == 200
     assertTemplateUsed(responseRemoveTool, "authentication/favorites.html")
 
@@ -400,9 +400,9 @@ def test_profile_view_post():
                         )
     client.login(username='Test User', email='', password='')
     path = reverse('profile', kwargs={'userID': User.objects.all()[0].id})
-    responseToolDetails = client.post(path, data={'toolDetails': ['1']})
+    responseToolDetails = client.post(path, data={'toolDetails': [Blog.objects.all()[0].id]})
     assert responseToolDetails.status_code == 302
-    assert responseToolDetails.url == '/user/' + str(User.objects.all()[0].id) + '/tool/1/details/'
+    assert responseToolDetails.url == '/user/' + str(User.objects.all()[0].id) + '/tool/' + str(Blog.objects.all()[0].id) + '/details/'
 
     responsePersonalTools = client.post(path, data={'showPersonalTools': ['1']})
     assert responsePersonalTools.status_code == 302

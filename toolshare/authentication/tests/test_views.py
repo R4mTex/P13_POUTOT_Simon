@@ -224,6 +224,9 @@ def test_research_view_post():
 
     print(len(Blog.objects.all()))
     print(Blog.objects.all()[0].id)
+    print(Blog.objects.all()[1].id)
+    print(Blog.objects.all()[2].id)
+    print(Blog.objects.all()[3].id)
     responseToolDetails = client.post(path, data={'toolDetails': ['3']})
     assert responseToolDetails.status_code == 302
     assert responseToolDetails.url == '/user/' + str(User.objects.all()[0].id) + '/tool/' + str(Blog.objects.all()[0].id) + '/details/'

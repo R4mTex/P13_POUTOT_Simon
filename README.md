@@ -1,4 +1,4 @@
-# OC_Projet_13 Toolshare
+# OC_Projet_13 Toolshare [![Build Status](https://app.travis-ci.com/R4mTex/P13_POUTOT_Simon.svg?branch=main)](https://app.travis-ci.com/R4mTex/P13_POUTOT_Simon)
 
 The program is a web application where you can search for borrowable tools and equipment for your construction projects (with a contract system).
 

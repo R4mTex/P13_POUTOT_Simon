@@ -33,11 +33,11 @@ before_install:
 before_script:
   - python -m venv env
   - source env/bin/activate
-  - pip install -r requirements.txt --use-pep517
+  #- pip install -r requirements.txt --use-pep517
   - cd toolshare
   - sudo psql -p 5433 -U postgres -c 'create database toolshare_db;'
   - python manage.py makemigrations
   - python manage.py migrate
 
 script:
-  - pytest
+  - pytest -s

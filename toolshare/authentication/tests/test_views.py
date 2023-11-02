@@ -223,7 +223,9 @@ def test_research_view_post():
     assertTemplateUsed(responseMostPopular, "authentication/research.html")
     
     test = Blog.objects.all()[0].id
-    responseToolDetails = client.post(path, data={'toolDetails': [test]})
+    print(test)
+    print(client.post(path, data={'toolDetails': test}))
+    responseToolDetails = client.post(path, data={'toolDetails': test})
     assert responseToolDetails.status_code == 302
     assert responseToolDetails.url == '/user/' + str(User.objects.all()[0].id) + '/tool/1/details/'
 

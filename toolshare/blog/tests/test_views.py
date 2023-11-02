@@ -129,15 +129,15 @@ def test_personalTools_view_post():
                         )
     client.login(username='Test User', email='', password='')
     path = reverse('personal-tools', kwargs={'userID': User.objects.all()[0].id})
-    responseToolDetails = client.post(path, data={'toolDetails': ['1']})
+    responseToolDetails = client.post(path, data={'toolDetails': [Blog.objects.all()[0].id]})
     assert responseToolDetails.status_code == 302
-    assert responseToolDetails.url == '/user/' + str(User.objects.all()[0].id) + '/tool/1/details/'
+    assert responseToolDetails.url == '/user/' + str(User.objects.all()[0].id) + '/tool/' + str(Blog.objects.all()[0].id) +'/details/'
 
-    responseSupprTool = client.post(path, data={'supprTool': ['1']})
+    responseSupprTool = client.post(path, data={'supprTool': [Blog.objects.all()[0].id]})
     assert responseSupprTool.status_code == 200
     assertTemplateUsed(responseSupprTool, "blog/personalTools.html")
 
-    responseSupprTool = client.post(path, data={'supprTool': ['2']})
+    responseSupprTool = client.post(path, data={'supprTool': [Blog.objects.all()[1].id]})
     assert responseSupprTool.status_code == 200
     assertTemplateUsed(responseSupprTool, "blog/personalTools.html")
 
@@ -181,21 +181,21 @@ def test_memberTools_view_post():
                         author=User.objects.all()[0])
     client.login(username='Test User', email='', password='')
     path = reverse('member-tools', kwargs={'userID': User.objects.all()[0].id, 'memberID': User.objects.all()[1].id})
-    responseToolDetails = client.post(path, data={'toolDetails': ['1']})
+    responseToolDetails = client.post(path, data={'toolDetails': [Blog.objects.all()[0].id]})
     assert responseToolDetails.status_code == 302
-    assert responseToolDetails.url == '/user/' + str(User.objects.all()[0].id) + '/tool/1/details/'
+    assert responseToolDetails.url == '/user/' + str(User.objects.all()[0].id) + '/tool/' + str(Blog.objects.all()[0].id) + '/details/'
 
-    responseAddTool = client.post(path, data={'addTool': ['1']})
+    responseAddTool = client.post(path, data={'addTool': [Blog.objects.all()[0].id]})
     assert responseAddTool.status_code == 200
     assertTemplateUsed(responseAddTool, "blog/personalTools.html")
 
-    responseRemoveTool = client.post(path, data={'removeTool': ['1']})
+    responseRemoveTool = client.post(path, data={'removeTool': [Blog.objects.all()[0].id]})
     assert responseRemoveTool.status_code == 200
     assertTemplateUsed(responseRemoveTool, "blog/personalTools.html")
 
-    responseAuthorProfile = client.post(path, data={'authorProfile': ['2']})
+    responseAuthorProfile = client.post(path, data={'authorProfile': [User.objects.all()[1].id]})
     assert responseAuthorProfile.status_code == 302
-    assert responseAuthorProfile.url == '/user/' + str(User.objects.all()[0].id) + '/member/2/member-profile/'
+    assert responseAuthorProfile.url == '/user/' + str(User.objects.all()[0].id) + '/member/' + str(User.objects.all()[1].id) + '/member-profile/'
 
 
 @pytest.mark.django_db
@@ -214,7 +214,7 @@ def test_toolDetails_view_get():
                         author=User.objects.all()[0]
                         )
     client.login(username='Test User', email='', password='')
-    path = reverse('tool-details', kwargs={'userID': 1, 'toolID': 1})
+    path = reverse('tool-details', kwargs={'userID': User.objects.all()[0].id, 'toolID': Blog.objects.all()[0].id})
     response = client.get(path)
     assert response.status_code == 200
     assertTemplateUsed(response, "blog/toolDetails.html")
@@ -236,20 +236,20 @@ def test_toolDetails_view_post():
                         author=User.objects.all()[0]
                         )
     client.login(username='Test User', email='', password='')
-    path = reverse('tool-details', kwargs={'userID': 1, 'toolID': 1})
-    responseAddTool = client.post(path, data={'addTool': ['1']})
+    path = reverse('tool-details', kwargs={'userID': User.objects.all()[0].id, 'toolID': Blog.objects.all()[0].id})
+    responseAddTool = client.post(path, data={'addTool': [Blog.objects.all()[0].id]})
     assert responseAddTool.status_code == 200
     assertTemplateUsed(responseAddTool, "blog/toolDetails.html")
 
-    responseRemoveTool = client.post(path, data={'removeTool': ['1']})
+    responseRemoveTool = client.post(path, data={'removeTool': [Blog.objects.all()[0].id]})
     assert responseRemoveTool.status_code == 200
     assertTemplateUsed(responseRemoveTool, "blog/toolDetails.html")
 
-    responseBorrowRequest = client.post(path, data={'borrowRequest': ['1']})
+    responseBorrowRequest = client.post(path, data={'borrowRequest': [Blog.objects.all()[0].id]})
     assert responseBorrowRequest.status_code == 302
-    assert responseBorrowRequest.url == '/user/' + str(User.objects.all()[0].id) + '/tool/1/details/borrow-request-contract/'
+    assert responseBorrowRequest.url == '/user/' + str(User.objects.all()[0].id) + '/tool/' + str(Blog.objects.all()[0].id) + '/details/borrow-request-contract/'
 
-    responseSupprTool = client.post(path, data={'supprTool': ['1']})
+    responseSupprTool = client.post(path, data={'supprTool': [Blog.objects.all()[0].id]})
     assert responseSupprTool.status_code == 302
     assert responseSupprTool.url == '/user/' + str(User.objects.all()[0].id) + '/research/'
 
@@ -270,7 +270,7 @@ def test_borrowRequestForm_view_get():
                         author=User.objects.all()[0]
                         )
     client.login(username='Test User', email='', password='')
-    path = reverse('borrow-request-form', kwargs={'userID': 1, 'toolID': 1})
+    path = reverse('borrow-request-form', kwargs={'userID': User.objects.all()[0].id, 'toolID': Blog.objects.all()[0].id})
     response = client.get(path)
     assert response.status_code == 200
     assertTemplateUsed(response, "blog/borrowRequestForm.html")
@@ -294,7 +294,7 @@ def test_borrowRequestForm_view_post():
                         author=User.objects.all()[0]
                         )
     client.login(username='Test User', email='', password='')
-    path = reverse('borrow-request-form', kwargs={'userID': 1, 'toolID': 1})
+    path = reverse('borrow-request-form', kwargs={'userID': User.objects.all()[0].id, 'toolID': Blog.objects.all()[0].id})
 
     response = client.post(path, data={'startOfUse': [date.today()],
                                        'initial-startOfUse': [date.today()],
@@ -307,7 +307,7 @@ def test_borrowRequestForm_view_post():
                                        'signature': ['[{"x":[178,172,165,156,145,133,121,112,102,96,92,97,103,116,131,146,169,185,202,220,234,245,254,261,266,268,268,267,262,256,247,238,229,218,208,198,188,181,177,177,176,176,178,183,187,194,201,208,213,219,211,201,189,174,154,135,114,100,86,75,67,62,60,60,60,60,61,62,64],"y":[59,56,56,54,54,54,53,51,50,48,46,39,34,28,22,19,14,13,11,11,12,16,20,26,32,37,44,50,56,61,67,71,74,77,78,78,78,77,75,70,64,56,48,39,32,23,16,9,5,0,1,5,9,15,23,31,41,51,62,75,88,100,108,118,125,131,136,141,145]}]'],
                                        'sendContract': ['']})
     assert response.status_code == 302
-    assert response.url == '/user/' + str(User.objects.all()[0].id) + '/tool/1/details/borrow-request-confirmation/'
+    assert response.url == '/user/' + str(User.objects.all()[0].id) + '/tool/' + str(Blog.objects.all()[0].id) + '/details/borrow-request-confirmation/'
 
 
 @pytest.mark.django_db
@@ -355,7 +355,7 @@ def test_consentToBorrowForm_view_get():
                             supplierSignature=SignatureModel.objects.all()[1],
                             )
     client.login(username='Test User', email='', password='')
-    path = reverse('consent-to-borrow-form', kwargs={'userID': 1, 'contractID': 1})
+    path = reverse('consent-to-borrow-form', kwargs={'userID': User.objects.all()[0].id, 'contractID': Contract.objects.all()[0].id})
     response = client.get(path)
     assert response.status_code == 200
     assertTemplateUsed(response, "blog/consentToBorrowForm.html")
@@ -405,7 +405,7 @@ def test_consentToBorrowForm_view_post():
                             supplierSignature=SignatureModel.objects.all()[1],
                             )
     client.login(username='Test User 2', email='test@test.com', password='')
-    path = reverse('consent-to-borrow-form', kwargs={'userID': 2, 'contractID': 1})
+    path = reverse('consent-to-borrow-form', kwargs={'userID': User.objects.all()[1].id, 'contractID': Contract.objects.all()[0].id})
     response = client.post(path, data={'supplierName': ['Test2Test2'],
                                        'supplierApproval': ['Read and Approved'],
                                        'approvalDate': [date.today()],
@@ -413,7 +413,7 @@ def test_consentToBorrowForm_view_post():
                                        'signature': ['[{"x":[180,172,165,156,145,133,121,112,102,96,92,97,103,116,131,146,169,185,202,220,234,245,254,261,266,268,268,267,262,256,247,238,229,218,208,198,188,181,177,177,176,176,178,183,187,194,201,208,213,219,211,201,189,174,154,135,114,100,86,75,67,62,60,60,60,60,61,62,64],"y":[59,56,56,54,54,54,53,51,50,48,46,39,34,28,22,19,14,13,11,11,12,16,20,26,32,37,44,50,56,61,67,71,74,77,78,78,78,77,75,70,64,56,48,39,32,23,16,9,5,0,1,5,9,15,23,31,41,51,62,75,88,100,108,118,125,131,136,141,145]}]'],
                                        'consent': ['']})
     assert response.status_code == 302
-    assert response.url == '/user/' + str(User.objects.all()[1].id) + '/contract/1/consent-to-borrow-confirmation/'
+    assert response.url == '/user/' + str(User.objects.all()[1].id) + '/contract/' + str(Contract.objects.all()[0].id) + '/consent-to-borrow-confirmation/'
 
 
 @pytest.mark.django_db
@@ -460,7 +460,7 @@ def test_consentToBorrowConfirmation_view_get():
                             supplierSignature=SignatureModel.objects.all()[1],
                             )
     client.login(username='Test User', email='', password='')
-    path = reverse('consent-to-borrow-confirmation', kwargs={'userID': 1, 'contractID': 1})
+    path = reverse('consent-to-borrow-confirmation', kwargs={'userID': User.objects.all()[0].id, 'contractID': Contract.objects.all()[0].id})
     response = client.get(path)
     assert response.status_code == 200
     assertTemplateUsed(response, "blog/consentToBorrowConfirmation.html")
@@ -510,7 +510,7 @@ def test_borrowContractPDF_view_get():
                             supplierSignature=SignatureModel.objects.all()[1],
                             )
     client.login(username='Test User', email='', password='')
-    path = reverse('borrowContract', kwargs={'userID': 1, 'contractID': 1})
+    path = reverse('borrowContract', kwargs={'userID': User.objects.all()[0].id, 'contractID': Contract.objects.all()[0].id})
     response = client.get(path)
     assert response.status_code == 200
     assertTemplateUsed(response, "blog/borrowContract.html")

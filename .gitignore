@@ -1,0 +1,10 @@
+env/
+db.sqlite3
+.env
+__pycache__
+.coverage
+./.coverage
+.coveragerc
+htmlcov/
+pytest.ini
+dump.sqlite.sql

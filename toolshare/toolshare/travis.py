@@ -1,4 +1,4 @@
-from toolshare.settings import *
+from toolshare.settings import * # noqa
 
 
 DATABASES = {
